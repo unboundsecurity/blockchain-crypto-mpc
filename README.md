@@ -22,8 +22,7 @@ library (high level description).
 
 **Note**: This is a preview release, including the API, but not the full
 source code and documentation. Full documentation and source code will
-be released shortly. You can subscribe our mailing list here -- and you
-will be among the first to know!
+be released shortly.
 
 Who Should Use it? 
 ===================

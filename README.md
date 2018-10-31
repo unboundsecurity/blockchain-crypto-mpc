@@ -310,5 +310,5 @@ Each peer starts by calling the **MPCCrypto_initEcdsaSign()** function
 for initialization. After initialization, each peer calls the 
 **MPCCrypto_step()** function a number of times until the peer is 
 finished with the signing process. The signature, which is the result of 
-the signing process, is receive by calling the final function, 
+the signing process, is received by calling the final function, 
 **MPCCrypto_finalEcdsaSign()**, after which the signing process is done.

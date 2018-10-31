@@ -73,7 +73,7 @@ applications that deal with key management.
 
 **We are delighted to make this contribution to the open source
 community, with hopes that it will enable secure, convenient, and easy
-to use blockchain applications for all. **
+to use blockchain applications for all.**
 
 What's Included?
 ================
@@ -208,7 +208,7 @@ only for disaster recovery.
 ### Backup Use Case 2: Managed Backup
 
 The following scenario is an expansion of the Endpoint/Server use case
-that includes a 3^rd^ party trustee service. The trustee service is used
+that includes a 3rd party trustee service. The trustee service is used
 only when either the user's device and/or the service provider have lost
 their respective key shares.
 

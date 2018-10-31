@@ -1,5 +1,4 @@
-Introduction to *blockchain-crypto-mpc*
-=====================================
+# 1. Introduction to *blockchain-crypto-mpc*
 
 **blockchain-crypto-mpc** is an open source library released by [Unbound
 Tech](https://www.unboundtech.com/company/about/) that provides the
@@ -24,8 +23,7 @@ library (high level description).
 source code and documentation. Full documentation and source code will
 be released shortly.
 
-Who Should Use it? 
-===================
+# 2. Who Should Use it? 
 
 **Blockchain Crypto MPC provides 100% of the cryptography needed for
 strongly securing crypto asset and blockchain wallets -- while being as
@@ -74,8 +72,8 @@ applications that deal with key management.
 community, with hopes that it will enable secure, convenient, and easy
 to use blockchain applications for all.**
 
-What's Included?
-================
+# 3. What's Included?
+
 
 blockchain-crypto-mpc includes a secure MPC implementation of the
 following algorithms:
@@ -102,21 +100,21 @@ remove this dependency will be included in future documentation.
 The compiled binary is a cryptographic library that has to be deployed
 on two or more separate machines to provide strong security.
 
-What are the Typical Use Cases?
-===============================
+# 4. What are the Typical Use Cases?
+
 
 blockchain-crypto-mpc can be used to provide security in any blockchain
 app. In this section we describe typical use cases that are relevant to
 many applications.
 
-Endpoint/Server Use Case 
--------------------------
+## 4.1 Endpoint/Server Use Case 
+
 
 This use case is common for wallet service providers. The user has a
 mobile wallet on their endpoint device, typically their mobile phone or
 laptop. The wallet application communicates with a server application.
 
-### Suggested setup:
+### 4.1.1 Suggested setup:
 
 The BIP32 seed and all signing keys are always split between the end
 user's device (participant 1) and the service provider (participant 2).
@@ -126,7 +124,7 @@ them).
 
 ![Endpoint/Server Use Case](docs/images/use-case-endpoint-server.png)
 
-### Use Case Properties
+### 4.1.2 Use Case Properties
 
 -   Guaranteed non-repudiation; the application server cannot sign any
     transaction without cooperation from the endpoint device.
@@ -145,15 +143,15 @@ them).
     maintaining a very high security level and granting the users full
     control of their crypto assets.
 
-Mobile/Laptop Use Case
-----------------------
+## 4.2 Mobile/Laptop Use Case
+
 
 This is a use case involving two end-user devices that typically belong
 to the same user. For example, a mobile phone and a laptop. Each device
 runs an app and both participants collaborate to create a secure
 blockchain wallet and sign transactions.
 
-### Suggested Setup
+### 4.2.1 Suggested Setup
 
 The BIP32 seed and all signing keys are always split between the mobile
 device (participant 1) and the laptop (participant 2). Performing any
@@ -162,7 +160,7 @@ of both participants (and communication between them).
 
 ![Mobile/Laptop Use Case](docs/images/use-case-mobile-laptop.png)
 
-### Use Case Properties
+### 4.2.2 Use Case Properties
 
 -   Both devices must collaborate and approve any transaction. No single
     device can approve a transaction.
@@ -180,8 +178,8 @@ of both participants (and communication between them).
     user experience while maintaining a very high security level and
     granting the users full control of their crypto assets.
 
-Backup
-------
+## 4.3 Backup
+
 
 Backup is one of the most challenging aspects of crypto asset key
 management. This section briefly describes the backup functionality of
@@ -194,7 +192,7 @@ participants to verify the correctness of the backup at any point in
 time without decrypting it. It therefore makes this verification secure
 and prevents a situation where a wrong backup was generated and stored.
 
-### Backup Use Case 1: User-Managed
+### 4.3.1 Backup Use Case 1: User-Managed
 
 This is a common form of backup, with the role of backup management
 mostly on the end-user. An encrypted backup of the wallet can be stored
@@ -204,7 +202,7 @@ private key for this backup should be in the user's sole possession,
 preferably in a cold backup. The backup recovery process should be used
 only for disaster recovery.
 
-### Backup Use Case 2: Managed Backup
+### 4.3.2 Backup Use Case 2: Managed Backup
 
 The following scenario is an expansion of the Endpoint/Server use case
 that includes a 3rd party trustee service. The trustee service is used
@@ -224,8 +222,8 @@ green shares (K''<sub>1</sub>, K''<sub>2</sub>) by the service provider and the 
 It's important to highlight that each of these pairs is completely
 independent, each is effectively a backup of the same seed.
 
-Technical Overview and Usage Guidelines
-=======================================
+# 5. Technical Overview and Usage Guidelines
+
 
 Unbound's Blockchain Crypto MPC open source library provides functions
 that enable you to create, sign, and refresh encryption keys, without
@@ -237,8 +235,8 @@ messages that are sent between the peers. Note that the actual
 communication between peers is not included in this library.
 
 ![blockchain-crypto-mpc system](docs/images/os-system.png)
-Definitions
------------
+## 5.1 Definitions
+
 
 Blockchain Crypto MPC utilizes the following three structures:
 
@@ -258,8 +256,8 @@ The **key share**, **message**, and **context** contain varying amounts
 of information depending on the type action, and therefore they are
 structures.
 
-Actions
--------
+## 5.2 Actions
+
 
 The library provides the following actions:
 
@@ -278,8 +276,8 @@ The library also provides mechanisms to handle serialization,
 deserialization, and memory management for the key share, message, and
 context structures.
 
-System Flow
------------
+## 5.3 System Flow
+
 
 The system flow is shown in the following figure:
 

@@ -224,3 +224,80 @@ K'<sub>2</sub>) are used by the user's device and the trustee service, and the
 green shares (K''<sub>1</sub>, K''<sub>2</sub>) by the service provider and the trustee.
 It's important to highlight that each of these pairs is completely
 independent, each is effectively a backup of the same seed.
+
+Technical Overview and Usage Guidelines
+=======================================
+
+Unbound's Blockchain Crypto MPC open source library provides functions
+that enable you to create, sign, and refresh encryption keys, without
+the whole key ever existing in any location.
+
+This library can be used to create system with two peers for the
+management of the keys. Each peer uses the library to create and process
+messages that are sent between the peers. Note that the actual
+communication between peers is not included in this library.
+
+![blockchain-crypto-mpc system](docs/images/os-system.png)
+Definitions
+-----------
+
+Blockchain Crypto MPC utilizes the following three structures:
+
+1.  **Key share** -- Encryption keys never exist as complete keys in any
+    phase of the process or in any location at any time. A key share is
+    a piece of a key, which can be used by Unbound's MPC technology to
+    sign transactions.
+
+2.  **Message** -- Data that is passed to the other peer. The message
+    contains information about the action in progress.
+
+3.  **Context** -- Since each action, such as signing with a key,
+    involves multiple messages between the two peers, the status of the
+    action is preserved in a context.
+
+The **key share**, **message**, and **context** contain varying amounts
+of information depending on the type action, and therefore they are
+structures.
+
+Actions
+-------
+
+The library provides the following actions:
+
+-   2-party ECDSA secp256k1: generation and signing
+
+-   2-party EdDSA ed25519: generation and signing
+
+-   2-party BIP32 (based on the [BIP32 specification](https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki)): generation, hard
+    derivation, and normal derivation
+
+-   Key share refresh
+
+-   Zero-knowledge backup
+
+The library also provides mechanisms to handle serialization,
+deserialization, and memory management for the key share, message, and
+context structures.
+
+System Flow
+-----------
+
+The system flow is shown in the following figure:
+
+![Flow](docs/images/os-flow.png)
+
+The first step is initialization. During this step you provide the
+library with all the relevant information required to complete the
+desired action. This step takes that information and creates a
+**context**. Each peer does its own initialization.
+
+The context is then passed through a series of steps. Each of these
+steps takes an **input** **message**, does some manipulation, and then
+creates an **output message**. You then transfer this output message to
+the other peer. The other peer receives the message and associates it
+with a context. It then knows how to handle the incoming message based
+on the context.
+
+When the peer is done with the last step it sets a finished flag. The
+peer can then do any necessary cleanup, such as freeing memory, or
+copying an updated key share to storage.

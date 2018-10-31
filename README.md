@@ -298,3 +298,16 @@ on the context.
 When the peer is done with the last step it sets a finished flag. The
 peer can then do any necessary cleanup, such as freeing memory, or
 copying an updated key share to storage.
+
+
+### 5.3.1 Example Action
+
+An example of an ECDSA signing action is shown in the following figure.
+
+![Flow](docs/images/os-flow-example.png)
+
+Each peer starts by calling the **MPCCrypto_initEcdsaSign()** function 
+for initialization. After initialization, each peer calls the 
+**MPCCrypto_step()** function a number of times until the peer is 
+finished with the signing process. The final call is to 
+**MPCCrypto_finalEcdsaSign()**, after which the signing process is done.

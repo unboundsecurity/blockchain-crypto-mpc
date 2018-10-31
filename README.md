@@ -75,7 +75,7 @@ to use blockchain applications for all.**
 # 3. What's Included?
 
 
-blockchain-crypto-mpc includes a secure MPC implementation of the
+**blockchain-crypto-mpc** includes a secure MPC implementation of the
 following algorithms:
 
 -   2-party ECDSA secp256k1: generation and signing
@@ -103,7 +103,7 @@ on two or more separate machines to provide strong security.
 # 4. What are the Typical Use Cases?
 
 
-blockchain-crypto-mpc can be used to provide security in any blockchain
+**blockchain-crypto-mpc** can be used to provide security in any blockchain
 app. In this section we describe typical use cases that are relevant to
 many applications.
 
@@ -183,9 +183,9 @@ of both participants (and communication between them).
 
 Backup is one of the most challenging aspects of crypto asset key
 management. This section briefly describes the backup functionality of
-blockchain-crypto-mpc and two potential usage scenarios.
+**blockchain-crypto-mpc** and two potential usage scenarios.
 
-blockchain-crypto-mpc includes a unique backup mechanism that introduces
+**blockchain-crypto-mpc** includes a unique backup mechanism that introduces
 zero-knowledge backup: an encrypted cold backup that allows public
 verifiability. This property is significant, as it allows both
 participants to verify the correctness of the backup at any point in

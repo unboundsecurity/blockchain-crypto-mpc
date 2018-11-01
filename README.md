@@ -122,7 +122,7 @@ Performing any cryptographic operation on the seed or private key
 requires cooperation of both participants (and communication between
 them).
 
-![Endpoint/Server Use Case](docs/images/use-case-endpoint-server.png)
+<img src="docs/images/use-case-endpoint-server.png" width="500px" alt="Endpoint/Server Use Case">
 
 ### 4.1.2 Use Case Properties
 
@@ -158,7 +158,7 @@ device (participant 1) and the laptop (participant 2). Performing any
 cryptographic operation on the seed or private key requires cooperation
 of both participants (and communication between them).
 
-![Mobile/Laptop Use Case](docs/images/use-case-mobile-laptop.png)
+<img src="docs/images/use-case-mobile-laptop.png" width="500px" alt="Mobile/Laptop Use Case">
 
 ### 4.2.2 Use Case Properties
 
@@ -209,16 +209,15 @@ that includes a 3rd party trustee service. The trustee service is used
 only when either the user's device and/or the service provider have lost
 their respective key shares.
 
-![Backup Use Case 2: Managed Backup](docs/images/use-case-managed-backup.png)
+<img src="docs/images/use-case-managed-backup.png" width="500px" alt="Backup Use Case 2: Managed Backup">
 
 This model creates a user-transparent backup, effectively similar to a
 2-of-3 scenario: each quorum containing 2 of the 3 participants noted
 above would suffice to perform a cryptographic operation. This is
 performed by creating three different random share pairs upon wallet and
-seed generation. In the diagram, the red shares (K<sub>1</sub>, K<sub>2</sub>) are used by
-the user's device and the service provider, the blue shares (K'<sub>1</sub>,
-K'<sub>2</sub>) are used by the user's device and the trustee service, and the
-green shares (K''<sub>1</sub>, K''<sub>2</sub>) by the service provider and the trustee.
+seed generation. In the diagram, key share A is used by
+the user's device and the Trustee Service, key share B is used by the user's device and the Wallet Service Provider, and key share C
+is used by the Wallet Service Provider and the Trustee Service.
 It's important to highlight that each of these pairs is completely
 independent, each is effectively a backup of the same seed.
 

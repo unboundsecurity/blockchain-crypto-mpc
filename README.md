@@ -59,7 +59,7 @@ specifically, it provides three critical security properties:
     both machines at virtually the same time in order to obtain key
     material.
 
-![Key Shares](docs/images/os-key-shares.png)
+<img src="docs/images/os-key-shares.png" width="500px" alt="Key Shares">
 
 **blockchain-crypto-mpc** includes a secure MPC implementation of 100%
 of the functionality required to strongly secure crypto asset and
@@ -233,7 +233,9 @@ management of the keys. Each peer uses the library to create and process
 messages that are sent between the peers. Note that the actual
 communication between peers is not included in this library.
 
-![blockchain-crypto-mpc system](docs/images/os-system.png)
+<img src="docs/images/os-system.png" width="500px" alt="blockchain-crypto-mpc system">
+
+
 ## 5.1 Definitions
 
 
@@ -280,7 +282,7 @@ context structures.
 
 The system flow is shown in the following figure:
 
-![Flow](docs/images/os-flow.png)
+<img src="docs/images/os-flow.png" width="500px" alt="blockchain-crypto-mpc Flow">
 
 The first step is initialization. During this step you provide the
 library with all the relevant information required to complete the
@@ -303,7 +305,7 @@ copying an updated key share to storage.
 
 An example of an ECDSA signing action is shown in the following figure.
 
-![Flow](docs/images/os-flow-example.png)
+<img src="docs/images/os-flow-example.png" width="500px" alt="blockchain-crypto-mpc Example Flow">
 
 Each peer starts by calling the **MPCCrypto_initEcdsaSign()** function 
 for initialization. After initialization, each peer calls the 

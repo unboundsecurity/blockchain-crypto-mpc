@@ -131,14 +131,14 @@ MPCCRYPTO_API int MPCCrypto_initRefreshKey(int peer, MPCCryptoShare* share, MPCC
 // EdDSA specific functions
 MPCCRYPTO_API int MPCCrypto_initGenerateEddsaKey(int peer, MPCCryptoContext** context);
 MPCCRYPTO_API int MPCCrypto_initEddsaSign(int peer, MPCCryptoShare* share, const uint8_t* in, int in_size, int refresh, MPCCryptoContext** context);
-MPCCRYPTO_API int MPCCrypto_finalEddsaSign(MPCCryptoContext* context, uint8_t* signature); // |signature|=64
+MPCCRYPTO_API int MPCCrypto_getResultEddsaSign(MPCCryptoContext* context, uint8_t* signature); // |signature|=64
 MPCCRYPTO_API int MPCCrypto_verifyEddsa(const uint8_t* pub_key, const uint8_t* in, int in_size, const uint8_t* signature); // |pub_key|=32, |signature|=64
 MPCCRYPTO_API int MPCCrypto_getEddsaPublic(MPCCryptoShare* share, uint8_t* pub_key); // |pub_key|=32
 
 // ECDSA specific functions
 MPCCRYPTO_API int MPCCrypto_initGenerateEcdsaKey(int peer, MPCCryptoContext** context);
 MPCCRYPTO_API int MPCCrypto_initEcdsaSign(int peer, MPCCryptoShare* share, const uint8_t* in, int in_size, int refresh, MPCCryptoContext** context);
-MPCCRYPTO_API int MPCCrypto_finalEcdsaSign(MPCCryptoContext* context, uint8_t* signature, int* out_size); // signature is der-encoded
+MPCCRYPTO_API int MPCCrypto_getResultEcdsaSign(MPCCryptoContext* context, uint8_t* signature, int* out_size); // signature is der-encoded
 MPCCRYPTO_API int MPCCrypto_verifyEcdsa(EC_KEY* pub_key, const uint8_t* in, int in_size, const uint8_t* signature, int signature_size); 
 MPCCRYPTO_API int MPCCrypto_getEcdsaPublic(MPCCryptoShare* share, EC_KEY** pub_key);
 
@@ -148,19 +148,19 @@ MPCCRYPTO_API int MPCCrypto_initImportGenericSecret(int peer, const uint8_t* key
 
 // Backup functions for ECDSA
 MPCCRYPTO_API int MPCCrypto_initBackupEcdsaKey(int peer, MPCCryptoShare* share, RSA* pub_backup_key, MPCCryptoContext** context);
-MPCCRYPTO_API int MPCCrypto_finalBackupEcdsaKey(MPCCryptoContext* context, uint8_t* out, int* out_size);
+MPCCRYPTO_API int MPCCrypto_getResultBackupEcdsaKey(MPCCryptoContext* context, uint8_t* out, int* out_size);
 MPCCRYPTO_API int MPCCrypto_verifyEcdsaBackupKey(RSA* pub_backup_key, EC_KEY* pub_key, const uint8_t* backup, int backup_size); 
 MPCCRYPTO_API int MPCCrypto_restoreEcdsaKey(RSA* prv_backup_key, const uint8_t* backup, int backup_size, EC_KEY** out); 
 
 // Backup functions for EdDSA
 MPCCRYPTO_API int MPCCrypto_initBackupEddsaKey(int peer, MPCCryptoShare* share, RSA* pub_backup_key, MPCCryptoContext** context);
-MPCCRYPTO_API int MPCCrypto_finalBackupEddsaKey(MPCCryptoContext* context, uint8_t* out, int* out_size);
+MPCCRYPTO_API int MPCCrypto_getResultBackupEddsaKey(MPCCryptoContext* context, uint8_t* out, int* out_size);
 MPCCRYPTO_API int MPCCrypto_verifyEddsaBackupKey(RSA* pub_backup_key, const uint8_t* pub_key, const uint8_t* backup, int backup_size); 
 MPCCRYPTO_API int MPCCrypto_restoreEddsaKey(RSA* prv_backup_key, const uint8_t* backup, int backup_size, uint8_t* out);  // |out|=32
 
 // BIP32 functions
 MPCCRYPTO_API int MPCCrypto_initDeriveBIP32(int peer, MPCCryptoShare* share, int hardened, unsigned index, MPCCryptoContext** context);
-MPCCRYPTO_API int MPCCrypto_finalDeriveBIP32(MPCCryptoContext* context, MPCCryptoShare** new_share);
+MPCCRYPTO_API int MPCCrypto_getResultDeriveBIP32(MPCCryptoContext* context, MPCCryptoShare** new_share);
 MPCCRYPTO_API int MPCCrypto_getBIPInfo(MPCCryptoShare* share, bip32_info_t* bip32_info);
 
 

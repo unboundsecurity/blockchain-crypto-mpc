@@ -59,7 +59,7 @@ specifically, it provides three critical security properties:
     both machines at virtually the same time in order to obtain key
     material.
 
-<img src="docs/images/os-key-shares.png" width="500px" alt="Key Shares">
+![Key Shares](docs/images/os-key-shares.png)
 
 **blockchain-crypto-mpc** includes a secure MPC implementation of 100%
 of the functionality required to strongly secure crypto asset and
@@ -122,7 +122,7 @@ Performing any cryptographic operation on the seed or private key
 requires cooperation of both participants (and communication between
 them).
 
-<img src="docs/images/use-case-endpoint-server.png" width="500px" alt="Endpoint/Server Use Case">
+![Endpoint/Server Use Case](docs/images/use-case-endpoint-server.png)
 
 ### 4.1.2 Use Case Properties
 
@@ -158,7 +158,7 @@ device (participant 1) and the laptop (participant 2). Performing any
 cryptographic operation on the seed or private key requires cooperation
 of both participants (and communication between them).
 
-<img src="docs/images/use-case-mobile-laptop.png" width="500px" alt="Mobile/Laptop Use Case">
+![Mobile/Laptop Use Case](docs/images/use-case-mobile-laptop.png)
 
 ### 4.2.2 Use Case Properties
 
@@ -209,17 +209,9 @@ that includes a 3rd party trustee service. The trustee service is used
 only when either the user's device and/or the service provider have lost
 their respective key shares.
 
-<img src="docs/images/use-case-managed-backup.png" width="500px" alt="Backup Use Case 2: Managed Backup">
+![Backup Use Case 2: Managed Backup](docs/images/use-case-managed-backup.png)
 
-This model creates a user-transparent backup, effectively similar to a
-2-of-3 scenario: each quorum containing 2 of the 3 participants noted
-above would suffice to perform a cryptographic operation. This is
-performed by creating three different random share pairs upon wallet and
-seed generation. In the diagram, key share A is used by
-the user's device and the Trustee Service, key share B is used by the user's device and the Wallet Service Provider, and key share C
-is used by the Wallet Service Provider and the Trustee Service.
-It's important to highlight that each of these pairs is completely
-independent, each is effectively a backup of the same seed.
+This model creates a user-transparent backup, effectively similar to a 2-of-3 scenario: each quorum containing 2 of the 3 participants noted above would suffice to perform a cryptographic operation. This is performed by creating three different random share pairs upon wallet and seed generation. In the diagram, key share A is used by the user's device and the Trustee Service, key share B is used by the user's device and the Wallet Service Provider, and key share C is used by the Wallet Service Provider and the Trustee Service. It's important to highlight that each of these pairs is completely independent, each is effectively a backup of the same seed.
 
 # 5. Technical Overview and Usage Guidelines
 
@@ -233,9 +225,7 @@ management of the keys. Each peer uses the library to create and process
 messages that are sent between the peers. Note that the actual
 communication between peers is not included in this library.
 
-<img src="docs/images/os-system.png" width="500px" alt="blockchain-crypto-mpc system">
-
-
+![blockchain-crypto-mpc system](docs/images/os-system.png)
 ## 5.1 Definitions
 
 
@@ -282,7 +272,7 @@ context structures.
 
 The system flow is shown in the following figure:
 
-<img src="docs/images/os-flow.png" width="500px" alt="blockchain-crypto-mpc Flow">
+![Flow](docs/images/os-flow.png)
 
 The first step is initialization. During this step you provide the
 library with all the relevant information required to complete the
@@ -290,7 +280,7 @@ desired action. This step takes that information and creates a
 **context**. Each peer does its own initialization.
 
 The context is then passed through a series of steps. Each of these
-steps takes an **input** **message**, does some manipulation, and then
+steps takes an **input message**, does some manipulation, and then
 creates an **output message**. You then transfer this output message to
 the other peer. The other peer receives the message and associates it
 with a context. It then knows how to handle the incoming message based
@@ -301,11 +291,39 @@ peer can then do any necessary cleanup, such as freeing memory, or
 copying an updated key share to storage.
 
 
-### 5.3.1 Example Action
+### 5.3.1 Peer Roles
+
+Peer roles are determined by which peer initiates key generation. This peer must be used for any subsequent key operations, such as signing, derivation, and backup. For example, if peer A generates a key and then peer B wants to initiate a signing process, it should make a request to the peer A to start the process. When complete, the peer A can send the result to peer B. Peer B can verify this result with the *verify* function.
+
+### 5.3.2 Detailed Flow
+
+A detailed flow is described in the following procedure:
+
+1. Peer A calls the relevant initialization function.
+1. Peer A calls the step function, with a null **input message**, and gets an **output message**.
+1. Peer A sends the **operation details** and its **output message** to peer B.
+    - Note that the **operation details** are sent in this step. This information enables peer B to run the initialization function. Alternatively, this information can be sent any time before the next step.
+1. Peer B verifies the **operation details** and consents to execute it.
+1. Peer B calls the initialization function.
+1. Peer B calls the **step** function with the message it received from peer A as **input message**.
+1. Peer B sends the **output message** back to peer A.
+1. Each peer alternates calling the **step** function with the **input message** from the other peer and then sending the **output message** to the other peer.
+1. This ping-pong process continues until both peers are finished, which is determined by output flags from the **step** function. 
+	- The *mpc_protocol_finished* flag denotes that it was the last step on this peer.
+	- If it also includes the *mpc_share_changed* flag then the local key share  changed, such as with a *refresh* action. The key share needs to retrieved from the context using the **getShare** function and stored for future use.
+	- If the output message from the last step is not empty it must be sent to the other peer.
+	- One or both peers may need to call the **getResult** function based on the type of operation. For example, a *sign* action only has a result for one peer, but a *refresh* action has a new key share for both peers.
+
+	
+Throughout the entire process the same context should be used. If the context needs to be stored, you can use the **serialization** function, and then read it back in using the **deserialization** function.
+
+
+
+### 5.3.3 Example Action
 
 An example of an ECDSA signing action is shown in the following figure.
 
-<img src="docs/images/os-flow-example.png" width="500px" alt="blockchain-crypto-mpc Example Flow">
+![Flow](docs/images/os-flow-example.png)
 
 Each peer starts by calling the **MPCCrypto_initEcdsaSign()** function 
 for initialization. After initialization, each peer calls the 

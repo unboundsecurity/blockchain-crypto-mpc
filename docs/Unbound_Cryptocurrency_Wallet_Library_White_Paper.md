@@ -176,10 +176,9 @@ group of order *q* with base point (generator) *G*. The private key is a
 random value *x* &isin; *Z*<sub>q</sub> and the public key is *Q* = *x* &sdot; *G*.
 Signing a message *m* is as follows
 
-1.  We denote *m'* = *H<sub>q</sub>(m)* as the first |*q*| bits
-    of *H(m)* where
-    a.  |*q*| is the bit size of *q*
-    b.  *H* is the hash function SHA-256
+1.  We denote *m'* = *H<sub>q</sub>(m)* as the first |*q*| bits of *H(m)* where:
+    1. |*q*| is the bit size of *q*
+    2. *H* is the hash function SHA-256
 2.  Choose a random *k* &isin; *Z<sub>q</sub>\**
 3.  Compute *R* &larr; k &sdot; *G* and denote
     *R* = *( r<sub>x</sub>, r<sub>y</sub> )*

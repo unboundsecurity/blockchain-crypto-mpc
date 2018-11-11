@@ -8,6 +8,8 @@
 
 **November 1, 2018**
 
+You can download a PDF of this document [here](./Unbound%20Cryptocurrency%20Wallet%20Library%20White%20Paper.pdf).
+
 ## Table of Contents
 
 [1. Problem Statement](#problem-statement)

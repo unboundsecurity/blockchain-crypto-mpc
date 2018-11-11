@@ -179,7 +179,7 @@ Signing a message *m* is as follows:
 1.  We denote *m'* = *H<sub>q</sub>(m)* as the first |*q*| bits of *H(m)* where:
     1. |*q*| is the bit size of *q*
     2. *H* is the hash function SHA-256
-2.  Choose a random *k* &isin; *Z<sub>q</sub>\**
+2.  Choose a random *k* &isin; *Z<sub>q</sub><sup>*</sup>*
 3.  Compute *R* &larr; k &sdot; *G* and denote
     *R* = *( r<sub>x</sub> , r<sub>y</sub> )*
 4.  Compute *r &larr; r<sub>x</sub> mod q*,
@@ -193,10 +193,10 @@ version of [Schnorr's
 signature](https://en.wikipedia.org/wiki/Schnorr_signature) over an
 Edwards curve. For simplicity, we will describe Schnorr's signatures
 here. Let *G* be an Elliptic curve group of order *q* with base point
-(generator) *G*. The private key is a random value *x &isin; Z<sub>q</sub>* and the
+(generator) *G*. The private key is a random value *x &isin; Z<sub>q</sub><sup>*</sup> and the
 public key is *Q = x &sdot; G.* Signing a message *m* is as follows:
 
-1.  Choose a random *r &isin; Z<sub>q</sub>\** (in EdDSA, this is derived from
+1.  Choose a random *r &isin; Z<sub>q</sub><sup>*</sup>* (in EdDSA, this is derived from
     the private key and message using a pseudo-random function)
 2. Compute *e &larr; H( R, Q, m )*.
 3. Compute *s &larr; r + x &sdot; e mod q*.

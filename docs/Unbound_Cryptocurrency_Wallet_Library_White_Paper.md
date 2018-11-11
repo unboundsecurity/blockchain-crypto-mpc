@@ -174,14 +174,14 @@ The
 signing algorithm is defined as follows. Let *G* be an elliptic curve
 group of order *q* with base point (generator) *G*. The private key is a
 random value *x* &isin; *Z*<sub>q</sub> and the public key is *Q* = *x* &sdot; *G*.
-Signing a message *m* is as follows
+Signing a message *m* is as follows:
 
 1.  We denote *m'* = *H<sub>q</sub>(m)* as the first |*q*| bits of *H(m)* where:
     1. |*q*| is the bit size of *q*
     2. *H* is the hash function SHA-256
 2.  Choose a random *k* &isin; *Z<sub>q</sub>\**
 3.  Compute *R* &larr; k &sdot; *G* and denote
-    *R* = *( r<sub>x</sub>, r<sub>y</sub> )*
+    *R* = *( r<sub>x</sub> , r<sub>y</sub> )*
 4.  Compute *r &larr; r<sub>x</sub> mod q*,
     *s &larr; k<sup>-1</sup> &sdot; ( m' + r &sdot; x ) mod q*
 5. Output *( r, s )*
@@ -194,7 +194,7 @@ signature](https://en.wikipedia.org/wiki/Schnorr_signature) over an
 Edwards curve. For simplicity, we will describe Schnorr's signatures
 here. Let *G* be an Elliptic curve group of order *q* with base point
 (generator) *G*. The private key is a random value *x &isin; Z<sub>q</sub>* and the
-public key is *Q = x &sdot; G.* Signing a message *m* is as follows
+public key is *Q = x &sdot; G.* Signing a message *m* is as follows:
 
 1.  Choose a random *r &isin; Z<sub>q</sub>\** (in EdDSA, this is derived from
     the private key and message using a pseudo-random function)
@@ -493,7 +493,7 @@ The parties run a secure coin tossing protocol in order to generate a
 random value *r* that neither can bias. Then, Alice modifies her share
 of the private key to be *x<sub>1</sub>' = x<sub>1</sub> + r mod q*, and Bob
 modifies his share of the private key to be
-*x<sub>2</sub>' = x<sub>2</sub> - r mod q*. Alice then generates a new Paillier key to encrypt x_1^' and proves in zero-knowledge that this is the correct value. This proof involves proving that the same value is encrypted under two different Paillier keys, and is very efficient. (This suffices since Bob can generate an encryption of x_1^' by adding the scalar r to the existing encryption of x_1 with the old Paillier key, and then verifying the proof.)
+*x<sub>2</sub>' = x<sub>2</sub> - r mod q*. Alice then generates a new Paillier key to encrypt x<sub>1</sub>' and proves in zero-knowledge that this is the correct value. This proof involves proving that the same value is encrypted under two different Paillier keys, and is very efficient. (This suffices since Bob can generate an encryption of x<sub>1</sub>' by adding the scalar r to the existing encryption of x<sub>1</sub> with the old Paillier key, and then verifying the proof.)
 As a result, after the refresh the parties hold a fresh sharing of *x*, with a new Paillier key. This achieves
 the property that if an attacker obtains Alice's secret information
 before a refresh and Bob's secret information after a refresh (or vice
@@ -558,9 +558,3 @@ Malicious Two-Party
 Computation](https://iacr.org/archive/pkc2006/39580468/39580468.pdf). In
 *Public Key Cryptography 2006*, Springer (LNCS 3958), pages 458-473,
 2006.
-
-
-
-
-
-

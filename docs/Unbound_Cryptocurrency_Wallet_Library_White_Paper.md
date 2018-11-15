@@ -1,4 +1,4 @@
-# Unbound Cryptocurrency Wallet Library
+# Unbound blockchain-crypto-mpc Library
 
 ## White Paper
 
@@ -55,7 +55,7 @@ two-party computation (MPC). The library can be found at:
 
 Unbound's solution is based on no single device holding the private key
 used to generate signatures and transfer funds. Rather, the private key
-is shared among two devices (servers/cell phones/computers) so that no
+is shared among two devices (servers/cell phones/laptops) so that no
 party has any information about the key. Then, in order to generate a
 signature, the two devices run a secure two-party computation protocol
 that generates the signature without revealing anything about the
@@ -94,7 +94,7 @@ secure, since key material is in the clear.
 Backup is a crucial element of any cryptocurrency solution, since the
 loss of the private key means that funds can never be retrieved. For the
 purpose of backup, an RSA key pair is generated, and the private RSA key
-is stored in cold backup. Then, the ECDSA private key is encrypted under
+is stored in cold backup. Then, the ECDSA/EdDSA private key is encrypted under
 the RSA cold backup public key. This encryption is carried out
 separately by each party on their share (since no party has the entire
 private key). In addition, each party generates a publicly verifiable
@@ -116,8 +116,8 @@ extension is carried out by having two parties generate the key
 initially, and reshare their shares to all pairs among the *n*. We
 show how to achieve this in our code samples.
 
-Our solution is generic, supporting ECDSA over any curve and supporting
-EdDSA (or Schnorr). For ECDSA, we implement the protocol that was
+Our solution is generic, supporting ECDSA over a secp256k1 curve and supporting
+EdDSA over an ed25519 curve (or Schnorr). For ECDSA, we implement the protocol that was
 published in \[5\]. For EdDSA, we use the folklore threshold signature
 protocol for Schnorr with additive sharing of the secret key.
 
@@ -195,10 +195,10 @@ version of [Schnorr's
 signature](https://en.wikipedia.org/wiki/Schnorr_signature) over an
 Edwards curve. For simplicity, we will describe Schnorr's signatures
 here. Let *G* be an Elliptic curve group of order *q* with base point
-(generator) *G*. The private key is a random value *x &isin; Z<sub>q</sub><sup>*</sup> and the
+(generator) *G*. The private key is a random value *x &isin; Z<sub>q</sub>* and the
 public key is *Q = x &sdot; G.* Signing a message *m* is as follows:
 
-1.  Choose a random *r &isin; Z<sub>q</sub><sup>*</sup>* (in EdDSA, this is derived from
+1.  Choose a random *r &isin; Z<sub>q</sub>\** (in EdDSA, this is derived from
     the private key and message using a pseudo-random function)
 2. Compute *e &larr; H( R, Q, m )*.
 3. Compute *s &larr; r + x &sdot; e mod q*.
@@ -323,8 +323,8 @@ when the results are not equal the leakage due to such an attack is
 small (revealing on average 2 bits of the key). As such, if an attack is
 detected, it is crucial to remove the attacker and then prudent to
 transfer the funds to a new address. The dual execution methodology was
-introduced in \[6\], and the one that we use is similar to that
-appearing in \[4\].
+introduced in \[6\]; the specific version that we use is similar to that
+appearing in Section 4 of \[4\] (in particular, the equality test is run on the encoded outputs and not on the actual output).
 
 # 5. Cryptographic Protocols Overview
 
@@ -363,23 +363,10 @@ elliptic curve generator by *G*, and its order by *q*.
 5. Bob outputs public key of Paillier as well as
     *(x<sub>2</sub>, Q<sub>1</sub>, Q, c<sub>key</sub>)*.
 
-The zero-knowledge proof that we use in step 3 is different (and much
-more efficient) to that appearing in \[5\]. First, we use the CFT range
-proof described in Section 1.2.3 of \[1\]. We remark that in order to
-prove the CFT range proof, a Pedersen commitment of the encrypted value in a group of unknown order 
-is needed (this achieves the effect of an integer commitment). Thus, Alice first provides a Pedersen commitment over a composite modulus to x<sub>1</sub>, and proves that it is a commitment 
-to the same integer value as in *c<sub>key</sub>*. We use the proof in Appendix A
-of \[1\] for this purpose. Then, Alice proves the CFT range proof on the Pedersen committed value. Next, the actual PDL proof of \[5\] that we
+The zero-knowledge proof that we use in step 3 is different to that appearing in \[5\]. First, we use a non-interactive version of the range proof appearing in [5]; this requires more repetitions of the proof (namely, 128) and thus is more computationally expensive. However, we wanted to minimize the number of rounds as much as possible. Second, the actual PDL proof of \[5\] that we
 use is essentially the same as the one in the original version of the
-paper appearing at CRYPTO 2017, except that the range proof was modified
-as above, and Fiat-Shamir was used to make it non-interactive. We remark
-that since the CFT proof guarantees that the value is in a range that is
-different to the prescribed one, and in particular may include small
-negative values, the parties add a constant to the encrypted value to
-guarantee that it is positive (the constant is a multiple of q and so disappears when the result is computed modulo q). The addition of this constant value is carried out in the signing phase. As a result, unlike the description in [5], we no
-longer need to take *x<sub>1</sub> < <sup>q</sup>&frasl;<sub>3</sub>*.
-
-We remark that the setup of the Pedersen commitment values is carried out the first time that key generation is called, and uses the method described in Section1.2 of [2]. In actuality, two sets of parameters are chosen, and this is needed for proactive security, as described in Section ‎5.6.
+paper appearing at CRYPTO 2017, and not the one appearing in [5], which is computationally cheaper. Again, we do this since this proof can be non-interactive, and enables us to reduce the number of rounds. Another difference is that instead of requiring Alice to generate x<sub>1</sub> to be less than <sup>q</sup>&frasl;<sub>3</sub>, we simply adjust the values appropriately in the beginning of the proof (by Alice sending how many multiples of <sup>q</sup>&frasl;<sub>3</sub> should be subtracted; this reveals at most 2 bits of information and so is fine).
+We remark that it is possible to use the far more efficient CFT range proof described in Section 1.2.3 of [1]. However, this requires using Pedersen commitments over a group of unknown order, and generation of such parameters in a validated way is very expensive (among other things, it requires generating safe primes, which is expensive); see Section 1.2 of [2].
 
 
 ## 5.2 BIP32/BIP44 Key Derivation
@@ -505,7 +492,6 @@ once the Paillier private key is stolen from Alice, it can corrupt Bob
 at any later time and decrypt *c<sub>key</sub>*; this value together with
 *x<sub>2</sub>* (both held by Bob) yields the private key *x*. This level of security is called proactive in the academic literature.
 
-Recall that the range proof used during key generation uses parameters for Pedersen commitments over composite moduli (with safe primes). Since this commitment is supposed to be an integer commitment, the factorization of the modulus must be unknown. In order to not have to regenerate these parameters at every refresh (since generating safe primes is expensive), we have both Alice and Bob generate Pedersen commitment parameters and erase the randomness used to generate them. Since at least one of them was honest during generation (otherwise, all is lost anyway), Bob is later guaranteed that at least one of these sets of parameters is good. (The proactive model has a unique but strange property that Bob cannot trust that he himself was honest in the past.) Thus, Alice proves the range proof twice upon key generation, once with each set of parameters. This is secure since even if the factorization of a modulus is known, (integer) binding may be broken, but the commitment is still hiding. Thus, hiding is guaranteed for both moduli (even if the adversary knows the factorization of one of them), and binding is guaranteed for at least one. This implies that zero-knowledge still holds, and if the range proof passes for both, then the binding of one of them guarantees soundness.
 
 
 # 6. Security Guarantees
@@ -546,10 +532,9 @@ In *EUROCRYPT 2000*, Springer (LNCS 1807), pages 431-444, 2000.
 NIZK](https://eprint.iacr.org/2018/057.pdf). *Cryptology ePrint
 Archive*: Report 2018/057.
 
-\[4\] Yan Huang, Jonathan Katz and David Evans. [Quid-Pro-Quo-tocols:
-Strengthening Semi-honest Protocols with Dual
-Execution](https://www.cs.virginia.edu/~evans/pubs/oakland2012/quidproquotocols.pdf).
-In *IEEE Symposium on Security and Privacy*, pages 272-284, 2012.
+\[4\] Vladimir Kolesnikov and Payman Mohassel and Ben Riva and Mike Rosulek. 
+[Richer Efficiency/Security Trade-offs in 2PC](https://eprint.iacr.org/2015/055.pdf). 
+In TCC 2015, Springer (LNCS 9014), pages 229-259, 2015. 
 
 \[5\] Yehuda Lindell. **[Fast Secure Two-Party ECDSA
 Signing](https://eprint.iacr.org/2017/552.pdf).** In *CRYPTO 2017*,

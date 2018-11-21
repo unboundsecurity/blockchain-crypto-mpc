@@ -20,18 +20,7 @@ You can download a PDF of this document [here](./Unbound%20Cryptocurrency%20Wall
 
 [4. Cryptographic Tools](#cryptographic-tools)
 
-- [4.1. ECDSA Signing](#ecdsa-signing)
-- [4.2. EdDSA Signing](#eddsa-signing)
-- [4.3. Paillier Encryption](#paillier-encryption)
-
 [5. Cryptographic Protocols Overview](#cryptographic-protocols-overview)
-
-- [5.1. Distributed Key Generation](#distributed-key-generation)
-- [5.2. BIP32/BIP44 Key Derivation](#bip32bip44-key-derivation)
-- [5.3. Backup](#backup)
-- [5.4. ECDSA Signing](#ecdsa-signing-1)
-- [5.5. EdDSA Signing](#eddsa-signing-1)
-- [5.6. Share Refresh](#share-refresh)
 
 [6. Security Guarantees](#security-guarantees)
 
@@ -181,7 +170,7 @@ Signing a message *m* is as follows:
 1.  We denote *m'* = *H<sub>q</sub>(m)* as the first |*q*| bits of *H(m)* where:
     1. |*q*| is the bit size of *q*
     2. *H* is the hash function SHA-256
-2.  Choose a random *k* &isin; *Z<sub>q</sub><sup>*</sup>*
+2.  Choose a random *k* &isin; *Z<sub>q</sub><sup>*</sup>\*
 3.  Compute *R* &larr; k &sdot; *G* and denote
     *R* = *( r<sub>x</sub> , r<sub>y</sub> )*
 4.  Compute *r &larr; r<sub>x</sub> mod q*,
@@ -226,7 +215,7 @@ encryption of the value *m<sub>1</sub> + m<sub>2</sub> mod N*. Thus, encrypted
 values can be summed, and multiplied by known scalars, without
 decrypting.
 
-### 4.3.1 Commitment Scheme
+## 4.4 Commitment Schemes
 
 A [commitment scheme](https://en.wikipedia.org/wiki/Commitment_scheme)
 is a cryptographic protocol run between a sender and a receiver that can
@@ -248,7 +237,7 @@ assumptions about the properties of the hash function. In particular, in
 the random oracle model, where the hash function is modeled as a random
 function, the value *H( m||r )* reveals nothing about *m*.
 
-### 4.3.2 Zero-Knowledge Proof
+## 4.5 Zero-Knowledge Proofs
 
 A [zero-knowledge
 proof](https://en.wikipedia.org/wiki/Zero-knowledge_proof) is a protocol
@@ -280,7 +269,12 @@ of being publicly verifiable (anyone can read the proof and validate
 that the statement is indeed correct). This can be used to verify that
 the backup is valid before transferring any funds to an address.
 
-### 4.3.3 Garbled Circuits
+## 4.6 Oblivious Transfer
+
+Oblivious transfer (typically referred to as OT) is a protocol between two parties, a sender and a receiver. The sender has a pair of inputs *x<sub>0</sub>, x<sub>1</sub>* and the receiver has a choice bit *c*. The result of the protocol is that the receiver learns x<sub>c</sub>, but nothing about the other value x<sub>(1-c)</sub>, and the sender learns nothing about *c*. OT requires the use of public-key primitives, and OT extensions can be used to run a fixed number of OTs based on public-key primitives and then obtain many more actual OTs using only hashing. We use the OT protocol of [7] together with the OT extension of [8]. Overall, this protocol requires 3 rounds of interaction to setup, and 2 rounds for carrying out OT executions (although the first round of the actual OT can be sent together with the third round of the setup, and so requires 4 rounds overall).
+
+
+## 4.7 Garbled Circuits
 
 A [garbled circuit](https://en.wikipedia.org/wiki/Garbled_circuit) is a
 cryptographic primitive that is used in secure two-party computation
@@ -294,7 +288,7 @@ This result has been known since the late 80's, but many optimizations
 and improvements from the last few years have made this very efficient in
 practice.
 
-### 4.3.4 Dual Execution
+## 4.8 Dual Execution
 
 If two players are semi-honest (meaning that it is guaranteed that they
 run the specified protocol), then they can run secure computation by
@@ -325,6 +319,15 @@ detected, it is crucial to remove the attacker and then prudent to
 transfer the funds to a new address. The dual execution methodology was
 introduced in \[6\]; the specific version that we use is similar to that
 appearing in Section 4 of \[4\] (in particular, the equality test is run on the encoded outputs and not on the actual output).
+
+We constructed a new equality test with 3 rounds of communication that is based on the equality test in [9] (using ElGamal in-the-exponent additively homomorphic encryption). This test is enhanced to enable a proof of security under the ideal/real model simulation paradigm of secure computation, and to provide (verified) output to both parties. 
+
+*Note: In order to prove our protocol secure, we defined an ideal functionality for equality that receives either the actual value or the value times the generator point of the group, and compares equality based on this. It is clear that this is equivalent for our purposes. In addition, the adversary can cause the honest party to think that the result was not equal even if it was equal. This outcome is fine since it only causes the honest party to abort. We stress that the reverse is not possible; if the result was not equal then the adversary cannot cause the honest party to think that the result was equal.*
+
+Using the two-rounds of OT required based on the extension, the entire dual execution has five rounds of communication, including the equality test.
+
+As we have described, our dual execution protocol has the property that if a party cheats, then it can learn a single bit, but at the cost of being caught with probability ½ (informally speaking). Thus, if an attack is detected, use of the key must be stopped. Now, one possible strategy of an adversary is to try to cheat, but to not provide the output of the equality test to the honest party (when it receives this output first), and claim that there was a “crash” or network failure. If this is not dealt with, then the adversary can learn all bits of the secret key. Thus, either executions must always conclude (by storing on disk the messages needed to complete, and continuing after a crash or failure), or some cheating attempt must be assumed. We also note that many executions on the same input key cannot be run in parallel since an attacker can learn a bit from each parallel execution. If this is desired, then it is possible to change the code so that a single equality test is run for all executions, and this will be secure.
+
 
 # 5. Cryptographic Protocols Overview
 
@@ -378,7 +381,7 @@ this computation using dual execution (with garbled circuits), with the
 result being that Alice receives *x<sub>1</sub>* and Bob receives *x<sub>2</sub>*. The
 parties then use these results in the key generation described above
 (i.e. instead of choosing random *x<sub>1</sub>, x<sub>2</sub>*, they use the results of
-the derivation).
+the derivation). The BIP derivation run in MPC in our implementation is fully compliant with the standard BIP32/BIP44 standards.
 
 The above description is overly naïve, since it does not prevent parties
 from cheating and using different values than prescribed. This is
@@ -386,14 +389,11 @@ important since if we backup only the BIP master key, then if parties
 use different inputs to the key derivation, keys will be generated that
 cannot be recovered from the BIP master key. Thus, the MPC protocol
 includes steps to detect such modifications. This includes additional
-randomized information in the dual execution, followed by a tailored MPC
-protocol to detect any cheating. At the end of the execution, the
-parties learn the new derived public key, and they verify that the same
-public key is obtained from the key generation phase. This ensures that
-no cheating took place.
+randomized information in the dual execution, followed by a “BIP verification phase” to detect any cheating. This randomized information is such that many shares of a key are output. Some are shares of zero (i.e., both have the same value), some are shares of the previous private key, and some are shares of the new private key. The parties then each compute shares of the public keys, by locally multiplying the generator by each share, and then securely exchange the values. Observe that if they have shares of 0 then they will exchange the same elliptic curve point, if they have shares of the previous private key then they will exchange shares of the previous public key (known to them), and if they have shares of the new private key then they will exchange shares of the new public key. This prevents cheating since if a party input an incorrect value for key derivation, then it must change the shares of the previous public key in order to match the real previous public key. However, it will then be caught since it will be detected if it changes a value based on a share of 0. Thus, if a party changes its input shares, it will be detected with very high probability. This verification step has 3 messages and is run after the dual execution.
 
-We stress that the BIP derivation carried out is fully compliant with
-the standard BIP32/BIP44 standards.
+When working with a BIP derivation, ECDSA key generation requires first running BIP derivation via dual execution (5 rounds), then verifying the BIP results (3 rounds), and then running ECDSA key generation on the received shares (3 rounds). In order to reduce the amount of communication, some of these messages can be piggybacked and we have 9 rounds overall. This flow is depicted in the following figure (note that *AgreeRandom* is a secure coin tossing protocol that is used to ensure a fresh session identifier in the actual ECDSA key generation phase), and is helpful to follow the implementation of this more complex protocol combination. 
+ 
+![Bip Key Derivation](images/BIP-Key-Derivation.png)
 
 ## 5.3 Backup
 
@@ -518,6 +518,9 @@ following bullets:
 3. Periodic refreshing of the shares makes it significantly harder for
     the attacker to break the system.
 
+We remind the reader than any application using this code must take care to treat cheating that takes place in the dual execution, including the case that the last equality message is “dropped”. This is crucial for secure usage of the library.
+
+
 # 7. References
 
 \[1\] Fabrice Boudot. [Efficient Proofs that a Committed Number Lies in
@@ -545,3 +548,9 @@ Malicious Two-Party
 Computation](https://iacr.org/archive/pkc2006/39580468/39580468.pdf). In
 *Public Key Cryptography 2006*, Springer (LNCS 3958), pages 458-473,
 2006.
+
+\[7\] Tung Chou and Claudio Orlandi. [The Simplest Protocol for Oblivious Transfer](https://eprint.iacr.org/2015/267.pdf). In LATINCRYPT 2015. 
+
+\[8\] Marcel Keller, Emmanuela Orsini, Peter Scholl. [Actively Secure OT Extension with Optimal Overhead](https://eprint.iacr.org/2015/546.pdf). In CRYPTO 2015, Springer (LNCS 9215), pages 724-741, 2015.
+
+\[9\] Yan Huang, Jonathan Katz and David Evans. [Quid-Pro-Quo-tocols: Strengthening Semi-honest Protocols with Dual Execution](https://www.cs.virginia.edu/~evans/pubs/oakland2012/quidproquotocols.pdf). In IEEE Symposium on Security and Privacy, pages 272-284, 2012.

@@ -236,20 +236,23 @@ static error_t reconstruct_private_share(const ECURVE& ecurve, const crypto::rsa
   {
     bool ej = get_bit(backup_proofs.proof_e, j);
     bn_t r, y, x;
+    const bn_t& ry = backup_proofs.proofs[j].ry;
     if (!ej)
     {
       y = rsa_dec_oaep(prv_key, backup_proofs.proofs[j].c);
       if (y==0) return rv = ub::error(E_CRYPTO);
-      x = (y - backup_proofs.proofs[j].ry) % q;
+      MODULO(q) x = y - ry;
     }
     else 
     {
       r = rsa_dec_oaep(prv_key, backup_proofs.proofs[j].c);
       if (r==0) return rv = ub::error(E_CRYPTO);
-      x = (backup_proofs.proofs[j].ry - r) % q;
+      MODULO(q) x = ry - r;
     }
 
-    if (G * x == Q_share)
+    typename ECURVE::point_t QQ = G * x;
+
+    if (QQ == Q_share)
     {
       x_share = x;
       return rv;

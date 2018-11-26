@@ -1,3 +1,4 @@
+
 # 1. Introduction to *blockchain-crypto-mpc*
 
 **blockchain-crypto-mpc** is an open source library released by [Unbound
@@ -5,6 +6,8 @@ Tech](https://www.unboundtech.com/company/about/) that provides the
 cryptographic foundation to resolve one of the hardest challenges
 associated with crypto asset and blockchain applications: **The
 protection of cryptographic signing keys and seed secrets**.
+
+
 
 Unbound leverages [secure multiparty computation
 (MPC)](https://www.unboundtech.com/technology-distributed-trust-platform/)
@@ -14,6 +17,8 @@ protection and additional applications. The protocols were designed by
 [Prof. Yehuda Lindell](https://en.wikipedia.org/wiki/Yehuda_Lindell) and
 Dr. Samuel Ranellucci, who also reviewed and approved the code and the
 implementation.
+
+See the [Unbound Cryptocurrency Wallet Library White Paper](./docs/Unbound_Cryptocurrency_Wallet_Library_White_Paper.md) for more detailed information about the protocols.
 
 This readme includes an overview of this library, why it is important,
 what it allows you to achieve, sample use cases, and how to use the
@@ -211,7 +216,14 @@ their respective key shares.
 
 ![Backup Use Case 2: Managed Backup](docs/images/use-case-managed-backup.png)
 
-This model creates a user-transparent backup, effectively similar to a 2-of-3 scenario: each quorum containing 2 of the 3 participants noted above would suffice to perform a cryptographic operation. This is performed by creating three different random share pairs upon wallet and seed generation. In the diagram, key share A is used by the user's device and the Trustee Service, key share B is used by the user's device and the Wallet Service Provider, and key share C is used by the Wallet Service Provider and the Trustee Service. It's important to highlight that each of these pairs is completely independent, each is effectively a backup of the same seed.
+This model creates a user-transparent backup, effectively similar to a
+2-of-3 scenario: each quorum containing 2 of the 3 participants noted
+above would suffice to perform a cryptographic operation. This is
+performed by creating three different random share pairs upon wallet and
+seed generation. In the diagram, key share A is used by
+the user's device and the Trustee Service, key share B is used by the user's device and the Wallet Service Provider, and key share C is used by the Wallet Service Provider and the Trustee Service.
+It's important to highlight that each of these pairs is completely
+independent, each is effectively a backup of the same seed.
 
 # 5. Technical Overview and Usage Guidelines
 
@@ -331,3 +343,4 @@ for initialization. After initialization, each peer calls the
 finished with the signing process. The signature, which is the result of 
 the signing process, is received by calling the final function, 
 **MPCCrypto_finalEcdsaSign()**, after which the signing process is done.
+

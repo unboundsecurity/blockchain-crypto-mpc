@@ -1,0 +1,232 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="mpc_crypto_context.h" />
+    <ClInclude Include="mpc_crypto_jni.h" />
+    <ClInclude Include="mpc_crypto_message.h" />
+    <ClInclude Include="mpc_crypto_share.h" />
+    <ClInclude Include="mpc_crypto_ecdsa.h" />
+    <ClInclude Include="mpc_crypto_eddsa.h" />
+    <ClInclude Include="mpc_crypto_generic_secret.h" />
+    <ClInclude Include="mpc_crypto_ecdsa_bip.h" />
+    <ClInclude Include="mpc_protocols\mpc_core.h">
+      <Filter>mpc_protocols</Filter>
+    </ClInclude>
+    <ClInclude Include="mpc_protocols\mpc_ecdh.h">
+      <Filter>mpc_protocols</Filter>
+    </ClInclude>
+    <ClInclude Include="mpc_protocols\mpc_ecdsa.h">
+      <Filter>mpc_protocols</Filter>
+    </ClInclude>
+    <ClInclude Include="mpc_protocols\mpc_eddsa.h">
+      <Filter>mpc_protocols</Filter>
+    </ClInclude>
+    <ClInclude Include="mpc_protocols\mpc_ot.h">
+      <Filter>mpc_protocols</Filter>
+    </ClInclude>
+    <ClInclude Include="crypto_utils\ec25519_core.h">
+      <Filter>crypto_utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\precompiled.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="crypto_utils\crypto_aesni.h">
+      <Filter>crypto_utils</Filter>
+    </ClInclude>
+    <ClInclude Include="crypto_utils\crypto_bn.h">
+      <Filter>crypto_utils</Filter>
+    </ClInclude>
+    <ClInclude Include="crypto_utils\crypto_ecc.h">
+      <Filter>crypto_utils</Filter>
+    </ClInclude>
+    <ClInclude Include="crypto_utils\crypto_hash.h">
+      <Filter>crypto_utils</Filter>
+    </ClInclude>
+    <ClInclude Include="crypto_utils\crypto_paillier.h">
+      <Filter>crypto_utils</Filter>
+    </ClInclude>
+    <ClInclude Include="crypto_utils\crypto_rsa.h">
+      <Filter>crypto_utils</Filter>
+    </ClInclude>
+    <ClInclude Include="mpc_protocols\garbled_circuit.h">
+      <Filter>mpc_protocols</Filter>
+    </ClInclude>
+    <ClInclude Include="mpc_protocols\garbled_circuit_2party.h">
+      <Filter>mpc_protocols</Filter>
+    </ClInclude>
+    <ClInclude Include="mpc_protocols\circuit_data.h">
+      <Filter>mpc_protocols</Filter>
+    </ClInclude>
+    <ClInclude Include="mpc_protocols\circuit_sha512_update.h">
+      <Filter>mpc_protocols</Filter>
+    </ClInclude>
+    <ClInclude Include="crypto_utils\crypto_ecc_bip.h">
+      <Filter>crypto_utils</Filter>
+    </ClInclude>
+    <ClInclude Include="mpc_protocols\ecc_backup.h">
+      <Filter>mpc_protocols</Filter>
+    </ClInclude>
+    <ClInclude Include="crypto_utils\crypto.h">
+      <Filter>crypto_utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\jni_helpers.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\ub_buf.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\ub_buf128.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\ub_buf256.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\ub_common.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\ub_common_def.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\ub_convert.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\ub_cpuid.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\ub_error.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\ub_string.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\ub_thread.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\mpc_crypto.h" />
+    <ClInclude Include="mpc_crypto_ec_backup.h" />
+    <ClInclude Include="mpc_protocols\mpc_ecc_core.h">
+      <Filter>mpc_protocols</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="mpc_crypto_context.cpp" />
+    <ClCompile Include="mpc_crypto_ecdsa.cpp" />
+    <ClCompile Include="mpc_crypto_eddsa.cpp" />
+    <ClCompile Include="mpc_crypto_jni.cpp" />
+    <ClCompile Include="mpc_crypto_message.cpp" />
+    <ClCompile Include="mpc_crypto_share.cpp" />
+    <ClCompile Include="mpc_crypto_test.cpp" />
+    <ClCompile Include="mpc_crypto_generic_secret.cpp" />
+    <ClCompile Include="mpc_crypto_ecdsa_bip.cpp" />
+    <ClCompile Include="mpc_protocols\mpc_core.cpp">
+      <Filter>mpc_protocols</Filter>
+    </ClCompile>
+    <ClCompile Include="mpc_protocols\mpc_ecdh.cpp">
+      <Filter>mpc_protocols</Filter>
+    </ClCompile>
+    <ClCompile Include="mpc_protocols\mpc_ecdsa.cpp">
+      <Filter>mpc_protocols</Filter>
+    </ClCompile>
+    <ClCompile Include="mpc_protocols\mpc_eddsa.cpp">
+      <Filter>mpc_protocols</Filter>
+    </ClCompile>
+    <ClCompile Include="mpc_protocols\mpc_ot.cpp">
+      <Filter>mpc_protocols</Filter>
+    </ClCompile>
+    <ClCompile Include="crypto_utils\ec25519_core.cpp">
+      <Filter>crypto_utils</Filter>
+    </ClCompile>
+    <ClCompile Include="crypto_utils\small_primes.cpp">
+      <Filter>crypto_utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\precompiled.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="crypto_utils\crypto_aesni.cpp">
+      <Filter>crypto_utils</Filter>
+    </ClCompile>
+    <ClCompile Include="crypto_utils\crypto_bn.cpp">
+      <Filter>crypto_utils</Filter>
+    </ClCompile>
+    <ClCompile Include="crypto_utils\crypto_ecc.cpp">
+      <Filter>crypto_utils</Filter>
+    </ClCompile>
+    <ClCompile Include="crypto_utils\crypto_hash.cpp">
+      <Filter>crypto_utils</Filter>
+    </ClCompile>
+    <ClCompile Include="crypto_utils\crypto_oaep.cpp">
+      <Filter>crypto_utils</Filter>
+    </ClCompile>
+    <ClCompile Include="crypto_utils\crypto_paillier.cpp">
+      <Filter>crypto_utils</Filter>
+    </ClCompile>
+    <ClCompile Include="crypto_utils\crypto_rsa.cpp">
+      <Filter>crypto_utils</Filter>
+    </ClCompile>
+    <ClCompile Include="mpc_protocols\garbled_circuit.cpp">
+      <Filter>mpc_protocols</Filter>
+    </ClCompile>
+    <ClCompile Include="mpc_protocols\garbled_circuit_2party.cpp">
+      <Filter>mpc_protocols</Filter>
+    </ClCompile>
+    <ClCompile Include="mpc_protocols\circuit_data.cpp">
+      <Filter>mpc_protocols</Filter>
+    </ClCompile>
+    <ClCompile Include="crypto_utils\crypto_ecc_bip.cpp">
+      <Filter>crypto_utils</Filter>
+    </ClCompile>
+    <ClCompile Include="mpc_protocols\ecc_backup.cpp">
+      <Filter>mpc_protocols</Filter>
+    </ClCompile>
+    <ClCompile Include="crypto_utils\crypto.cpp">
+      <Filter>crypto_utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\ub_buf.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\ub_buf128.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\ub_buf256.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\ub_common.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\ub_convert.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\ub_cpuid.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\ub_error.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\ub_string.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\ub_thread.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="mpc_crypto_ec_backup.cpp" />
+    <ClCompile Include="mpc_protocols\mpc_ecc_core.cpp">
+      <Filter>mpc_protocols</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="utils">
+      <UniqueIdentifier>{d9b4e3b5-dc00-4863-bdf8-cd39b34eddd4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mpc_protocols">
+      <UniqueIdentifier>{8381fa81-0d3c-4a22-802d-d55358fbdde8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="crypto_utils">
+      <UniqueIdentifier>{69177b31-aba1-4f0e-87d0-67916ea1d9ec}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <MASM Include="mpc_protocols\garbled_circuit_x64.asm">
+      <Filter>mpc_protocols</Filter>
+    </MASM>
+  </ItemGroup>
+</Project>

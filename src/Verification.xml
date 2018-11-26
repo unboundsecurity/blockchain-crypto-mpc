@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+  <verified>
+    <date>2018-11-22</date>
+    <file>
+      <name> garbled_circuit.cpp </name>
+      <hash> 900939E894E49DF7E2F39775F3CBB5621676270385743B671687AE0C31133374 </hash>
+    </file>
+
+    <file>
+      <name> garbled_circuit_2party.cpp </name>
+      <hash> 4FFF10DDC7C8879D5093C793DE757A2BCC85699E77A8AC801D9F5A2C5BD609F2 </hash>
+    </file>
+    
+    <file>
+      <name>mpc_core.cpp</name>
+      <hash>D4D43017479055AD79625ECDAA1CB620ACA563DBE071F7040A44161F8BFD970A</hash>
+    </file>
+
+    <file>
+      <name>mpc_ecc_core.cpp</name>
+      <hash> 924D643FEE0043CE294D14BACD7DBC9D6B1FF504DE589506A27127AE6F44E016</hash>    
+    </file>
+
+    <file>
+      <name>mpc_ecdh.cpp</name>
+      <hash>697DDE8000D9ED655FB8530DE146F35076B2D8035352FB96CDB8C58E69D9831F</hash>
+    </file>
+      
+    <file>
+      <name>mpc_ecdsa.cpp</name>
+      <hash> C4D1716B1938243BF40E7C2736F5A5719F3EE939BA5305469E75EA0443D38DF5</hash>
+    </file>
+
+    <file>
+      <name>mpc_eddsa.cpp</name>
+      <hash>CAEA242C70B705142E1AF0C31430C65E054620FADAD12EF7B66A77ED713F5602</hash>
+    </file>
+
+    <file>
+      <name>mpc_ot.cpp</name>
+      <hash>6C99552FC7B36A6BA6589D9FFC89A762201C598491A1569EEF8264CEC70E6705</hash>
+    </file>
+  </verified>
+  
+  <needs_fix>
+    <file> ecc_backup </file>   
+  </needs_fix>
+</root>

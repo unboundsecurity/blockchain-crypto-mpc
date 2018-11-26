@@ -1,0 +1,841 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		514BDA2121AAE727007A51AA /* MPCCrypto_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 514BDA1721AAE726007A51AA /* MPCCrypto_macOS.framework */; };
+		514BDA2621AAE727007A51AA /* MPCCrypto_macOSTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 514BDA2521AAE727007A51AA /* MPCCrypto_macOSTests.m */; };
+		514BDA2821AAE727007A51AA /* MPCCrypto_macOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 514BDA1A21AAE726007A51AA /* MPCCrypto_macOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		514BDB3321AAE7C6007A51AA /* mpc_crypto_context.h in Headers */ = {isa = PBXBuildFile; fileRef = 514BDADC21AAE7C4007A51AA /* mpc_crypto_context.h */; };
+		514BDB3421AAE7C6007A51AA /* mpc_crypto_ecdsa_bip.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 514BDADD21AAE7C4007A51AA /* mpc_crypto_ecdsa_bip.cpp */; };
+		514BDB3521AAE7C6007A51AA /* mpc_crypto_share.h in Headers */ = {isa = PBXBuildFile; fileRef = 514BDADE21AAE7C4007A51AA /* mpc_crypto_share.h */; };
+		514BDB3721AAE7C6007A51AA /* mpc_crypto_context.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 514BDAE021AAE7C5007A51AA /* mpc_crypto_context.cpp */; };
+		514BDB3821AAE7C6007A51AA /* mpc_crypto_eddsa.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 514BDAE121AAE7C5007A51AA /* mpc_crypto_eddsa.cpp */; };
+		514BDB3A21AAE7C6007A51AA /* mpc_crypto_eddsa.h in Headers */ = {isa = PBXBuildFile; fileRef = 514BDAE321AAE7C5007A51AA /* mpc_crypto_eddsa.h */; };
+		514BDB3B21AAE7C6007A51AA /* crypto_paillier.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 514BDAE521AAE7C5007A51AA /* crypto_paillier.cpp */; };
+		514BDB3C21AAE7C6007A51AA /* crypto_aesni.h in Headers */ = {isa = PBXBuildFile; fileRef = 514BDAE621AAE7C5007A51AA /* crypto_aesni.h */; };
+		514BDB3D21AAE7C6007A51AA /* crypto_ecc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 514BDAE721AAE7C5007A51AA /* crypto_ecc.cpp */; };
+		514BDB3E21AAE7C6007A51AA /* crypto_aesni.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 514BDAE821AAE7C5007A51AA /* crypto_aesni.cpp */; };
+		514BDB3F21AAE7C6007A51AA /* crypto_bn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 514BDAE921AAE7C5007A51AA /* crypto_bn.cpp */; };
+		514BDB4021AAE7C6007A51AA /* crypto_hash.h in Headers */ = {isa = PBXBuildFile; fileRef = 514BDAEA21AAE7C5007A51AA /* crypto_hash.h */; };
+		514BDB4121AAE7C6007A51AA /* crypto_rsa.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 514BDAEB21AAE7C5007A51AA /* crypto_rsa.cpp */; };
+		514BDB4221AAE7C6007A51AA /* crypto_oaep.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 514BDAEC21AAE7C5007A51AA /* crypto_oaep.cpp */; };
+		514BDB4321AAE7C6007A51AA /* crypto_ecc_bip.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 514BDAED21AAE7C5007A51AA /* crypto_ecc_bip.cpp */; };
+		514BDB4421AAE7C6007A51AA /* crypto.h in Headers */ = {isa = PBXBuildFile; fileRef = 514BDAEE21AAE7C5007A51AA /* crypto.h */; };
+		514BDB4521AAE7C6007A51AA /* crypto_hash.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 514BDAEF21AAE7C5007A51AA /* crypto_hash.cpp */; };
+		514BDB4621AAE7C6007A51AA /* crypto_ecc.h in Headers */ = {isa = PBXBuildFile; fileRef = 514BDAF021AAE7C5007A51AA /* crypto_ecc.h */; };
+		514BDB4721AAE7C6007A51AA /* ec25519_core.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 514BDAF121AAE7C5007A51AA /* ec25519_core.cpp */; };
+		514BDB4821AAE7C6007A51AA /* crypto_rsa.h in Headers */ = {isa = PBXBuildFile; fileRef = 514BDAF221AAE7C5007A51AA /* crypto_rsa.h */; };
+		514BDB4921AAE7C6007A51AA /* small_primes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 514BDAF321AAE7C5007A51AA /* small_primes.cpp */; };
+		514BDB4A21AAE7C6007A51AA /* crypto.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 514BDAF421AAE7C5007A51AA /* crypto.cpp */; };
+		514BDB4B21AAE7C6007A51AA /* crypto_bn.h in Headers */ = {isa = PBXBuildFile; fileRef = 514BDAF521AAE7C5007A51AA /* crypto_bn.h */; };
+		514BDB4C21AAE7C6007A51AA /* crypto_ecc_bip.h in Headers */ = {isa = PBXBuildFile; fileRef = 514BDAF621AAE7C5007A51AA /* crypto_ecc_bip.h */; };
+		514BDB4D21AAE7C6007A51AA /* crypto_paillier.h in Headers */ = {isa = PBXBuildFile; fileRef = 514BDAF721AAE7C5007A51AA /* crypto_paillier.h */; };
+		514BDB4E21AAE7C6007A51AA /* ec25519_core.h in Headers */ = {isa = PBXBuildFile; fileRef = 514BDAF821AAE7C5007A51AA /* ec25519_core.h */; };
+		514BDB4F21AAE7C6007A51AA /* mpc_crypto_ecdsa_bip.h in Headers */ = {isa = PBXBuildFile; fileRef = 514BDAF921AAE7C5007A51AA /* mpc_crypto_ecdsa_bip.h */; };
+		514BDB5021AAE7C6007A51AA /* mpc_crypto_generic_secret.h in Headers */ = {isa = PBXBuildFile; fileRef = 514BDAFA21AAE7C5007A51AA /* mpc_crypto_generic_secret.h */; };
+		514BDB5121AAE7C6007A51AA /* mpc_crypto_message.h in Headers */ = {isa = PBXBuildFile; fileRef = 514BDAFB21AAE7C5007A51AA /* mpc_crypto_message.h */; };
+		514BDB5221AAE7C6007A51AA /* mpc_crypto_ecdsa.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 514BDAFC21AAE7C5007A51AA /* mpc_crypto_ecdsa.cpp */; };
+		514BDB5321AAE7C6007A51AA /* ub_buf256.h in Headers */ = {isa = PBXBuildFile; fileRef = 514BDAFE21AAE7C5007A51AA /* ub_buf256.h */; };
+		514BDB5421AAE7C6007A51AA /* ub_convert.h in Headers */ = {isa = PBXBuildFile; fileRef = 514BDAFF21AAE7C5007A51AA /* ub_convert.h */; };
+		514BDB5521AAE7C6007A51AA /* ub_thread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 514BDB0021AAE7C5007A51AA /* ub_thread.cpp */; };
+		514BDB5621AAE7C6007A51AA /* ub_string.h in Headers */ = {isa = PBXBuildFile; fileRef = 514BDB0121AAE7C5007A51AA /* ub_string.h */; };
+		514BDB5721AAE7C6007A51AA /* ub_common.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 514BDB0221AAE7C5007A51AA /* ub_common.cpp */; };
+		514BDB5821AAE7C6007A51AA /* ub_cpuid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 514BDB0321AAE7C5007A51AA /* ub_cpuid.cpp */; };
+		514BDB5921AAE7C6007A51AA /* precompiled.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 514BDB0421AAE7C5007A51AA /* precompiled.cpp */; };
+		514BDB5A21AAE7C6007A51AA /* ub_buf.h in Headers */ = {isa = PBXBuildFile; fileRef = 514BDB0521AAE7C5007A51AA /* ub_buf.h */; };
+		514BDB5B21AAE7C6007A51AA /* ub_common_def.h in Headers */ = {isa = PBXBuildFile; fileRef = 514BDB0621AAE7C5007A51AA /* ub_common_def.h */; };
+		514BDB5C21AAE7C6007A51AA /* ub_string.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 514BDB0721AAE7C5007A51AA /* ub_string.cpp */; };
+		514BDB5D21AAE7C6007A51AA /* ub_common.h in Headers */ = {isa = PBXBuildFile; fileRef = 514BDB0821AAE7C5007A51AA /* ub_common.h */; };
+		514BDB5E21AAE7C6007A51AA /* ub_thread.h in Headers */ = {isa = PBXBuildFile; fileRef = 514BDB0921AAE7C5007A51AA /* ub_thread.h */; };
+		514BDB5F21AAE7C6007A51AA /* ub_buf128.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 514BDB0A21AAE7C5007A51AA /* ub_buf128.cpp */; };
+		514BDB6021AAE7C6007A51AA /* ub_convert.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 514BDB0B21AAE7C5007A51AA /* ub_convert.cpp */; };
+		514BDB6121AAE7C6007A51AA /* ub_error.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 514BDB0C21AAE7C5007A51AA /* ub_error.cpp */; };
+		514BDB6321AAE7C6007A51AA /* jni_helpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 514BDB0E21AAE7C5007A51AA /* jni_helpers.h */; };
+		514BDB6421AAE7C6007A51AA /* ub_buf256.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 514BDB0F21AAE7C5007A51AA /* ub_buf256.cpp */; };
+		514BDB6521AAE7C6007A51AA /* ub_cpuid.h in Headers */ = {isa = PBXBuildFile; fileRef = 514BDB1021AAE7C5007A51AA /* ub_cpuid.h */; };
+		514BDB6621AAE7C6007A51AA /* ub_buf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 514BDB1121AAE7C5007A51AA /* ub_buf.cpp */; };
+		514BDB6721AAE7C6007A51AA /* ub_buf128.h in Headers */ = {isa = PBXBuildFile; fileRef = 514BDB1221AAE7C5007A51AA /* ub_buf128.h */; };
+		514BDB6821AAE7C6007A51AA /* ub_error.h in Headers */ = {isa = PBXBuildFile; fileRef = 514BDB1321AAE7C5007A51AA /* ub_error.h */; };
+		514BDB6921AAE7C6007A51AA /* mpc_crypto_ecdsa.h in Headers */ = {isa = PBXBuildFile; fileRef = 514BDB1421AAE7C5007A51AA /* mpc_crypto_ecdsa.h */; };
+		514BDB6A21AAE7C6007A51AA /* mpc_crypto_share.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 514BDB1521AAE7C5007A51AA /* mpc_crypto_share.cpp */; };
+		514BDB6C21AAE7C6007A51AA /* mpc_crypto_generic_secret.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 514BDB1721AAE7C6007A51AA /* mpc_crypto_generic_secret.cpp */; };
+		514BDB6D21AAE7C6007A51AA /* mpc_crypto_ec_backup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 514BDB1821AAE7C6007A51AA /* mpc_crypto_ec_backup.cpp */; };
+		514BDB6E21AAE7C6007A51AA /* mpc_crypto_message.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 514BDB1921AAE7C6007A51AA /* mpc_crypto_message.cpp */; };
+		514BDB6F21AAE7C6007A51AA /* mpc_crypto_ec_backup.h in Headers */ = {isa = PBXBuildFile; fileRef = 514BDB1A21AAE7C6007A51AA /* mpc_crypto_ec_backup.h */; };
+		514BDB7021AAE7C6007A51AA /* circuit_sha512_update.h in Headers */ = {isa = PBXBuildFile; fileRef = 514BDB1C21AAE7C6007A51AA /* circuit_sha512_update.h */; };
+		514BDB7221AAE7C6007A51AA /* ecc_backup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 514BDB1E21AAE7C6007A51AA /* ecc_backup.cpp */; };
+		514BDB7321AAE7C6007A51AA /* garbled_circuit_x64.s in Sources */ = {isa = PBXBuildFile; fileRef = 514BDB1F21AAE7C6007A51AA /* garbled_circuit_x64.s */; };
+		514BDB7421AAE7C6007A51AA /* circuit_data.h in Headers */ = {isa = PBXBuildFile; fileRef = 514BDB2021AAE7C6007A51AA /* circuit_data.h */; };
+		514BDB7521AAE7C6007A51AA /* mpc_ecdsa.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 514BDB2121AAE7C6007A51AA /* mpc_ecdsa.cpp */; };
+		514BDB7621AAE7C6007A51AA /* mpc_ecdh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 514BDB2221AAE7C6007A51AA /* mpc_ecdh.cpp */; };
+		514BDB7721AAE7C6007A51AA /* garbled_circuit_2party.h in Headers */ = {isa = PBXBuildFile; fileRef = 514BDB2321AAE7C6007A51AA /* garbled_circuit_2party.h */; };
+		514BDB7821AAE7C6007A51AA /* mpc_ecdh.h in Headers */ = {isa = PBXBuildFile; fileRef = 514BDB2421AAE7C6007A51AA /* mpc_ecdh.h */; };
+		514BDB7921AAE7C6007A51AA /* garbled_circuit.h in Headers */ = {isa = PBXBuildFile; fileRef = 514BDB2521AAE7C6007A51AA /* garbled_circuit.h */; };
+		514BDB7A21AAE7C6007A51AA /* circuit_data.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 514BDB2621AAE7C6007A51AA /* circuit_data.cpp */; };
+		514BDB7B21AAE7C6007A51AA /* mpc_eddsa.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 514BDB2721AAE7C6007A51AA /* mpc_eddsa.cpp */; };
+		514BDB7C21AAE7C6007A51AA /* mpc_ot.h in Headers */ = {isa = PBXBuildFile; fileRef = 514BDB2821AAE7C6007A51AA /* mpc_ot.h */; };
+		514BDB7D21AAE7C6007A51AA /* garbled_circuit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 514BDB2921AAE7C6007A51AA /* garbled_circuit.cpp */; };
+		514BDB7E21AAE7C6007A51AA /* ecc_backup.h in Headers */ = {isa = PBXBuildFile; fileRef = 514BDB2A21AAE7C6007A51AA /* ecc_backup.h */; };
+		514BDB7F21AAE7C6007A51AA /* mpc_eddsa.h in Headers */ = {isa = PBXBuildFile; fileRef = 514BDB2B21AAE7C6007A51AA /* mpc_eddsa.h */; };
+		514BDB8021AAE7C6007A51AA /* mpc_ecc_core.h in Headers */ = {isa = PBXBuildFile; fileRef = 514BDB2C21AAE7C6007A51AA /* mpc_ecc_core.h */; };
+		514BDB8121AAE7C6007A51AA /* garbled_circuit_2party.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 514BDB2D21AAE7C6007A51AA /* garbled_circuit_2party.cpp */; };
+		514BDB8221AAE7C6007A51AA /* mpc_ot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 514BDB2E21AAE7C6007A51AA /* mpc_ot.cpp */; };
+		514BDB8321AAE7C6007A51AA /* mpc_ecdsa.h in Headers */ = {isa = PBXBuildFile; fileRef = 514BDB2F21AAE7C6007A51AA /* mpc_ecdsa.h */; };
+		514BDB8421AAE7C6007A51AA /* mpc_ecc_core.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 514BDB3021AAE7C6007A51AA /* mpc_ecc_core.cpp */; };
+		514BDB8521AAE7C6007A51AA /* mpc_core.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 514BDB3121AAE7C6007A51AA /* mpc_core.cpp */; };
+		514BDB8621AAE7C6007A51AA /* mpc_core.h in Headers */ = {isa = PBXBuildFile; fileRef = 514BDB3221AAE7C6007A51AA /* mpc_core.h */; };
+		514BDB8821AAE94B007A51AA /* mpc_crypto.h in Headers */ = {isa = PBXBuildFile; fileRef = 514BDB8721AAE94B007A51AA /* mpc_crypto.h */; };
+		514BDB8921AAF1C4007A51AA /* mpc_crypto_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 514BDB1621AAE7C5007A51AA /* mpc_crypto_test.cpp */; };
+		514BDB8A21AAF276007A51AA /* precompiled.h in Headers */ = {isa = PBXBuildFile; fileRef = 514BDB0D21AAE7C5007A51AA /* precompiled.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		514BDA2221AAE727007A51AA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 514BDA0E21AAE726007A51AA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 514BDA1621AAE726007A51AA;
+			remoteInfo = "MPCCrypto-macOS";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		514BDA1721AAE726007A51AA /* MPCCrypto_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MPCCrypto_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		514BDA1A21AAE726007A51AA /* MPCCrypto_macOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPCCrypto_macOS.h; sourceTree = "<group>"; };
+		514BDA1B21AAE726007A51AA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		514BDA2021AAE727007A51AA /* MPCCrypto-macOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "MPCCrypto-macOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		514BDA2521AAE727007A51AA /* MPCCrypto_macOSTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPCCrypto_macOSTests.m; sourceTree = "<group>"; };
+		514BDA2721AAE727007A51AA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		514BDADC21AAE7C4007A51AA /* mpc_crypto_context.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mpc_crypto_context.h; path = ../../src/mpc_crypto_context.h; sourceTree = "<group>"; };
+		514BDADD21AAE7C4007A51AA /* mpc_crypto_ecdsa_bip.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mpc_crypto_ecdsa_bip.cpp; path = ../../src/mpc_crypto_ecdsa_bip.cpp; sourceTree = "<group>"; };
+		514BDADE21AAE7C4007A51AA /* mpc_crypto_share.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mpc_crypto_share.h; path = ../../src/mpc_crypto_share.h; sourceTree = "<group>"; };
+		514BDAE021AAE7C5007A51AA /* mpc_crypto_context.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mpc_crypto_context.cpp; path = ../../src/mpc_crypto_context.cpp; sourceTree = "<group>"; };
+		514BDAE121AAE7C5007A51AA /* mpc_crypto_eddsa.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mpc_crypto_eddsa.cpp; path = ../../src/mpc_crypto_eddsa.cpp; sourceTree = "<group>"; };
+		514BDAE321AAE7C5007A51AA /* mpc_crypto_eddsa.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mpc_crypto_eddsa.h; path = ../../src/mpc_crypto_eddsa.h; sourceTree = "<group>"; };
+		514BDAE521AAE7C5007A51AA /* crypto_paillier.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = crypto_paillier.cpp; sourceTree = "<group>"; };
+		514BDAE621AAE7C5007A51AA /* crypto_aesni.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crypto_aesni.h; sourceTree = "<group>"; };
+		514BDAE721AAE7C5007A51AA /* crypto_ecc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = crypto_ecc.cpp; sourceTree = "<group>"; };
+		514BDAE821AAE7C5007A51AA /* crypto_aesni.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = crypto_aesni.cpp; sourceTree = "<group>"; };
+		514BDAE921AAE7C5007A51AA /* crypto_bn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = crypto_bn.cpp; sourceTree = "<group>"; };
+		514BDAEA21AAE7C5007A51AA /* crypto_hash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crypto_hash.h; sourceTree = "<group>"; };
+		514BDAEB21AAE7C5007A51AA /* crypto_rsa.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = crypto_rsa.cpp; sourceTree = "<group>"; };
+		514BDAEC21AAE7C5007A51AA /* crypto_oaep.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = crypto_oaep.cpp; sourceTree = "<group>"; };
+		514BDAED21AAE7C5007A51AA /* crypto_ecc_bip.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = crypto_ecc_bip.cpp; sourceTree = "<group>"; };
+		514BDAEE21AAE7C5007A51AA /* crypto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crypto.h; sourceTree = "<group>"; };
+		514BDAEF21AAE7C5007A51AA /* crypto_hash.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = crypto_hash.cpp; sourceTree = "<group>"; };
+		514BDAF021AAE7C5007A51AA /* crypto_ecc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crypto_ecc.h; sourceTree = "<group>"; };
+		514BDAF121AAE7C5007A51AA /* ec25519_core.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ec25519_core.cpp; sourceTree = "<group>"; };
+		514BDAF221AAE7C5007A51AA /* crypto_rsa.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crypto_rsa.h; sourceTree = "<group>"; };
+		514BDAF321AAE7C5007A51AA /* small_primes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = small_primes.cpp; sourceTree = "<group>"; };
+		514BDAF421AAE7C5007A51AA /* crypto.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = crypto.cpp; sourceTree = "<group>"; };
+		514BDAF521AAE7C5007A51AA /* crypto_bn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crypto_bn.h; sourceTree = "<group>"; };
+		514BDAF621AAE7C5007A51AA /* crypto_ecc_bip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crypto_ecc_bip.h; sourceTree = "<group>"; };
+		514BDAF721AAE7C5007A51AA /* crypto_paillier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crypto_paillier.h; sourceTree = "<group>"; };
+		514BDAF821AAE7C5007A51AA /* ec25519_core.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ec25519_core.h; sourceTree = "<group>"; };
+		514BDAF921AAE7C5007A51AA /* mpc_crypto_ecdsa_bip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mpc_crypto_ecdsa_bip.h; path = ../../src/mpc_crypto_ecdsa_bip.h; sourceTree = "<group>"; };
+		514BDAFA21AAE7C5007A51AA /* mpc_crypto_generic_secret.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mpc_crypto_generic_secret.h; path = ../../src/mpc_crypto_generic_secret.h; sourceTree = "<group>"; };
+		514BDAFB21AAE7C5007A51AA /* mpc_crypto_message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mpc_crypto_message.h; path = ../../src/mpc_crypto_message.h; sourceTree = "<group>"; };
+		514BDAFC21AAE7C5007A51AA /* mpc_crypto_ecdsa.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mpc_crypto_ecdsa.cpp; path = ../../src/mpc_crypto_ecdsa.cpp; sourceTree = "<group>"; };
+		514BDAFE21AAE7C5007A51AA /* ub_buf256.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ub_buf256.h; sourceTree = "<group>"; };
+		514BDAFF21AAE7C5007A51AA /* ub_convert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ub_convert.h; sourceTree = "<group>"; };
+		514BDB0021AAE7C5007A51AA /* ub_thread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ub_thread.cpp; sourceTree = "<group>"; };
+		514BDB0121AAE7C5007A51AA /* ub_string.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ub_string.h; sourceTree = "<group>"; };
+		514BDB0221AAE7C5007A51AA /* ub_common.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ub_common.cpp; sourceTree = "<group>"; };
+		514BDB0321AAE7C5007A51AA /* ub_cpuid.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ub_cpuid.cpp; sourceTree = "<group>"; };
+		514BDB0421AAE7C5007A51AA /* precompiled.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = precompiled.cpp; sourceTree = "<group>"; };
+		514BDB0521AAE7C5007A51AA /* ub_buf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ub_buf.h; sourceTree = "<group>"; };
+		514BDB0621AAE7C5007A51AA /* ub_common_def.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ub_common_def.h; sourceTree = "<group>"; };
+		514BDB0721AAE7C5007A51AA /* ub_string.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ub_string.cpp; sourceTree = "<group>"; };
+		514BDB0821AAE7C5007A51AA /* ub_common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ub_common.h; sourceTree = "<group>"; };
+		514BDB0921AAE7C5007A51AA /* ub_thread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ub_thread.h; sourceTree = "<group>"; };
+		514BDB0A21AAE7C5007A51AA /* ub_buf128.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ub_buf128.cpp; sourceTree = "<group>"; };
+		514BDB0B21AAE7C5007A51AA /* ub_convert.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ub_convert.cpp; sourceTree = "<group>"; };
+		514BDB0C21AAE7C5007A51AA /* ub_error.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ub_error.cpp; sourceTree = "<group>"; };
+		514BDB0D21AAE7C5007A51AA /* precompiled.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = precompiled.h; sourceTree = "<group>"; };
+		514BDB0E21AAE7C5007A51AA /* jni_helpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = jni_helpers.h; sourceTree = "<group>"; };
+		514BDB0F21AAE7C5007A51AA /* ub_buf256.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ub_buf256.cpp; sourceTree = "<group>"; };
+		514BDB1021AAE7C5007A51AA /* ub_cpuid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ub_cpuid.h; sourceTree = "<group>"; };
+		514BDB1121AAE7C5007A51AA /* ub_buf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ub_buf.cpp; sourceTree = "<group>"; };
+		514BDB1221AAE7C5007A51AA /* ub_buf128.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ub_buf128.h; sourceTree = "<group>"; };
+		514BDB1321AAE7C5007A51AA /* ub_error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ub_error.h; sourceTree = "<group>"; };
+		514BDB1421AAE7C5007A51AA /* mpc_crypto_ecdsa.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mpc_crypto_ecdsa.h; path = ../../src/mpc_crypto_ecdsa.h; sourceTree = "<group>"; };
+		514BDB1521AAE7C5007A51AA /* mpc_crypto_share.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mpc_crypto_share.cpp; path = ../../src/mpc_crypto_share.cpp; sourceTree = "<group>"; };
+		514BDB1621AAE7C5007A51AA /* mpc_crypto_test.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mpc_crypto_test.cpp; path = ../../src/mpc_crypto_test.cpp; sourceTree = "<group>"; };
+		514BDB1721AAE7C6007A51AA /* mpc_crypto_generic_secret.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mpc_crypto_generic_secret.cpp; path = ../../src/mpc_crypto_generic_secret.cpp; sourceTree = "<group>"; };
+		514BDB1821AAE7C6007A51AA /* mpc_crypto_ec_backup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mpc_crypto_ec_backup.cpp; path = ../../src/mpc_crypto_ec_backup.cpp; sourceTree = "<group>"; };
+		514BDB1921AAE7C6007A51AA /* mpc_crypto_message.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mpc_crypto_message.cpp; path = ../../src/mpc_crypto_message.cpp; sourceTree = "<group>"; };
+		514BDB1A21AAE7C6007A51AA /* mpc_crypto_ec_backup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mpc_crypto_ec_backup.h; path = ../../src/mpc_crypto_ec_backup.h; sourceTree = "<group>"; };
+		514BDB1C21AAE7C6007A51AA /* circuit_sha512_update.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = circuit_sha512_update.h; sourceTree = "<group>"; };
+		514BDB1E21AAE7C6007A51AA /* ecc_backup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ecc_backup.cpp; sourceTree = "<group>"; };
+		514BDB1F21AAE7C6007A51AA /* garbled_circuit_x64.s */ = {isa = PBXFileReference; explicitFileType = sourcecode.asm.llvm; fileEncoding = 4; path = garbled_circuit_x64.s; sourceTree = "<group>"; };
+		514BDB2021AAE7C6007A51AA /* circuit_data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = circuit_data.h; sourceTree = "<group>"; };
+		514BDB2121AAE7C6007A51AA /* mpc_ecdsa.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mpc_ecdsa.cpp; sourceTree = "<group>"; };
+		514BDB2221AAE7C6007A51AA /* mpc_ecdh.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mpc_ecdh.cpp; sourceTree = "<group>"; };
+		514BDB2321AAE7C6007A51AA /* garbled_circuit_2party.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = garbled_circuit_2party.h; sourceTree = "<group>"; };
+		514BDB2421AAE7C6007A51AA /* mpc_ecdh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mpc_ecdh.h; sourceTree = "<group>"; };
+		514BDB2521AAE7C6007A51AA /* garbled_circuit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = garbled_circuit.h; sourceTree = "<group>"; };
+		514BDB2621AAE7C6007A51AA /* circuit_data.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = circuit_data.cpp; sourceTree = "<group>"; };
+		514BDB2721AAE7C6007A51AA /* mpc_eddsa.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mpc_eddsa.cpp; sourceTree = "<group>"; };
+		514BDB2821AAE7C6007A51AA /* mpc_ot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mpc_ot.h; sourceTree = "<group>"; };
+		514BDB2921AAE7C6007A51AA /* garbled_circuit.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = garbled_circuit.cpp; sourceTree = "<group>"; };
+		514BDB2A21AAE7C6007A51AA /* ecc_backup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ecc_backup.h; sourceTree = "<group>"; };
+		514BDB2B21AAE7C6007A51AA /* mpc_eddsa.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mpc_eddsa.h; sourceTree = "<group>"; };
+		514BDB2C21AAE7C6007A51AA /* mpc_ecc_core.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mpc_ecc_core.h; sourceTree = "<group>"; };
+		514BDB2D21AAE7C6007A51AA /* garbled_circuit_2party.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = garbled_circuit_2party.cpp; sourceTree = "<group>"; };
+		514BDB2E21AAE7C6007A51AA /* mpc_ot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mpc_ot.cpp; sourceTree = "<group>"; };
+		514BDB2F21AAE7C6007A51AA /* mpc_ecdsa.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mpc_ecdsa.h; sourceTree = "<group>"; };
+		514BDB3021AAE7C6007A51AA /* mpc_ecc_core.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mpc_ecc_core.cpp; sourceTree = "<group>"; };
+		514BDB3121AAE7C6007A51AA /* mpc_core.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mpc_core.cpp; sourceTree = "<group>"; };
+		514BDB3221AAE7C6007A51AA /* mpc_core.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mpc_core.h; sourceTree = "<group>"; };
+		514BDB8721AAE94B007A51AA /* mpc_crypto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mpc_crypto.h; path = ../../include/mpc_crypto.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		514BDA1421AAE726007A51AA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		514BDA1D21AAE727007A51AA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				514BDA2121AAE727007A51AA /* MPCCrypto_macOS.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		514BDA0D21AAE726007A51AA = {
+			isa = PBXGroup;
+			children = (
+				514BDA1921AAE726007A51AA /* MPCCrypto-macOS */,
+				514BDA2421AAE727007A51AA /* MPCCrypto-macOSTests */,
+				514BDA1821AAE726007A51AA /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		514BDA1821AAE726007A51AA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				514BDA1721AAE726007A51AA /* MPCCrypto_macOS.framework */,
+				514BDA2021AAE727007A51AA /* MPCCrypto-macOSTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		514BDA1921AAE726007A51AA /* MPCCrypto-macOS */ = {
+			isa = PBXGroup;
+			children = (
+				514BDB8721AAE94B007A51AA /* mpc_crypto.h */,
+				514BDAE421AAE7C5007A51AA /* crypto_utils */,
+				514BDAE021AAE7C5007A51AA /* mpc_crypto_context.cpp */,
+				514BDADC21AAE7C4007A51AA /* mpc_crypto_context.h */,
+				514BDB1821AAE7C6007A51AA /* mpc_crypto_ec_backup.cpp */,
+				514BDB1A21AAE7C6007A51AA /* mpc_crypto_ec_backup.h */,
+				514BDADD21AAE7C4007A51AA /* mpc_crypto_ecdsa_bip.cpp */,
+				514BDAF921AAE7C5007A51AA /* mpc_crypto_ecdsa_bip.h */,
+				514BDAFC21AAE7C5007A51AA /* mpc_crypto_ecdsa.cpp */,
+				514BDB1421AAE7C5007A51AA /* mpc_crypto_ecdsa.h */,
+				514BDAE121AAE7C5007A51AA /* mpc_crypto_eddsa.cpp */,
+				514BDAE321AAE7C5007A51AA /* mpc_crypto_eddsa.h */,
+				514BDB1721AAE7C6007A51AA /* mpc_crypto_generic_secret.cpp */,
+				514BDAFA21AAE7C5007A51AA /* mpc_crypto_generic_secret.h */,
+				514BDB1921AAE7C6007A51AA /* mpc_crypto_message.cpp */,
+				514BDAFB21AAE7C5007A51AA /* mpc_crypto_message.h */,
+				514BDB1521AAE7C5007A51AA /* mpc_crypto_share.cpp */,
+				514BDADE21AAE7C4007A51AA /* mpc_crypto_share.h */,
+				514BDB1621AAE7C5007A51AA /* mpc_crypto_test.cpp */,
+				514BDB1B21AAE7C6007A51AA /* mpc_protocols */,
+				514BDAFD21AAE7C5007A51AA /* utils */,
+				514BDA1A21AAE726007A51AA /* MPCCrypto_macOS.h */,
+				514BDA1B21AAE726007A51AA /* Info.plist */,
+			);
+			path = "MPCCrypto-macOS";
+			sourceTree = "<group>";
+		};
+		514BDA2421AAE727007A51AA /* MPCCrypto-macOSTests */ = {
+			isa = PBXGroup;
+			children = (
+				514BDA2521AAE727007A51AA /* MPCCrypto_macOSTests.m */,
+				514BDA2721AAE727007A51AA /* Info.plist */,
+			);
+			path = "MPCCrypto-macOSTests";
+			sourceTree = "<group>";
+		};
+		514BDAE421AAE7C5007A51AA /* crypto_utils */ = {
+			isa = PBXGroup;
+			children = (
+				514BDAE521AAE7C5007A51AA /* crypto_paillier.cpp */,
+				514BDAE621AAE7C5007A51AA /* crypto_aesni.h */,
+				514BDAE721AAE7C5007A51AA /* crypto_ecc.cpp */,
+				514BDAE821AAE7C5007A51AA /* crypto_aesni.cpp */,
+				514BDAE921AAE7C5007A51AA /* crypto_bn.cpp */,
+				514BDAEA21AAE7C5007A51AA /* crypto_hash.h */,
+				514BDAEB21AAE7C5007A51AA /* crypto_rsa.cpp */,
+				514BDAEC21AAE7C5007A51AA /* crypto_oaep.cpp */,
+				514BDAED21AAE7C5007A51AA /* crypto_ecc_bip.cpp */,
+				514BDAEE21AAE7C5007A51AA /* crypto.h */,
+				514BDAEF21AAE7C5007A51AA /* crypto_hash.cpp */,
+				514BDAF021AAE7C5007A51AA /* crypto_ecc.h */,
+				514BDAF121AAE7C5007A51AA /* ec25519_core.cpp */,
+				514BDAF221AAE7C5007A51AA /* crypto_rsa.h */,
+				514BDAF321AAE7C5007A51AA /* small_primes.cpp */,
+				514BDAF421AAE7C5007A51AA /* crypto.cpp */,
+				514BDAF521AAE7C5007A51AA /* crypto_bn.h */,
+				514BDAF621AAE7C5007A51AA /* crypto_ecc_bip.h */,
+				514BDAF721AAE7C5007A51AA /* crypto_paillier.h */,
+				514BDAF821AAE7C5007A51AA /* ec25519_core.h */,
+			);
+			name = crypto_utils;
+			path = ../../src/crypto_utils;
+			sourceTree = "<group>";
+		};
+		514BDAFD21AAE7C5007A51AA /* utils */ = {
+			isa = PBXGroup;
+			children = (
+				514BDAFE21AAE7C5007A51AA /* ub_buf256.h */,
+				514BDAFF21AAE7C5007A51AA /* ub_convert.h */,
+				514BDB0021AAE7C5007A51AA /* ub_thread.cpp */,
+				514BDB0121AAE7C5007A51AA /* ub_string.h */,
+				514BDB0221AAE7C5007A51AA /* ub_common.cpp */,
+				514BDB0321AAE7C5007A51AA /* ub_cpuid.cpp */,
+				514BDB0421AAE7C5007A51AA /* precompiled.cpp */,
+				514BDB0521AAE7C5007A51AA /* ub_buf.h */,
+				514BDB0621AAE7C5007A51AA /* ub_common_def.h */,
+				514BDB0721AAE7C5007A51AA /* ub_string.cpp */,
+				514BDB0821AAE7C5007A51AA /* ub_common.h */,
+				514BDB0921AAE7C5007A51AA /* ub_thread.h */,
+				514BDB0A21AAE7C5007A51AA /* ub_buf128.cpp */,
+				514BDB0B21AAE7C5007A51AA /* ub_convert.cpp */,
+				514BDB0C21AAE7C5007A51AA /* ub_error.cpp */,
+				514BDB0E21AAE7C5007A51AA /* jni_helpers.h */,
+				514BDB0F21AAE7C5007A51AA /* ub_buf256.cpp */,
+				514BDB1021AAE7C5007A51AA /* ub_cpuid.h */,
+				514BDB1121AAE7C5007A51AA /* ub_buf.cpp */,
+				514BDB1221AAE7C5007A51AA /* ub_buf128.h */,
+				514BDB1321AAE7C5007A51AA /* ub_error.h */,
+				514BDB0D21AAE7C5007A51AA /* precompiled.h */,
+			);
+			name = utils;
+			path = ../../src/utils;
+			sourceTree = "<group>";
+		};
+		514BDB1B21AAE7C6007A51AA /* mpc_protocols */ = {
+			isa = PBXGroup;
+			children = (
+				514BDB1C21AAE7C6007A51AA /* circuit_sha512_update.h */,
+				514BDB1E21AAE7C6007A51AA /* ecc_backup.cpp */,
+				514BDB1F21AAE7C6007A51AA /* garbled_circuit_x64.s */,
+				514BDB2021AAE7C6007A51AA /* circuit_data.h */,
+				514BDB2121AAE7C6007A51AA /* mpc_ecdsa.cpp */,
+				514BDB2221AAE7C6007A51AA /* mpc_ecdh.cpp */,
+				514BDB2321AAE7C6007A51AA /* garbled_circuit_2party.h */,
+				514BDB2421AAE7C6007A51AA /* mpc_ecdh.h */,
+				514BDB2521AAE7C6007A51AA /* garbled_circuit.h */,
+				514BDB2621AAE7C6007A51AA /* circuit_data.cpp */,
+				514BDB2721AAE7C6007A51AA /* mpc_eddsa.cpp */,
+				514BDB2821AAE7C6007A51AA /* mpc_ot.h */,
+				514BDB2921AAE7C6007A51AA /* garbled_circuit.cpp */,
+				514BDB2A21AAE7C6007A51AA /* ecc_backup.h */,
+				514BDB2B21AAE7C6007A51AA /* mpc_eddsa.h */,
+				514BDB2C21AAE7C6007A51AA /* mpc_ecc_core.h */,
+				514BDB2D21AAE7C6007A51AA /* garbled_circuit_2party.cpp */,
+				514BDB2E21AAE7C6007A51AA /* mpc_ot.cpp */,
+				514BDB2F21AAE7C6007A51AA /* mpc_ecdsa.h */,
+				514BDB3021AAE7C6007A51AA /* mpc_ecc_core.cpp */,
+				514BDB3121AAE7C6007A51AA /* mpc_core.cpp */,
+				514BDB3221AAE7C6007A51AA /* mpc_core.h */,
+			);
+			name = mpc_protocols;
+			path = ../../src/mpc_protocols;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		514BDA1221AAE726007A51AA /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				514BDB7721AAE7C6007A51AA /* garbled_circuit_2party.h in Headers */,
+				514BDB6321AAE7C6007A51AA /* jni_helpers.h in Headers */,
+				514BDB4E21AAE7C6007A51AA /* ec25519_core.h in Headers */,
+				514BDB4D21AAE7C6007A51AA /* crypto_paillier.h in Headers */,
+				514BDB5121AAE7C6007A51AA /* mpc_crypto_message.h in Headers */,
+				514BDB5321AAE7C6007A51AA /* ub_buf256.h in Headers */,
+				514BDB5021AAE7C6007A51AA /* mpc_crypto_generic_secret.h in Headers */,
+				514BDB7F21AAE7C6007A51AA /* mpc_eddsa.h in Headers */,
+				514BDB4621AAE7C6007A51AA /* crypto_ecc.h in Headers */,
+				514BDB6821AAE7C6007A51AA /* ub_error.h in Headers */,
+				514BDB5621AAE7C6007A51AA /* ub_string.h in Headers */,
+				514BDB5E21AAE7C6007A51AA /* ub_thread.h in Headers */,
+				514BDB3321AAE7C6007A51AA /* mpc_crypto_context.h in Headers */,
+				514BDB4F21AAE7C6007A51AA /* mpc_crypto_ecdsa_bip.h in Headers */,
+				514BDB8321AAE7C6007A51AA /* mpc_ecdsa.h in Headers */,
+				514BDB8021AAE7C6007A51AA /* mpc_ecc_core.h in Headers */,
+				514BDB7421AAE7C6007A51AA /* circuit_data.h in Headers */,
+				514BDB5A21AAE7C6007A51AA /* ub_buf.h in Headers */,
+				514BDB8621AAE7C6007A51AA /* mpc_core.h in Headers */,
+				514BDB5B21AAE7C6007A51AA /* ub_common_def.h in Headers */,
+				514BDB4821AAE7C6007A51AA /* crypto_rsa.h in Headers */,
+				514BDB5421AAE7C6007A51AA /* ub_convert.h in Headers */,
+				514BDB3521AAE7C6007A51AA /* mpc_crypto_share.h in Headers */,
+				514BDB6F21AAE7C6007A51AA /* mpc_crypto_ec_backup.h in Headers */,
+				514BDB6921AAE7C6007A51AA /* mpc_crypto_ecdsa.h in Headers */,
+				514BDB7821AAE7C6007A51AA /* mpc_ecdh.h in Headers */,
+				514BDB4B21AAE7C6007A51AA /* crypto_bn.h in Headers */,
+				514BDB3C21AAE7C6007A51AA /* crypto_aesni.h in Headers */,
+				514BDB7021AAE7C6007A51AA /* circuit_sha512_update.h in Headers */,
+				514BDB6521AAE7C6007A51AA /* ub_cpuid.h in Headers */,
+				514BDB7921AAE7C6007A51AA /* garbled_circuit.h in Headers */,
+				514BDB4021AAE7C6007A51AA /* crypto_hash.h in Headers */,
+				514BDB4C21AAE7C6007A51AA /* crypto_ecc_bip.h in Headers */,
+				514BDB3A21AAE7C6007A51AA /* mpc_crypto_eddsa.h in Headers */,
+				514BDB7E21AAE7C6007A51AA /* ecc_backup.h in Headers */,
+				514BDB5D21AAE7C6007A51AA /* ub_common.h in Headers */,
+				514BDB6721AAE7C6007A51AA /* ub_buf128.h in Headers */,
+				514BDA2821AAE727007A51AA /* MPCCrypto_macOS.h in Headers */,
+				514BDB4421AAE7C6007A51AA /* crypto.h in Headers */,
+				514BDB8A21AAF276007A51AA /* precompiled.h in Headers */,
+				514BDB8821AAE94B007A51AA /* mpc_crypto.h in Headers */,
+				514BDB7C21AAE7C6007A51AA /* mpc_ot.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		514BDA1621AAE726007A51AA /* MPCCrypto-macOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 514BDA2B21AAE727007A51AA /* Build configuration list for PBXNativeTarget "MPCCrypto-macOS" */;
+			buildPhases = (
+				514BDA1221AAE726007A51AA /* Headers */,
+				514BDA1321AAE726007A51AA /* Sources */,
+				514BDA1421AAE726007A51AA /* Frameworks */,
+				514BDA1521AAE726007A51AA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "MPCCrypto-macOS";
+			productName = "MPCCrypto-macOS";
+			productReference = 514BDA1721AAE726007A51AA /* MPCCrypto_macOS.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		514BDA1F21AAE727007A51AA /* MPCCrypto-macOSTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 514BDA2E21AAE727007A51AA /* Build configuration list for PBXNativeTarget "MPCCrypto-macOSTests" */;
+			buildPhases = (
+				514BDA1C21AAE727007A51AA /* Sources */,
+				514BDA1D21AAE727007A51AA /* Frameworks */,
+				514BDA1E21AAE727007A51AA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				514BDA2321AAE727007A51AA /* PBXTargetDependency */,
+			);
+			name = "MPCCrypto-macOSTests";
+			productName = "MPCCrypto-macOSTests";
+			productReference = 514BDA2021AAE727007A51AA /* MPCCrypto-macOSTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		514BDA0E21AAE726007A51AA /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1010;
+				ORGANIZATIONNAME = "Unbound Tech";
+				TargetAttributes = {
+					514BDA1621AAE726007A51AA = {
+						CreatedOnToolsVersion = 10.1;
+					};
+					514BDA1F21AAE727007A51AA = {
+						CreatedOnToolsVersion = 10.1;
+					};
+				};
+			};
+			buildConfigurationList = 514BDA1121AAE726007A51AA /* Build configuration list for PBXProject "MPCCrypto-macOS" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 514BDA0D21AAE726007A51AA;
+			productRefGroup = 514BDA1821AAE726007A51AA /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				514BDA1621AAE726007A51AA /* MPCCrypto-macOS */,
+				514BDA1F21AAE727007A51AA /* MPCCrypto-macOSTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		514BDA1521AAE726007A51AA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		514BDA1E21AAE727007A51AA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		514BDA1321AAE726007A51AA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				514BDB4321AAE7C6007A51AA /* crypto_ecc_bip.cpp in Sources */,
+				514BDB7221AAE7C6007A51AA /* ecc_backup.cpp in Sources */,
+				514BDB7B21AAE7C6007A51AA /* mpc_eddsa.cpp in Sources */,
+				514BDB3B21AAE7C6007A51AA /* crypto_paillier.cpp in Sources */,
+				514BDB3421AAE7C6007A51AA /* mpc_crypto_ecdsa_bip.cpp in Sources */,
+				514BDB6C21AAE7C6007A51AA /* mpc_crypto_generic_secret.cpp in Sources */,
+				514BDB6E21AAE7C6007A51AA /* mpc_crypto_message.cpp in Sources */,
+				514BDB8421AAE7C6007A51AA /* mpc_ecc_core.cpp in Sources */,
+				514BDB7321AAE7C6007A51AA /* garbled_circuit_x64.s in Sources */,
+				514BDB3821AAE7C6007A51AA /* mpc_crypto_eddsa.cpp in Sources */,
+				514BDB7621AAE7C6007A51AA /* mpc_ecdh.cpp in Sources */,
+				514BDB8521AAE7C6007A51AA /* mpc_core.cpp in Sources */,
+				514BDB6621AAE7C6007A51AA /* ub_buf.cpp in Sources */,
+				514BDB5221AAE7C6007A51AA /* mpc_crypto_ecdsa.cpp in Sources */,
+				514BDB6121AAE7C6007A51AA /* ub_error.cpp in Sources */,
+				514BDB3721AAE7C6007A51AA /* mpc_crypto_context.cpp in Sources */,
+				514BDB6D21AAE7C6007A51AA /* mpc_crypto_ec_backup.cpp in Sources */,
+				514BDB4921AAE7C6007A51AA /* small_primes.cpp in Sources */,
+				514BDB5C21AAE7C6007A51AA /* ub_string.cpp in Sources */,
+				514BDB3D21AAE7C6007A51AA /* crypto_ecc.cpp in Sources */,
+				514BDB5821AAE7C6007A51AA /* ub_cpuid.cpp in Sources */,
+				514BDB5F21AAE7C6007A51AA /* ub_buf128.cpp in Sources */,
+				514BDB5521AAE7C6007A51AA /* ub_thread.cpp in Sources */,
+				514BDB3F21AAE7C6007A51AA /* crypto_bn.cpp in Sources */,
+				514BDB5921AAE7C6007A51AA /* precompiled.cpp in Sources */,
+				514BDB4521AAE7C6007A51AA /* crypto_hash.cpp in Sources */,
+				514BDB4A21AAE7C6007A51AA /* crypto.cpp in Sources */,
+				514BDB6A21AAE7C6007A51AA /* mpc_crypto_share.cpp in Sources */,
+				514BDB5721AAE7C6007A51AA /* ub_common.cpp in Sources */,
+				514BDB7521AAE7C6007A51AA /* mpc_ecdsa.cpp in Sources */,
+				514BDB8121AAE7C6007A51AA /* garbled_circuit_2party.cpp in Sources */,
+				514BDB4221AAE7C6007A51AA /* crypto_oaep.cpp in Sources */,
+				514BDB8221AAE7C6007A51AA /* mpc_ot.cpp in Sources */,
+				514BDB7A21AAE7C6007A51AA /* circuit_data.cpp in Sources */,
+				514BDB6021AAE7C6007A51AA /* ub_convert.cpp in Sources */,
+				514BDB6421AAE7C6007A51AA /* ub_buf256.cpp in Sources */,
+				514BDB4121AAE7C6007A51AA /* crypto_rsa.cpp in Sources */,
+				514BDB3E21AAE7C6007A51AA /* crypto_aesni.cpp in Sources */,
+				514BDB7D21AAE7C6007A51AA /* garbled_circuit.cpp in Sources */,
+				514BDB4721AAE7C6007A51AA /* ec25519_core.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		514BDA1C21AAE727007A51AA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				514BDA2621AAE727007A51AA /* MPCCrypto_macOSTests.m in Sources */,
+				514BDB8921AAF1C4007A51AA /* mpc_crypto_test.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		514BDA2321AAE727007A51AA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 514BDA1621AAE726007A51AA /* MPCCrypto-macOS */;
+			targetProxy = 514BDA2221AAE727007A51AA /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		514BDA2921AAE727007A51AA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		514BDA2A21AAE727007A51AA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		514BDA2C21AAE727007A51AA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = DYU2YCUJM2;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				HEADER_SEARCH_PATHS = "/usr/local/opt/openssl/include/ ";
+				INFOPLIST_FILE = "MPCCrypto-macOS/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = /usr/local/opt/openssl/lib;
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-maes",
+					"-mpclmul",
+				);
+				OTHER_LDFLAGS = (
+					"-lcrypto",
+					"-lssl",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.unboundtech.MPCCrypto-macOS";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		514BDA2D21AAE727007A51AA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = DYU2YCUJM2;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				HEADER_SEARCH_PATHS = "/usr/local/opt/openssl/include/ ";
+				INFOPLIST_FILE = "MPCCrypto-macOS/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = /usr/local/opt/openssl/lib;
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-maes",
+					"-mpclmul",
+				);
+				OTHER_LDFLAGS = (
+					"-lcrypto",
+					"-lssl",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.unboundtech.MPCCrypto-macOS";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		514BDA2F21AAE727007A51AA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = DYU2YCUJM2;
+				HEADER_SEARCH_PATHS = "/usr/local/opt/openssl/include/ ";
+				INFOPLIST_FILE = "MPCCrypto-macOSTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = /usr/local/opt/openssl/lib;
+				OTHER_LDFLAGS = (
+					"-lcrypto",
+					"-lssl",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.unboundtech.MPCCrypto-macOSTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		514BDA3021AAE727007A51AA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = DYU2YCUJM2;
+				HEADER_SEARCH_PATHS = "/usr/local/opt/openssl/include/ ";
+				INFOPLIST_FILE = "MPCCrypto-macOSTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = /usr/local/opt/openssl/lib;
+				OTHER_LDFLAGS = (
+					"-lcrypto",
+					"-lssl",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.unboundtech.MPCCrypto-macOSTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		514BDA1121AAE726007A51AA /* Build configuration list for PBXProject "MPCCrypto-macOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				514BDA2921AAE727007A51AA /* Debug */,
+				514BDA2A21AAE727007A51AA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		514BDA2B21AAE727007A51AA /* Build configuration list for PBXNativeTarget "MPCCrypto-macOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				514BDA2C21AAE727007A51AA /* Debug */,
+				514BDA2D21AAE727007A51AA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		514BDA2E21AAE727007A51AA /* Build configuration list for PBXNativeTarget "MPCCrypto-macOSTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				514BDA2F21AAE727007A51AA /* Debug */,
+				514BDA3021AAE727007A51AA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 514BDA0E21AAE726007A51AA /* Project object */;
+}

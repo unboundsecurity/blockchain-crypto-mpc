@@ -24,8 +24,6 @@
 
 #include <stdint.h>
 #include <string.h>
-#include <openssl/rsa.h>
-#include <openssl/ec.h>
 
 #ifdef MPC_CRYPTO_EXPORTS
 #ifdef _WIN32
@@ -139,29 +137,30 @@ MPCCRYPTO_API int MPCCrypto_getEddsaPublic(MPCCryptoShare* share, uint8_t* pub_k
 MPCCRYPTO_API int MPCCrypto_initGenerateEcdsaKey(int peer, MPCCryptoContext** context);
 MPCCRYPTO_API int MPCCrypto_initEcdsaSign(int peer, MPCCryptoShare* share, const uint8_t* in, int in_size, int refresh, MPCCryptoContext** context);
 MPCCRYPTO_API int MPCCrypto_getResultEcdsaSign(MPCCryptoContext* context, uint8_t* signature, int* out_size); // signature is der-encoded
-MPCCRYPTO_API int MPCCrypto_verifyEcdsa(EC_KEY* pub_key, const uint8_t* in, int in_size, const uint8_t* signature, int signature_size); 
-MPCCRYPTO_API int MPCCrypto_getEcdsaPublic(MPCCryptoShare* share, EC_KEY** pub_key);
+MPCCRYPTO_API int MPCCrypto_verifyEcdsa(const uint8_t* pub_key, int pub_key_size, const uint8_t* in, int in_size, const uint8_t* signature, int signature_size); 
+MPCCRYPTO_API int MPCCrypto_getEcdsaPublic(MPCCryptoShare* share, uint8_t* pub_key, int* pub_key_size);
 
 // Generic secret (seed) functions
 MPCCRYPTO_API int MPCCrypto_initGenerateGenericSecret(int peer, int bits, MPCCryptoContext** context);
 MPCCRYPTO_API int MPCCrypto_initImportGenericSecret(int peer, const uint8_t* key, int size, MPCCryptoContext** context);
 
 // Backup functions for ECDSA
-MPCCRYPTO_API int MPCCrypto_initBackupEcdsaKey(int peer, MPCCryptoShare* share, RSA* pub_backup_key, MPCCryptoContext** context);
+MPCCRYPTO_API int MPCCrypto_initBackupEcdsaKey(int peer, MPCCryptoShare* share, const uint8_t* pub_backup_key, int pub_backup_key_size, MPCCryptoContext** context);
 MPCCRYPTO_API int MPCCrypto_getResultBackupEcdsaKey(MPCCryptoContext* context, uint8_t* out, int* out_size);
-MPCCRYPTO_API int MPCCrypto_verifyEcdsaBackupKey(RSA* pub_backup_key, EC_KEY* pub_key, const uint8_t* backup, int backup_size); 
-MPCCRYPTO_API int MPCCrypto_restoreEcdsaKey(RSA* prv_backup_key, const uint8_t* backup, int backup_size, EC_KEY** out); 
+MPCCRYPTO_API int MPCCrypto_verifyEcdsaBackupKey(const uint8_t* pub_backup_key, int pub_backup_key_size, const uint8_t* pub_key, int pub_key_size, const uint8_t* backup, int backup_size); 
+MPCCRYPTO_API int MPCCrypto_restoreEcdsaKey(const uint8_t* prv_backup_key, int prv_backup_key_size, const uint8_t* pub_key, int pub_key_size, const uint8_t* backup, int backup_size, uint8_t* prv_key, int* prv_key_size); 
 
 // Backup functions for EdDSA
-MPCCRYPTO_API int MPCCrypto_initBackupEddsaKey(int peer, MPCCryptoShare* share, RSA* pub_backup_key, MPCCryptoContext** context);
+MPCCRYPTO_API int MPCCrypto_initBackupEddsaKey(int peer, MPCCryptoShare* share, const uint8_t* pub_backup_key, int pub_backup_key_size, MPCCryptoContext** context);
 MPCCRYPTO_API int MPCCrypto_getResultBackupEddsaKey(MPCCryptoContext* context, uint8_t* out, int* out_size);
-MPCCRYPTO_API int MPCCrypto_verifyEddsaBackupKey(RSA* pub_backup_key, const uint8_t* pub_key, const uint8_t* backup, int backup_size); 
-MPCCRYPTO_API int MPCCrypto_restoreEddsaKey(RSA* prv_backup_key, const uint8_t* backup, int backup_size, uint8_t* out);  // |out|=32
+MPCCRYPTO_API int MPCCrypto_verifyEddsaBackupKey(const uint8_t* pub_backup_key, int pub_backup_key_size, const uint8_t* pub_key, const uint8_t* backup, int backup_size); 
+MPCCRYPTO_API int MPCCrypto_restoreEddsaKey(const uint8_t* prv_backup_key, int prv_backup_key_size, const uint8_t* pub_key, const uint8_t* backup, int backup_size, uint8_t* out);  // [pub_ley]=32, |out|=32
 
 // BIP32 functions
 MPCCRYPTO_API int MPCCrypto_initDeriveBIP32(int peer, MPCCryptoShare* share, int hardened, unsigned index, MPCCryptoContext** context);
 MPCCRYPTO_API int MPCCrypto_getResultDeriveBIP32(MPCCryptoContext* context, MPCCryptoShare** new_share);
-MPCCRYPTO_API int MPCCrypto_getBIPInfo(MPCCryptoShare* share, bip32_info_t* bip32_info);
+MPCCRYPTO_API int MPCCrypto_getBIP32Info(MPCCryptoShare* share, bip32_info_t* bip32_info);
+MPCCRYPTO_API int MPCCrypto_serializePubBIP32(MPCCryptoShare* share, char* out, int* out_size);
 
 
 #ifdef __cplusplus

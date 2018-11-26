@@ -1224,7 +1224,7 @@ ecc_key_t ecc_key_t::import_pkcs8_prv(mem_t in)
     return ecc;
   }
 
-  EVP_PKEY* evp = EVP_PKCS82PKEY(pkcs8);
+  ub::scoped_ptr_t<EVP_PKEY> evp = EVP_PKCS82PKEY(pkcs8);
   if (!evp) 
   {
     openssl_error("EVP_PKCS82PKEY error");

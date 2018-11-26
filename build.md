@@ -49,7 +49,6 @@ This repository includes a macOS Xcode project (in the *macos* folder).
 
 The repository includes an Android Studio project for building (in the *android* folder).
 
-TBD
 
 ### iOS
 

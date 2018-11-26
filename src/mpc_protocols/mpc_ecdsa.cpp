@@ -89,7 +89,6 @@ error_t ecdsa_create_paillier_t::peer1_step1(ecdsa_share_t& share, mem_t session
   share.c_key = out.c_key = share.paillier.encrypt(share.x, share.r_key);
   const ecc_generator_point_t& G = curve.generator();
   out.pi = ZK_PAILLIER_P_non_interactive(out.N, share.paillier.get_phi_N(), session_id);
-  //out.zk_pdl.p(curve, G * share.x, out.c_key, share.paillier, session_id, 1, share.r_key, share.x); 
 
   return 0;
 }
@@ -106,7 +105,6 @@ error_t ecdsa_create_paillier_t::peer2_step2(ecdsa_share_t& share, mem_t session
   share.paillier.create_pub(in.N);
 
   if (!ZK_PAILLIER_V_non_interactive(in.N, in.pi, session_id)) return rv = error(E_CRYPTO);
-  //if (!in.zk_pdl.v(curve, share.Q_other, in.c_key, in.N, session_id, 1)) return rv = error(E_CRYPTO); 
 
   return 0;
 }

@@ -956,7 +956,7 @@ void ecc_key_t::set_pub_key(const ecc_point_t& pub_key)
   curve = pub_key.curve;
 
   ptr = EC_KEY_new_by_curve_name(curve.get_openssl_code());
-  EC_KEY_set_public_key(ptr, EC_POINT_dup(pub_key, curve.get_group()));
+  EC_KEY_set_public_key(ptr, pub_key);
 }
 
 void ecc_key_t::set_prv_key(ecurve_t _curve, const bn_t& prv_key)

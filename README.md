@@ -24,9 +24,6 @@ This readme includes an overview of this library, why it is important,
 what it allows you to achieve, sample use cases, and how to use the
 library (high level description).
 
-**Note**: This is a preview release, including the API, but not the full
-source code and documentation. Full documentation and source code will
-be released shortly.
 
 # 2. Who Should Use it? 
 

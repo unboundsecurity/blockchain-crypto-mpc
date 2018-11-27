@@ -177,9 +177,6 @@ class message_info_t(Structure):
 
 
 #  Information
-# libmpc.MPCCrypto_shareInfo(MPCCryptoShare * share,     mpc_crypto_share_info_t * info)
-# libmpc.MPCCrypto_contextInfo(MPCCryptoContext * context, mpc_crypto_context_info_t * info)
-# libmpc.MPCCrypto_messageInfo(MPCCryptoMessage * message, mpc_crypto_message_info_t * info)
 libmpc.MPCCrypto_shareInfo.argtypes = [c_void_p, POINTER(share_info_t)]
 libmpc.MPCCrypto_contextInfo.argtypes = [c_void_p, POINTER(context_info_t)]
 libmpc.MPCCrypto_messageInfo.argtypes = [c_void_p, POINTER(message_info_t)]
@@ -283,7 +280,98 @@ def getEddsaPublic(key):
     return pub_key.raw
 
 
-#  ECDSA specific functions
+#  Backup functions for ECDSA
+libmpc.MPCCrypto_initBackupEcdsaKey.argtypes = [
+    c_int, c_void_p, c_char_p, c_int, POINTER(c_void_p)]
+libmpc.MPCCrypto_initBackupEcdsaKey.restype = c_uint
+libmpc.MPCCrypto_getResultBackupEcdsaKey.argtypes = [
+    c_void_p, c_char_p, POINTER(c_int)]
+libmpc.MPCCrypto_getResultBackupEcdsaKey.restype = c_uint
+libmpc.MPCCrypto_verifyEcdsaBackupKey.argtypes = [
+    c_char_p, c_int, c_char_p, c_int, c_char_p, c_int]
+libmpc.MPCCrypto_verifyEcdsaBackupKey.restype = c_uint
+libmpc.MPCCrypto_restoreEcdsaKey.argtypes = [
+    c_char_p, c_int, c_char_p, c_int, c_char_p, c_int, c_char_p, POINTER(c_int)]
+libmpc.MPCCrypto_restoreEcdsaKey.restype = c_uint
+
+
+def initBackupEcdsaKey(peer, share, pub_backup_key):
+    ctx = c_void_p()
+    test_rv(libmpc.MPCCrypto_initBackupEcdsaKey(c_int(peer), share, c_char_p(
+        pub_backup_key), c_int(len(pub_backup_key)), byref(ctx)))
+    return ctx
+
+
+def getResultBackupEcdsaKey(ctx):
+    out_size = c_int()
+    test_rv(libmpc.MPCCrypto_getResultBackupEcdsaKey(
+        ctx, None, byref(out_size)))
+    result = create_string_buffer(out_size.value)
+    test_rv(libmpc.MPCCrypto_getResultBackupEcdsaKey(
+        ctx, result, byref(out_size)))
+    return result.raw
+
+
+def verifyEcdsaBackupKey(pub_backup_key, pub_ecdsa_key, backup):
+    test_rv(libmpc.MPCCrypto_verifyEcdsaBackupKey(c_char_p(pub_backup_key), c_int(
+        len(pub_backup_key)), c_char_p(pub_ecdsa_key), c_int(len(pub_ecdsa_key)), c_char_p(backup), c_int(len(backup))))
+
+
+def restoreEcdsaKey(prv_backup_key, pub_ecdsa_key, backup):
+    out_size = c_int()
+    test_rv(libmpc.MPCCrypto_restoreEcdsaKey(c_char_p(prv_backup_key), c_int(
+        len(prv_backup_key)), c_char_p(pub_ecdsa_key), c_int(len(pub_ecdsa_key)), c_char_p(backup), c_int(len(backup)), None, byref(out_size)))
+    ret_key = create_string_buffer(out_size.value)
+    test_rv(libmpc.MPCCrypto_restoreEcdsaKey(c_char_p(prv_backup_key), c_int(
+        len(prv_backup_key)), c_char_p(pub_ecdsa_key), c_int(len(pub_ecdsa_key)), c_char_p(backup), c_int(len(backup)), ret_key, byref(out_size)))
+    return ret_key.raw
+
+
+#  Backup functions for EdDSA
+libmpc.MPCCrypto_initBackupEddsaKey.argtypes = [
+    c_int, c_void_p, c_char_p, c_int, POINTER(c_void_p)]
+libmpc.MPCCrypto_initBackupEddsaKey.restype = c_uint
+libmpc.MPCCrypto_getResultBackupEddsaKey.argtypes = [
+    c_void_p, c_char_p, POINTER(c_int)]
+libmpc.MPCCrypto_getResultBackupEddsaKey.restype = c_uint
+libmpc.MPCCrypto_verifyEddsaBackupKey.argtypes = [
+    c_char_p, c_int, c_char_p, c_char_p, c_int]
+libmpc.MPCCrypto_verifyEddsaBackupKey.restype = c_uint
+libmpc.MPCCrypto_restoreEddsaKey.argtypes = [
+    c_char_p, c_int, c_char_p, c_char_p, c_int, c_char_p]
+libmpc.MPCCrypto_restoreEddsaKey.restype = c_uint
+
+
+def initBackupEddsaKey(peer, share, pub_backup_key):
+    ctx = c_void_p()
+    test_rv(libmpc.MPCCrypto_initBackupEddsaKey(c_int(peer), share, c_char_p(
+        pub_backup_key), c_int(len(pub_backup_key)), byref(ctx)))
+    return ctx
+
+
+def getResultBackupEddsaKey(ctx):
+    out_size = c_int()
+    test_rv(libmpc.MPCCrypto_getResultBackupEddsaKey(
+        ctx, None, byref(out_size)))
+    result = create_string_buffer(out_size.value)
+    test_rv(libmpc.MPCCrypto_getResultBackupEddsaKey(
+        ctx, result, byref(out_size)))
+    return result.raw
+
+
+def verifyEddsaBackupKey(pub_backup_key, pub_eddsa_key, backup):
+    test_rv(libmpc.MPCCrypto_verifyEddsaBackupKey(c_char_p(pub_backup_key), c_int(
+        len(pub_backup_key)), c_char_p(pub_eddsa_key), c_char_p(backup), c_int(len(backup))))
+
+
+def restoreEddsaKey(prv_backup_key, pub_eddsa_key, backup):
+    ret_key = create_string_buffer(32)
+    test_rv(libmpc.MPCCrypto_restoreEddsaKey(c_char_p(prv_backup_key), c_int(
+        len(prv_backup_key)), c_char_p(pub_eddsa_key), c_char_p(backup), c_int(len(backup)), ret_key))
+    return ret_key.raw
+
+
+    #  ECDSA specific functions
 libmpc.MPCCrypto_initGenerateEcdsaKey.argtypes = [c_int, POINTER(c_void_p)]
 libmpc.MPCCrypto_initGenerateEcdsaKey.restype = c_uint
 libmpc.MPCCrypto_initEcdsaSign.argtypes = [
@@ -293,9 +381,9 @@ libmpc.MPCCrypto_getResultEcdsaSign.argtypes = [
     c_void_p, c_char_p, POINTER(c_int)]
 libmpc.MPCCrypto_getResultEcdsaSign.restype = c_uint
 libmpc.MPCCrypto_verifyEcdsa.argtypes = [
-    c_void_p, c_char_p, c_int, c_char_p, c_int]
+    c_char_p, c_int, c_char_p, c_int, c_char_p, c_int]
 libmpc.MPCCrypto_verifyEcdsa.restype = c_uint
-libmpc.MPCCrypto_getEcdsaPublic.argtypes = [c_void_p, POINTER(c_void_p)]
+libmpc.MPCCrypto_getEcdsaPublic.argtypes = [c_void_p, c_char_p, POINTER(c_int)]
 libmpc.MPCCrypto_getEcdsaPublic.restype = c_uint
 
 
@@ -322,16 +410,19 @@ def getEcdsaSignResult(ctx):
 
 
 def verifyEcdsa(pub_key, test, sig):
-    test_rv(libmpc.MPCCrypto_verifyEcdsa(pub_key,
+    test_rv(libmpc.MPCCrypto_verifyEcdsa(c_char_p(pub_key), c_int(len(pub_key)),
                                          c_char_p(test), c_int(len(test)), c_char_p(sig), c_int(len(sig))))
 
 
 def getEcdsaPublic(key):
-    pub_key = c_void_p()
-    test_rv(libmpc.MPCCrypto_getEcdsaPublic(key, byref(pub_key)))
-    return pub_key
+    out_size = c_int()
+    test_rv(libmpc.MPCCrypto_getEcdsaPublic(key, None, byref(out_size)))
+    pub_key = create_string_buffer(out_size.value)
+    test_rv(libmpc.MPCCrypto_getEcdsaPublic(key, pub_key, byref(out_size)))
+    return pub_key.raw
 
 
+# BIP32 functions
 class bip32_info_t(Structure):
     _fields_ = [("hardened", c_int),
                 ("level", c_ubyte),
@@ -341,7 +432,6 @@ class bip32_info_t(Structure):
                 ]
 
 
-# BIP32 functions
 libmpc.MPCCrypto_initDeriveBIP32.argtypes = [
     c_int, c_void_p, c_int, c_uint, POINTER(c_void_p)]
 libmpc.MPCCrypto_initDeriveBIP32.restype = c_uint
@@ -479,9 +569,17 @@ class Eddsa(MpcObject):
         self.ctx = None
         return res
 
+    def getPublic(self):
+        return getEddsaPublic(self.share)
+
     def verify(self, data, signature):
-        pub_key = getEddsaPublic(self.share)
-        verifyEddsa(pub_key, data, signature)
+        verifyEddsa(self.getPublic(), data, signature)
+
+    def initBackup(self, rsa_pub_der):
+        self.ctx = initBackupEddsaKey(self.peer, self.share, rsa_pub_der)
+
+    def getBackupResult(self):
+        return getResultBackupEddsaKey(self.ctx)
 
 
 class Ecdsa(MpcObject):
@@ -497,9 +595,17 @@ class Ecdsa(MpcObject):
         self.ctx = None
         return res
 
+    def getPublic(self):
+        return getEcdsaPublic(self.share)
+
     def verify(self, data, signature):
-        pub_key = getEcdsaPublic(self.share)
-        verifyEcdsa(pub_key, data, signature)
+        verifyEcdsa(self.getPublic(), data, signature)
+
+    def initBackup(self, rsa_pub_der):
+        self.ctx = initBackupEcdsaKey(self.peer, self.share, rsa_pub_der)
+
+    def getBackupResult(self):
+        return getResultBackupEcdsaKey(self.ctx)
 
 
 class Bip32(MpcObject):

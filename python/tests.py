@@ -1,6 +1,11 @@
 import sys
 import os
 import binascii
+
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives.asymmetric import rsa
+from cryptography.hazmat.primitives import serialization
+
 import mpc_crypto
 
 CLIENT = 1
@@ -128,7 +133,6 @@ def bip_derive(srcClient, srcServer, hardened, index, test):
 
 
 def test_bip():
-    print("test_bip...")
     seed = "000102030405060708090a0b0c0d0e0f"
     seedClient, seedServer = generic_secret_import(
         binascii.unhexlify(seed))
@@ -145,19 +149,67 @@ def test_bip():
     #                 "xpub6FHa3pjLCk84BayeJxFW2SP4XRrFd1JYnxeLeU8EqN3vDfZmbqBqaGJAyiLjTAwm6ZLRQUMv1ZACTj37sR62cfN7fe5JnJ7dh8zL4fiyLHV")
     # test_bip_derive(m_0H_1_2H_2, False, 1000000000, m_0H_1_2H_2_1000000000,
     #                 "xpub6H1LXWLaKsWFhvm6RVpEL9P4KfRZSW7abD2ttkWP3SSQvnyA8FSVqNTEcYFgJS2UaFcxupHiYkro49S8yGasTvXEYBVPamhGW6cFJodrTHy")
-    print("OK")
+
+
+def gen_rsa_test_key():
+    backup_key = rsa.generate_private_key(
+        public_exponent=65537,
+        key_size=2048,
+        backend=default_backend()
+    )
+    rsa_prv_der = backup_key.private_bytes(
+        encoding=serialization.Encoding.DER,
+        format=serialization.PrivateFormat.PKCS8,
+        encryption_algorithm=serialization.NoEncryption()
+    )
+    backup_pub_key = backup_key.public_key()
+    rsa_pub_der = backup_pub_key.public_bytes(
+        encoding=serialization.Encoding.DER,
+        format=serialization.PublicFormat.SubjectPublicKeyInfo
+    )
+    return rsa_prv_der, rsa_pub_der
+
+
+def eddsa_backup(clientObj, serverObj):
+    print("test_eddsa_backup...")
+    rsa_prv_der, rsa_pub_der = gen_rsa_test_key()
+    clientObj.initBackup(rsa_pub_der)
+    serverObj.initBackup(rsa_pub_der)
+    exec_client_server(clientObj, serverObj)
+    backup = clientObj.getBackupResult()
+
+    pub_eddsa_key = clientObj.getPublic()
+    mpc_crypto.verifyEddsaBackupKey(rsa_pub_der, pub_eddsa_key, backup)
+    prv_eddsa_key = mpc_crypto.restoreEddsaKey(
+        rsa_prv_der, pub_eddsa_key, backup)
+
+
+def ecdsa_backup(clientObj, serverObj):
+    print("test_ecdsa_backup...")
+    rsa_prv_der, rsa_pub_der = gen_rsa_test_key()
+    clientObj.initBackup(rsa_pub_der)
+    serverObj.initBackup(rsa_pub_der)
+    exec_client_server(clientObj, serverObj)
+    backup = clientObj.getBackupResult()
+
+    pub_ecdsa_key = clientObj.getPublic()
+    mpc_crypto.verifyEcdsaBackupKey(rsa_pub_der, pub_ecdsa_key, backup)
+    prv_ecdsa_key = mpc_crypto.restoreEcdsaKey(
+        rsa_prv_der, pub_ecdsa_key, backup)
 
 
 def test_eddsa():
     eddsaKeyClient, eddsaKeyServer = eddsa_gen()
     refresh_shares(eddsaKeyClient, eddsaKeyServer)
     eddsa_sign(eddsaKeyClient, eddsaKeyServer)
+    eddsa_backup(eddsaKeyClient, eddsaKeyServer)
 
 
 def test_ecdsa():
     ecdsaKeyClient, ecdsaKeyServer = ecdsa_gen()
     refresh_shares(ecdsaKeyClient, ecdsaKeyServer)
     ecdsa_sign(ecdsaKeyClient, ecdsaKeyServer)
+    ecdsa_backup(ecdsaKeyClient, ecdsaKeyServer)
 
 
 def test_generic_secret():
@@ -167,8 +219,8 @@ def test_generic_secret():
 
 if __name__ == "__main__":
     try:
-        test_bip()
         test_eddsa()
+        test_bip()
         test_ecdsa()
         test_generic_secret()
     except mpc_crypto.MPCException as e:

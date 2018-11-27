@@ -116,6 +116,7 @@ efficient, it integrates MPC for BIP key derivation with ECDSA key
 generation, and it contains key-sharing refresh, which achieves proactive
 security. We describe these differences in this document.
 
+<a name="supported-functionalities"></a>
 # 3. Supported Functionalities
 
 The open source library supports the following operations:

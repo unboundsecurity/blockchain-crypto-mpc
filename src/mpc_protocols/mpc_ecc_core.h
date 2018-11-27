@@ -29,6 +29,80 @@ namespace mpc {
 buf_t ZK_PAILLIER_P_non_interactive(const crypto::bn_t& N, const crypto::bn_t& phi_N, mem_t session_id);
 bool ZK_PAILLIER_V_non_interactive(const crypto::bn_t& N, mem_t pi, mem_t session_id);
 
+
+struct zk_paillier_zero_t
+{
+  bn_t e, z;
+
+  void convert(ub::converter_t& converter)
+  {
+    converter.convert(e);
+    converter.convert(z);
+  }
+
+  void p(const bn_t& N, const bn_t& c, mem_t session_id, uint8_t aux, const bn_t& r);
+  bool v(const bn_t& N, const bn_t& c, mem_t session_id, uint8_t aux) const;
+};
+
+
+
+struct zk_paillier_range_t 
+{
+  enum { t = 128 };
+  struct info_t
+  {
+    bn_t a, b, c, d;
+    void convert(ub::converter_t& converter)
+    {
+      converter.convert(a);
+      converter.convert(b);
+      converter.convert(c);
+      converter.convert(d);
+    }
+  };
+
+  info_t infos[t];
+  buf128_t e;
+  int u;
+
+  void convert(ub::converter_t& converter)
+  {
+    converter.convert(u);
+    converter.convert(e);
+    converter.convert(infos);
+  }
+
+  void clear()
+  {
+    for (int i=0; i<t; i++) { infos[i].a = infos[i].b = infos[i].b = infos[i].d = 0; }
+  }
+
+  void p(const bn_t& q, const crypto::paillier_t& paillier, const bn_t& E, mem_t session_id, uint8_t aux, const bn_t& x, const bn_t& r);
+  bool v(const bn_t& q, const bn_t& N, const bn_t& E, mem_t session_id, uint8_t aux) const;
+};
+
+struct zk_pdl_t
+{
+  bn_t c_r, c_rho, z;
+  ecc_point_t R;
+  zk_paillier_zero_t zk_paillier_zero;
+  zk_paillier_range_t zk_paillier_range;
+
+  void convert(ub::converter_t& converter)
+  {
+    converter.convert(c_r);
+    converter.convert(c_rho);
+    converter.convert(z);
+    converter.convert(R);
+    converter.convert(zk_paillier_zero);
+    converter.convert(zk_paillier_range);
+  }
+
+  void p(ecurve_t curve, const ecc_point_t& Q, const bn_t& c_key, const crypto::paillier_t& paillier, mem_t session_id, uint8_t aux, const bn_t& r_key, const bn_t& x1);
+  bool v(ecurve_t curve, const ecc_point_t& Q, const bn_t& c_key, const bn_t& N,                      mem_t session_id, uint8_t aux) const;
+};
+
+
 struct zk_dl_t
 {
   bn_t e;

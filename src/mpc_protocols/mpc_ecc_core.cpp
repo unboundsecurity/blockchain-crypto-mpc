@@ -106,6 +106,314 @@ bool ZK_PAILLIER_V_non_interactive(const bn_t& N, mem_t pi, mem_t session_id)
 }
 
 
+//----------------------------------- zk_paillier_zero_t ---------------------------
+
+void zk_paillier_zero_t::p(const bn_t& N, const bn_t& c, mem_t session_id, uint8_t aux, const bn_t& r)
+{
+  bn_t N2 = N*N;
+  bn_t rho = bn_t::rand(N);
+  bn_t a = rho.pow_mod(N, N2);
+  
+  e = bn_t(sha256_t::hash(N, c, a, session_id, aux));
+  MODULO(N2) z = rho * r.pow(e);
+}
+
+bool zk_paillier_zero_t::v(const bn_t& N, const bn_t& c, mem_t session_id, uint8_t aux) const
+{
+  bn_t N2 = N*N;
+  bn_t a;
+  MODULO(N2) a = z.pow(N) / c.pow(e);
+
+  if (bn_t::gcd(a, N) != 1) 
+  {
+    return false;
+  }
+
+  if (bn_t::gcd(c, N) != 1) 
+  {
+    return false;
+  }
+
+  if (bn_t::gcd(z, N) != 1) 
+  {
+    return false;
+  }
+
+  bn_t e_tag = bn_t(sha256_t::hash(N, c, a, session_id, aux));
+  return e==e_tag;
+}
+
+//------------- zk_paillier_range_t ---------------------------------------
+
+void zk_paillier_range_t::p(const bn_t& q, const crypto::paillier_t& paillier, const bn_t& c_key, mem_t session_id, uint8_t aux, const bn_t& x_original, const bn_t& r)
+{
+  bn_t N = paillier.get_N();
+  bn_t x = x_original;
+  bn_t l = q / 3;
+  bn_t l2 = l * 2;
+  bn_t l3 = l * 3;
+
+  bn_t w1[t];
+  bn_t w2[t];
+  bn_t c1[t];
+  bn_t c2[t];
+  bn_t r1[t];
+  bn_t r2[t];
+  buf128_t rnd = buf128_t::rand();
+
+  sha256_t sha256;
+
+  for (int i=0; i<t; i++) 
+  {
+    w2[i] = bn_t::rand(l);
+    w1[i] = l + w2[i];
+
+    if (rnd.get_bit(i)) 
+    {
+      std::swap(w1[i], w2[i]);
+    }
+
+    r1[i] = bn_t::rand(N);
+    r2[i] = bn_t::rand(N);
+
+    c1[i] = paillier.encrypt(w1[i], r1[i]);
+    c2[i] = paillier.encrypt(w2[i], r2[i]);
+
+    sha256.update(c1[i]);
+    sha256.update(c2[i]);
+  }
+
+  u = 0;
+
+       if (x < l)  u = 0;
+  else if (x < l2) u = 1;
+  else if (x < l3) u = 2;
+  else if (x < q)  u = 3;
+  else assert(false);
+
+  bn_t c = paillier.sub_scalar(c_key, l * u);
+  x = x - (l * u);
+  
+  sha256.update(u);
+  sha256.update(c_key);
+  sha256.update(N);
+  sha256.update(session_id);
+  sha256.update(aux);
+
+  e = sha256.final().lo; // 16 bytes
+
+  for (int i=0; i<t; i++) 
+  {
+    bool ei = e.get_bit(i);
+    if (!ei)
+    {
+      infos[i].a = w1[i];
+      infos[i].b = r1[i];
+      infos[i].c = w2[i];
+      infos[i].d = r2[i];
+    }
+    else
+    {
+      int j = 0;
+           if (x + w1[i] >= l && x + w1[i] <= l2) j = 1;
+      else if (x + w2[i] >= l && x + w2[i] <= l2) j = 2;
+      else assert(false);
+
+      infos[i].a = j;
+      infos[i].b = x + ((j==1) ? w1[i] : w2[i]);
+      MODULO(N) infos[i].c = r * ((j==1) ? r1[i] : r2[i]);
+      infos[i].d = (j==2) ? c1[i] : c2[i];
+    }
+  }
+}
+
+bool zk_paillier_range_t::v(const bn_t& q, const bn_t& N, const bn_t& c_key, mem_t session_id, uint8_t aux) const
+{
+  bn_t N2 = N*N;
+
+  bn_t l = q / 3;
+  bn_t l2 = l * 2;
+
+  crypto::paillier_t paillier; paillier.create_pub(N);
+  bn_t c = paillier.sub_scalar(c_key, l * u);
+  int j;
+
+  sha256_t sha256;
+  for (int i=0; i<t; i++) 
+  {
+    bn_t c1, c2;
+
+    bool ei = e.get_bit(i);
+    if (!ei)
+    {
+      bn_t w1 = infos[i].a;
+      bn_t w2 = infos[i].c;
+      if (w1<w2)
+      {
+        if (w1<0)
+        {
+          return false;
+        }
+        if (w1>l)
+        {
+          return false;
+        }
+        if (w2<l)
+        {
+          return false;
+        }
+        if (w2>l2) 
+        {
+          return false;
+        }
+      }
+      else
+      {
+        if (w2<0)
+        {
+          return false;
+        }
+        if (w2>l)
+        {
+          return false;
+        }
+        if (w1<l)
+        {
+          return false;
+        }
+        if (w1>l2) 
+        {
+          return false;
+        }
+      }
+
+      bn_t r1 = infos[i].b;
+      bn_t r2 = infos[i].d;
+      c1 = paillier.encrypt(w1, r1);
+      c2 = paillier.encrypt(w2, r2);
+    }
+    else
+    {
+      if (infos[i].a!=1 && infos[i].a!=2) 
+      {
+        return false;
+      }
+      j = (int)infos[i].a;
+
+      bn_t wi = infos[i].b;
+      if (wi<l)
+      {
+        return false;
+      }
+      if (wi>l2) 
+      {
+        return false;
+      }
+
+      bn_t ri = infos[i].c;
+      bn_t ci_flip = infos[i].d;
+
+      bn_t c_tag = paillier.encrypt(wi, ri);
+      bn_t c_other;
+
+      MODULO(N2) c_other = c_tag / c;
+      c1 = (j == 2) ? ci_flip : c_other;
+      c2 = (j == 1) ? ci_flip : c_other;
+    }
+
+    sha256.update(c1);
+    sha256.update(c2);
+  }
+
+  sha256.update(u);
+  sha256.update(c_key);
+  sha256.update(N);
+  sha256.update(session_id);
+  sha256.update(aux);
+
+  buf128_t e_tag = sha256.final().lo; // 16 bytes
+  if (e != e_tag)
+  {
+    return false;
+  }
+
+  return true;
+}
+
+
+
+//-------------------------------------- zk_pdl_t ------------------------------
+void zk_pdl_t::p(ecurve_t curve, const ecc_point_t& Q, const bn_t& c_key, const paillier_t& paillier, mem_t session_id, uint8_t aux, const bn_t& r_key, const bn_t& x1)
+{
+  const bn_t& q = curve.order();
+  const ecc_generator_point_t& G = curve.generator();
+ 
+  bn_t N = paillier.get_N();
+  bn_t r = bn_t::rand(q);
+  bn_t r_rand = bn_t::rand(N);					//(*)
+  c_r = paillier.encrypt(r,r_rand);				//(*)
+  R = G * r;
+  bn_t rho = bn_t::rand(q.sqr());
+  bn_t rho_rand = bn_t::rand(N);				//(*)
+  c_rho =  paillier.encrypt(rho*q, rho_rand);			//(*)
+ 
+  bn_t e = bn_t(sha256_t::hash(c_key, N, Q, c_r, R, c_rho, session_id, aux));
+  bn_t temp = paillier.mul_scalar(c_key, e);
+  bn_t temp2 = paillier.add_ciphers(c_r, temp);
+  bn_t c_z = paillier.add_ciphers(temp2, c_rho);
+  z = r + (e * x1) + (rho * q);
+ 
+  bn_t c_tag = paillier.sub_scalar(c_z, z);
+ 
+  bn_t r_temp = r_key.pow_mod(e, N);				//(*)
+  bn_t r_tag;
+  MODULO(N) r_tag = r_temp * r_rand * rho_rand;		//(*)
+ 
+  zk_paillier_zero.p(N, c_tag, session_id, aux, r_tag);
+ 
+  zk_paillier_range.p(q, paillier, c_key, session_id, aux, x1, r_key);
+}
+
+
+bool zk_pdl_t::v(ecurve_t curve, const ecc_point_t& Q, const bn_t& c_key, const bn_t& N, mem_t session_id, uint8_t aux) const
+{
+  const bn_t& q = curve.order();
+  const ecc_generator_point_t& G = curve.generator();
+
+  paillier_t paillier; paillier.create_pub(N);
+
+  bn_t e = bn_t(sha256_t::hash(c_key, N, Q, c_r, R, c_rho, session_id, aux));
+
+  bn_t temp = paillier.mul_scalar(c_key, e);
+  bn_t temp2 = paillier.add_ciphers(c_r, temp);
+  bn_t c_z = paillier.add_ciphers(temp2, c_rho);
+
+  ecc_point_t P = G*z;
+  if (P != R + Q*e) 
+  {
+    return false;
+  }
+  if (z<0 || z>=N) 
+  {
+    return false;
+  }
+
+  bn_t c_tag = paillier.sub_scalar(c_z, z);
+
+  if (!zk_paillier_zero.v(N, c_tag, session_id, aux)) 
+  {
+    return false;
+  }
+
+
+  if (!zk_paillier_range.v(q, N, c_key, session_id, aux)) 
+  {
+    return false;
+  }
+  return true;
+}
+
+
 // ------------------------------ zk_dl ------------------------
 
 static bn_t zk_dl_hash(const ecc_point_t& G, const ecc_point_t& Q, const ecc_point_t& X, mem_t session_id, uint8_t aux)

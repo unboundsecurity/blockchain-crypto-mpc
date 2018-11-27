@@ -76,12 +76,14 @@ struct ecdsa_create_paillier_t
   {
     bn_t N, c_key;
     buf_t pi;
+    zk_pdl_t zk_pdl;
 
     void convert(ub::converter_t& converter) 
     { 
       converter.convert(N);
       converter.convert(c_key);
       converter.convert(pi);
+      converter.convert(zk_pdl);
     }
   };
 

@@ -1290,6 +1290,8 @@ ecp_25519_t operator * (const ecp_gen_25519_t& G, const bn_t& val)
 
 ecp_25519_t ec25519::mul_to_generator(const bn_t& val)
 {
+  assert(val.sign()>=0);
+
   byte_t scalar[32];
   ec25519::encode_scalar(val, scalar);
 

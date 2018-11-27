@@ -14,7 +14,7 @@ You can download a PDF of this document [here](./Unbound%20Cryptocurrency%20Wall
 
 [1. Problem Statement](#problem-statement)
 
-[2. Overview of the Solution](#overview-of-the-solution)
+[2. Overview of the Solution](#2.-overview-of-the-solution)
 
 [3. Supported Functionalities](#supported-functionalities)
 

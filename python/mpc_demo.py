@@ -1,19 +1,20 @@
 """
-The script demonstrates Unbound Tech mpc_crypto library usage.
-Two instances, client and server, cooperate to execute Crypto primitives via MPC.
+The script demonstrates the Unbound Tech blockchain-crypto-mpc library.
+This example has two instances, a client and a server, which cooperate to execute crypto primitives via MPC.
 
-Simple protocol is executed, where server and client are assumed to perform the same operation.
-Messages are sent as is, preceded by lenght.
+A simple protocol is executed where the server and client are assumed to perform the same operation.
+Messages are sent as is, preceded by length.
 
 Usage:
-    Server instance should receive '--server' flag.
-    Client instance should receive hostname ('--host') of the server.
+    Server instance should have the '--server' flag.
+    Client instance should have the hostname ('--host') of the server.
     Run with '--help' flag to see all parameter details.
 
-Example1: generate split EDDSA key
+Example 1: Generate a split EDDSA key
     user1@host1> python mpc_demo.py --type EDDSA --command generate --out_file key_share.bin --server
     user2@host2> python mpc_demo.py --type EDDSA --command generate --out_file key_share.bin --host host1
-Example2: sign with the split EDDSA key
+
+Example 2: Sign with the split EDDSA key
     user1@host1> python mpc_demo.py --type EDDSA --command sign --in_file key_share.bin --server
     user2@host2> python mpc_demo.py --type EDDSA --command sign --in_file key_share.bin --host host1
 """

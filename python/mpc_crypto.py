@@ -1,6 +1,6 @@
 """
-ctypes wrappers for the Unbound Tech mpc_crypto library functions.
-In addition, more convenient object oriented interface is provided.
+ctypes wrapper for the Unbound Tech blockchain-crypto-mpc library functions.
+It also provides a more convenient object oriented interface.
 """
 from ctypes import *
 

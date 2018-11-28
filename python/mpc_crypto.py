@@ -1,3 +1,7 @@
+"""
+ctypes wrappers for the Unbound Tech mpc_crypto library functions.
+In addition, more convenient object oriented interface is provided.
+"""
 from ctypes import *
 
 dll_name = "mpc_crypto"

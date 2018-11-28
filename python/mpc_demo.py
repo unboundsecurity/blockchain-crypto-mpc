@@ -1,3 +1,22 @@
+"""
+The script demonstrates Unbound Tech mpc_crypto library usage.
+Two instances, client and server, cooperate to execute Crypto primitives via MPC.
+
+Simple protocol is executed, where server and client are assumed to perform the same operation.
+Messages are sent as is, preceded by lenght.
+
+Usage:
+    Server instance should receive '--server' flag.
+    Client instance should receive hostname ('--host') of the server.
+    Run with '--help' flag to see all parameter details.
+
+Example1: generate split EDDSA key
+    user1@host1> python mpc_demo.py --type EDDSA --command generate --out_file key_share.bin --server
+    user2@host2> python mpc_demo.py --type EDDSA --command generate --out_file key_share.bin --host host1
+Example2: sign with the split EDDSA key
+    user1@host1> python mpc_demo.py --type EDDSA --command sign --in_file key_share.bin --server
+    user2@host2> python mpc_demo.py --type EDDSA --command sign --in_file key_share.bin --host host1
+"""
 import sys
 import argparse
 import socket
@@ -154,10 +173,11 @@ def run_command():
         out = run_sign(inStr)
         outFileDefault = args.type + '_signature'
 
-    outputFile = args.out_file if args.out_file else outFileDefault + \
-        '_' + str(peer) + '.dat'
-    with open(outputFile, "wb") as f:
-        f.write(out)
+    if args.command != 'sign' or peer == CLIENT:  # only client receives the signature
+        outputFile = args.out_file if args.out_file else outFileDefault + \
+            '_' + str(peer) + '.dat'
+        with open(outputFile, "wb") as f:
+            f.write(out)
 
 
 def run_server():

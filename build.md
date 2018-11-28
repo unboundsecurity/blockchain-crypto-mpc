@@ -11,6 +11,8 @@ The **blockchain-mpc-crypto** library has the following dependencies:
 - C++ version "-std=c++0x" or newer
 - OpenSSL version 1.0.1 or newer
 - Java version 1.7 or newer (Optional - use if you need JNI)
+- Python version 3.0 or newer (Optional - only for using Python)
+
 
 Building your target requires having the required OpenSSL version and optionally having Java if JNI is required.
 
@@ -66,6 +68,7 @@ The Java code is a wrapper over the basic native library.
 ### Python
 
 The python module is based on the native library (ctypes).
+
 
 1. Build the native library for your platform (see relevant platform instructions).
 1. The python library can then be used with *mpc_crypto.py*.

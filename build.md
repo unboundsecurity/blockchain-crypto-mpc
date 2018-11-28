@@ -16,6 +16,8 @@ The **blockchain-mpc-crypto** library has the following dependencies:
 
 Building your target requires having the required OpenSSL version and optionally having Java if JNI is required.
 
+**Note:** If you do not need **JNI** (the library will not be used from Java), you can disable JNI code generation and build dependency on Java header files by defining `MPC_CRYPTO_NO_JNI` (add  the flag `-DMPC_CRYPTO_NO_JNI` to CPP).
+
 ## Build Instructions
 
 The following sections provide build instructions for the various platforms.
@@ -64,6 +66,7 @@ The Java code is a wrapper over the basic native library.
 
 1. Build the native library (including JNI support) for your platform (see relevant platform instructions). 
 1. You can then build the and use the Java code.
+
 
 ### Python
 

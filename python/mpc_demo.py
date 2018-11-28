@@ -156,7 +156,7 @@ def run_command():
 
     outputFile = args.out_file if args.out_file else outFileDefault + \
         '_' + str(peer) + '.dat'
-    with open(outputFile, "bw") as f:
+    with open(outputFile, "wb") as f:
         f.write(out)
 
 

@@ -3,8 +3,11 @@ ctypes wrappers for the Unbound Tech mpc_crypto library functions.
 In addition, more convenient object oriented interface is provided.
 """
 from ctypes import *
+import sys
 
-dll_name = "mpc_crypto"
+dll_name = 'mpc_crypto'
+if 'win' not in sys.platform:
+    dll_name = 'lib' + dll_name + '.so'
 libmpc = CDLL(dll_name)
 
 KEY_TYPE_EDDSA = 2

@@ -26,6 +26,7 @@ You can download a PDF of this document [here](./Unbound%20Cryptocurrency%20Wall
 
 [7. References](#references)
 
+<a name="problem-statement"></a>
 # 1. Problem Statement
 
 In the realm of crypto-currencies, storing private keys for cryptographic
@@ -39,6 +40,7 @@ two-party computation (MPC). The library can be found at:
 
 <https://github.com/unbound-tech/blockchain-crypto-mpc/>
 
+<a name="overview-of-the-solution"></a>
 # 2. Overview of the Solution
 
 
@@ -116,6 +118,7 @@ efficient, it integrates MPC for BIP key derivation with ECDSA key
 generation, and it contains key-sharing refresh, which achieves proactive
 security. We describe these differences in this document.
 
+<a name="supported-functionalities"></a>
 # 3. Supported Functionalities
 
 The open source library supports the following operations:
@@ -154,6 +157,7 @@ The open source library supports the following operations:
     learns nothing about the private key. Thus, it must breach and be
     resident on both parties before any refresh takes place. This security property is called “proactive” in the academic MPC literature.
 
+<a name="cryptographic-tools"></a>
 # 4. Cryptographic Tools
 
 
@@ -329,6 +333,7 @@ Using the two-rounds of OT required based on the extension, the entire dual exec
 As we have described, our dual execution protocol has the property that if a party cheats, then it can learn a single bit, but at the cost of being caught with probability ½ (informally speaking). Thus, if an attack is detected, use of the key must be stopped. Now, one possible strategy of an adversary is to try to cheat, but to not provide the output of the equality test to the honest party (when it receives this output first), and claim that there was a “crash” or network failure. If this is not dealt with, then the adversary can learn all bits of the secret key. Thus, either executions must always conclude (by storing on disk the messages needed to complete, and continuing after a crash or failure), or some cheating attempt must be assumed. We also note that many executions on the same input key cannot be run in parallel since an attacker can learn a bit from each parallel execution. If this is desired, then it is possible to change the code so that a single equality test is run for all executions, and this will be secure.
 
 
+<a name="cryptographic-protocols-overview"></a>
 # 5. Cryptographic Protocols Overview
 
 Having described all the cryptographic primitives and tools used in
@@ -393,7 +398,7 @@ randomized information in the dual execution, followed by a “BIP verification 
 
 When working with a BIP derivation, ECDSA key generation requires first running BIP derivation via dual execution (5 rounds), then verifying the BIP results (3 rounds), and then running ECDSA key generation on the received shares (3 rounds). In order to reduce the amount of communication, some of these messages can be piggybacked and we have 9 rounds overall. This flow is depicted in the following figure (note that *AgreeRandom* is a secure coin tossing protocol that is used to ensure a fresh session identifier in the actual ECDSA key generation phase), and is helpful to follow the implementation of this more complex protocol combination. 
  
-![Bip Key Derivation](images/BIP-Key-Derivation.png)
+[Bip Key Derivation](images/BIP-Key-Derivation.png)
 
 ## 5.3 Backup
 
@@ -493,7 +498,7 @@ at any later time and decrypt *c<sub>key</sub>*; this value together with
 *x<sub>2</sub>* (both held by Bob) yields the private key *x*. This level of security is called proactive in the academic literature.
 
 
-
+<a name="security-guarantees"></a>
 # 6. Security Guarantees
 
 All of our protocols are secure in the presence of malicious
@@ -520,7 +525,7 @@ following bullets:
 
 We remind the reader than any application using this code must take care to treat cheating that takes place in the dual execution, including the case that the last equality message is “dropped”. This is crucial for secure usage of the library.
 
-
+<a name="references"></a>
 # 7. References
 
 \[1\] Fabrice Boudot. [Efficient Proofs that a Committed Number Lies in

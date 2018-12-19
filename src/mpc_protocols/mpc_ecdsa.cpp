@@ -142,6 +142,7 @@ error_t ecdsa_refresh_paillier_t::peer1_step(ecdsa_share_t& share, mem_t session
   bn_t c2 = paillier2.encrypt(temp, r2);
 
   zk_paillier_eq.p(temp, r1, r2, session_id, n1, c1, n2, c2);
+  pi = ZK_PAILLIER_P_non_interactive(N, paillier2.get_phi_N(), session_id);
   share.c_key = c_key = share.paillier.add_scalar(c2, delta);
 
   return 0;
@@ -169,6 +170,9 @@ error_t ecdsa_refresh_paillier_t::peer2_step(ecdsa_share_t& share, mem_t session
 
   bn_t n1 = paillier1.get_N();
   bn_t n2 = paillier2.get_N();
+
+  if (!ZK_PAILLIER_V_non_interactive(n2, pi, session_id)) return rv = error(E_CRYPTO);
+
   if (!zk_paillier_eq.v(session_id, n1, n2))
   {
     return rv = ub::error(E_CRYPTO);

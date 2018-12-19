@@ -388,13 +388,16 @@ error_t ecdsa_sign_t::peer2_step2(
 
   bn_t m_tag = bn_t::from_bin(data_to_sign);
 
-  bn_t rho = bn_t::rand((q*q) << 208); // 128 + 80 (needed to ensure statistical closeness, even though over integers)
+  //bn_t rho = bn_t::rand((q*q) << 208); // 128 + 80 (needed to ensure statistical closeness, even though over integers)
+  bn_t rho = bn_t::rand((q*q) << 80); // 80 (need additional noise over q*q due to refresh)
+
   MODULO(q) u = m_tag / k2;  
   bn_t u2 = rho*q + u;
   MODULO(q) v = r / k2;  
 
   bn_t c1 = share.paillier.add_scalar(share.c_key, share.x);
-  c1 = share.paillier.add_scalar(c1, q << 208); // 128 + 80 (needed to ensure that is positive, due to slack in range proof)
+  // c1 = share.paillier.add_scalar(c1, q << 208); // 128 + 80 (needed to ensure that is positive, due to slack in range proof)
+
   bn_t c2 = share.paillier.mul_scalar(c1, v);
   out.c3 = share.paillier.add_scalar(c2, u2);
 

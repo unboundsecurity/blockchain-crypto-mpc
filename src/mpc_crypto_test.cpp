@@ -559,10 +559,14 @@ static int test_bip()
   return rv;
 }
 
+namespace mpc {
+extern int zk_paillier_range_time;
+}
+
 MPCCRYPTO_API int MPCCrypto_test()
 {
   int rv = 0;
-
+  /*
   test_key_t eddsa_key;
   if (rv = test_eddsa_gen(eddsa_key)) return rv;
   if (rv = test_eddsa_backup(eddsa_key)) return rv;
@@ -572,8 +576,14 @@ MPCCRYPTO_API int MPCCrypto_test()
     if (rv = test_refresh(eddsa_key)) return rv;
   }
 
-  test_key_t ecdsa_key;
-  if (rv = test_ecdsa_gen(ecdsa_key)) return rv;
+  */
+  int t = GetTickCount();
+  for (int i=0; i<10; i++)
+  {
+    test_key_t ecdsa_key;
+    if (rv = test_ecdsa_gen(ecdsa_key)) return rv;
+  }
+  /*
   if (rv = test_ecdsa_backup(ecdsa_key)) return rv;
   for (int i=0; i<3; i++)
   {
@@ -590,8 +600,8 @@ MPCCRYPTO_API int MPCCrypto_test()
   {
     if (rv = test_refresh(secret_key2)) return rv;
   }
-  
-  printf("\nAll tests successfully finished\n");
+  */
+  printf("\nAll tests successfully finished full=%d, zk_paillier_range=%d\n", GetTickCount()-t, mpc::zk_paillier_range_time);
   return rv;
 }
 

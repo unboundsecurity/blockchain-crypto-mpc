@@ -77,8 +77,8 @@ struct zk_paillier_range_t
     for (int i=0; i<t; i++) { infos[i].a = infos[i].b = infos[i].b = infos[i].d = 0; }
   }
 
-  void p(const bn_t& q, const crypto::paillier_t& paillier, const bn_t& E, mem_t session_id, uint8_t aux, const bn_t& x, const bn_t& r);
-  bool v(const bn_t& q, const bn_t& N, const bn_t& E, mem_t session_id, uint8_t aux) const;
+  void p(bool threaded, const bn_t& q, const crypto::paillier_t& paillier, const bn_t& E, mem_t session_id, uint8_t aux, const bn_t& x, const bn_t& r);
+  bool v(bool threaded, const bn_t& q, const bn_t& N, const bn_t& E, mem_t session_id, uint8_t aux) const;
 };
 
 struct zk_pdl_t

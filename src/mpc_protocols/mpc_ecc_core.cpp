@@ -145,8 +145,44 @@ bool zk_paillier_zero_t::v(const bn_t& N, const bn_t& c, mem_t session_id, uint8
 
 //------------- zk_paillier_range_t ---------------------------------------
 
-void zk_paillier_range_t::p(const bn_t& q, const crypto::paillier_t& paillier, const bn_t& c_key, mem_t session_id, uint8_t aux, const bn_t& x_original, const bn_t& r)
+struct paillier_enc_info_t
 {
+  const bn_t* src;
+  const bn_t* rand;
+  bn_t* dst;
+};
+
+class paillier_enc_thread_t : public ub::thread_t
+{
+public:
+  virtual void run() override
+  {
+    int n = (int)infos.size();
+    for (int i=0; i<n; i++) *infos[i].dst = paillier->encrypt(*infos[i].src, *infos[i].rand);
+  }
+
+  void add(const bn_t* src, const bn_t* rand, bn_t* dst)
+  {
+    paillier_enc_info_t info; info.src = src; info.rand = rand; info.dst = dst;
+    infos.push_back(info);
+  }
+  void set_paillier(const crypto::paillier_t& paillier)
+  {
+    this->paillier = &paillier;
+  }
+
+private:
+  std::vector<paillier_enc_info_t> infos;
+  const crypto::paillier_t* paillier;
+};
+
+int zk_paillier_range_time = 0;
+
+
+void zk_paillier_range_t::p(bool threaded, const bn_t& q, const crypto::paillier_t& paillier, const bn_t& c_key, mem_t session_id, uint8_t aux, const bn_t& x_original, const bn_t& r)
+{
+  int tt = GetTickCount();
+
   bn_t N = paillier.get_N();
   bn_t x = x_original;
   bn_t l = q / 3;
@@ -161,8 +197,6 @@ void zk_paillier_range_t::p(const bn_t& q, const crypto::paillier_t& paillier, c
   bn_t r2[t];
   buf128_t rnd = buf128_t::rand();
 
-  sha256_t sha256;
-
   for (int i=0; i<t; i++) 
   {
     w2[i] = bn_t::rand(l);
@@ -175,10 +209,34 @@ void zk_paillier_range_t::p(const bn_t& q, const crypto::paillier_t& paillier, c
 
     r1[i] = bn_t::rand(N);
     r2[i] = bn_t::rand(N);
+  }
 
+  int cores = threaded ? ub::get_cpu_count() : 1;
+  if (cores<1) cores = 1;
+  std::vector<paillier_enc_thread_t> threads(cores);
+
+  for (int i=0; i<t; i++) 
+  {
+    int thread_index = i % cores;
+    threads[thread_index].add(w1+i, r1+i, c1+i);
+    threads[thread_index].add(w2+i, r2+i, c2+i);
+  }
+
+  for (int i=0; i<cores; i++) threads[i].set_paillier(paillier);
+  for (int i=0; i<cores-1; i++) threads[i].start();
+  threads[cores-1].run();
+  for (int i=0; i<cores-1; i++) threads[i].join();
+
+  /*for (int i=0; i<t; i++) 
+  {
     c1[i] = paillier.encrypt(w1[i], r1[i]);
     c2[i] = paillier.encrypt(w2[i], r2[i]);
+  }*/
 
+
+  sha256_t sha256;
+  for (int i=0; i<t; i++) 
+  {
     sha256.update(c1[i]);
     sha256.update(c2[i]);
   }
@@ -225,10 +283,13 @@ void zk_paillier_range_t::p(const bn_t& q, const crypto::paillier_t& paillier, c
       infos[i].d = (j==2) ? c1[i] : c2[i];
     }
   }
+
+  zk_paillier_range_time += GetTickCount()-tt;
 }
 
-bool zk_paillier_range_t::v(const bn_t& q, const bn_t& N, const bn_t& c_key, mem_t session_id, uint8_t aux) const
+bool zk_paillier_range_t::v(bool threaded, const bn_t& q, const bn_t& N, const bn_t& c_key, mem_t session_id, uint8_t aux) const
 {
+  int tt = GetTickCount();
   bn_t N2 = N*N;
 
   bn_t l = q / 3;
@@ -238,10 +299,18 @@ bool zk_paillier_range_t::v(const bn_t& q, const bn_t& N, const bn_t& c_key, mem
   bn_t c = paillier.sub_scalar(c_key, l * u);
   int j;
 
-  sha256_t sha256;
+  int cores = threaded ? ub::get_cpu_count() : 1;
+  if (cores<1) cores = 1;
+  std::vector<paillier_enc_thread_t> threads(cores);
+
+  bn_t c1_tab[t];
+  bn_t c2_tab[t];
+  //bn_t c_tag_tab[t];
+
   for (int i=0; i<t; i++) 
   {
-    bn_t c1, c2;
+    //bn_t c1, c2;
+    int thread_index = i % cores;
 
     bool ei = e.get_bit(i);
     if (!ei)
@@ -250,75 +319,65 @@ bool zk_paillier_range_t::v(const bn_t& q, const bn_t& N, const bn_t& c_key, mem
       bn_t w2 = infos[i].c;
       if (w1<w2)
       {
-        if (w1<0)
-        {
-          return false;
-        }
-        if (w1>l)
-        {
-          return false;
-        }
-        if (w2<l)
-        {
-          return false;
-        }
-        if (w2>l2) 
-        {
-          return false;
-        }
+        if (w1<0) return false;
+        if (w1>l) return false;
+        if (w2<l) return false;
+        if (w2>l2) return false;
       }
       else
       {
-        if (w2<0)
-        {
-          return false;
-        }
-        if (w2>l)
-        {
-          return false;
-        }
-        if (w1<l)
-        {
-          return false;
-        }
-        if (w1>l2) 
-        {
-          return false;
-        }
+        if (w2<0) return false;
+        if (w2>l) return false;
+        if (w1<l) return false;
+        if (w1>l2) return false;
       }
 
-      bn_t r1 = infos[i].b;
-      bn_t r2 = infos[i].d;
-      c1 = paillier.encrypt(w1, r1);
-      c2 = paillier.encrypt(w2, r2);
+      //bn_t r1 = infos[i].b;
+      //bn_t r2 = infos[i].d;
+      //c1 = paillier.encrypt(w1, r1);
+      //c2 = paillier.encrypt(w2, r2);
+      threads[thread_index].add(&infos[i].a, &infos[i].b, &c1_tab[i]); 
+      threads[thread_index].add(&infos[i].c, &infos[i].d, &c2_tab[i]); 
     }
     else
     {
-      if (infos[i].a!=1 && infos[i].a!=2) 
-      {
-        return false;
-      }
+      if (infos[i].a!=1 && infos[i].a!=2) return false;
       j = (int)infos[i].a;
 
       bn_t wi = infos[i].b;
-      if (wi<l)
-      {
-        return false;
-      }
-      if (wi>l2) 
-      {
-        return false;
-      }
+      if (wi<l) return false;
+      if (wi>l2) return false;
 
-      bn_t ri = infos[i].c;
-      bn_t ci_flip = infos[i].d;
+      //bn_t ri = infos[i].c;
+      //bn_t c_tag = paillier.encrypt(wi, ri);
+      threads[thread_index].add(&infos[i].b, &infos[i].c, &c1_tab[i]); 
+    }
+  }
 
-      bn_t c_tag = paillier.encrypt(wi, ri);
-      bn_t c_other;
+  for (int i=0; i<cores; i++) threads[i].set_paillier(paillier);
+  for (int i=0; i<cores-1; i++) threads[i].start();
+  threads[cores-1].run();
+  for (int i=0; i<cores-1; i++) threads[i].join();
 
-      MODULO(N2) c_other = c_tag / c;
-      c1 = (j == 2) ? ci_flip : c_other;
-      c2 = (j == 1) ? ci_flip : c_other;
+  sha256_t sha256;
+  for (int i=0; i<t; i++) 
+  {
+    bn_t c1, c2;
+
+    bool ei = e.get_bit(i);
+    if (!ei)
+    {
+      c1 = c1_tab[i];
+      c2 = c2_tab[i];
+    }
+    else
+    {
+      j = (int)infos[i].a;
+
+      MODULO(N2) c1 = c1_tab[i] / c;
+      c2 = infos[i].d;
+
+      if (j==2) std::swap(c1, c2);
     }
 
     sha256.update(c1);
@@ -337,10 +396,9 @@ bool zk_paillier_range_t::v(const bn_t& q, const bn_t& N, const bn_t& c_key, mem
     return false;
   }
 
+  zk_paillier_range_time += GetTickCount()-tt;
   return true;
 }
-
-
 
 //-------------------------------------- zk_pdl_t ------------------------------
 void zk_pdl_t::p(ecurve_t curve, const ecc_point_t& Q, const bn_t& c_key, const paillier_t& paillier, mem_t session_id, uint8_t aux, const bn_t& r_key, const bn_t& x1)
@@ -371,7 +429,7 @@ void zk_pdl_t::p(ecurve_t curve, const ecc_point_t& Q, const bn_t& c_key, const 
  
   zk_paillier_zero.p(N, c_tag, session_id, aux, r_tag);
  
-  zk_paillier_range.p(q, paillier, c_key, session_id, aux, x1, r_key);
+  zk_paillier_range.p(true, q, paillier, c_key, session_id, aux, x1, r_key);
 }
 
 
@@ -406,7 +464,7 @@ bool zk_pdl_t::v(ecurve_t curve, const ecc_point_t& Q, const bn_t& c_key, const 
   }
 
 
-  if (!zk_paillier_range.v(q, N, c_key, session_id, aux)) 
+  if (!zk_paillier_range.v(true, q, N, c_key, session_id, aux)) 
   {
     return false;
   }

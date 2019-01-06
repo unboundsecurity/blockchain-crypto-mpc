@@ -28,6 +28,8 @@ namespace ub {
 
 extern bool g_process_termination;
 
+int get_cpu_count();
+
 template<class T> class global_t
 {
 public: 
@@ -105,6 +107,22 @@ public:
   static uint64_t thread_id();
   static void sleep(int milliseconds);
   static void yield();
+
+  thread_t();
+  virtual ~thread_t();
+  void start();
+  void join();
+
+protected:
+  virtual void run()=0;
+
+#ifdef _WIN32
+  HANDLE handle; 
+  static DWORD __stdcall worker(void_ptr self);
+#else
+  pthread_t handle;
+  static void_ptr worker(void_ptr self);
+#endif
 };
 
 

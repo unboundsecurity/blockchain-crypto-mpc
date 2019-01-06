@@ -209,6 +209,41 @@ bool mutex_t::try_lock()
 
 //--------------------------------- thread_t ----------------------------
 
+thread_t::thread_t() : handle(0)
+{  
+}
+
+thread_t::~thread_t()
+{
+  if (!handle) return;
+  join();
+#ifdef _WIN32
+  ::CloseHandle(handle);
+#endif
+}
+
+void thread_t::start()
+{
+#ifdef _WIN32
+  DWORD thread_id = 0;
+  handle = ::CreateThread(NULL, 0, worker, this, 0, &thread_id);
+#else
+  pthread_create(&handle, nullptr, worker, this);
+#endif
+}
+
+void thread_t::join()
+{
+  if (!handle) return;
+
+#ifdef _WIN32
+  ::WaitForSingleObject(handle, INFINITE);
+#else
+  pthread_join(handle, NULL);
+  handle = 0;
+#endif
+}
+
 uint64_t thread_t::thread_id()
 {
 #ifdef _WIN32
@@ -228,13 +263,10 @@ void thread_t::yield()
 {
 #if defined(_WIN32)
   ::SwitchToThread();
-#elif defined(__APPLE__)
-  sched_yield();
 #else
   sched_yield();
 #endif
 }
-
 
 void thread_t::sleep(int milliseconds)
 {
@@ -243,6 +275,17 @@ void thread_t::sleep(int milliseconds)
 #else
   usleep(milliseconds*1000);
 #endif
+}
+
+#ifdef _WIN32
+DWORD __stdcall thread_t::worker(void* self)
+#else
+void* thread_t::worker(void* self)
+#endif
+{
+  thread_t* thread = (thread_t*)self;
+  thread->run();
+  return 0;
 }
 
 //------------------------- TLS ----------------------
@@ -351,6 +394,32 @@ void_ptr tls_base_t::get(int index) // static
 }
 
 
+int get_cpu_count()
+{
+#if defined(_WIN32)
+  SYSTEM_INFO si;
+  GetSystemInfo(&si);
+  return si.dwNumberOfProcessors;
+#elif defined(__APPLE__)
+  int nm[2];
+  size_t len = 4;
+  uint32_t count;
+
+  nm[0] = CTL_HW; nm[1] = HW_AVAILCPU;
+  sysctl(nm, 2, &count, &len, NULL, 0);
+
+  if(count < 1) {
+      nm[1] = HW_NCPU;
+      sysctl(nm, 2, &count, &len, NULL, 0);
+      if(count < 1) { count = 1; }
+  }
+  return count;
+#else // linux
+  int count = sysconf(_SC_NPROCESSORS_ONLN);
+  if (count<1) count = 1;
+  return count;
+#endif
+}
 
 
 } // namespace

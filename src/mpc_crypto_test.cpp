@@ -577,12 +577,16 @@ MPCCRYPTO_API int MPCCrypto_test()
   }
 
   */
-  int t = GetTickCount();
+  test_key_t ecdsa_key;
+  if (rv = test_ecdsa_gen(ecdsa_key)) return rv;
+
+  uint64_t t = ub::read_timer_ms();
   for (int i=0; i<10; i++)
   {
-    test_key_t ecdsa_key;
-    if (rv = test_ecdsa_gen(ecdsa_key)) return rv;
+    if (rv = test_ecdsa_sign(ecdsa_key)) return rv;
   }
+  t = ub::read_timer_ms() - t;
+
   /*
   if (rv = test_ecdsa_backup(ecdsa_key)) return rv;
   for (int i=0; i<3; i++)
@@ -601,7 +605,7 @@ MPCCRYPTO_API int MPCCrypto_test()
     if (rv = test_refresh(secret_key2)) return rv;
   }
   */
-  printf("\nAll tests successfully finished full=%d, zk_paillier_range=%d\n", GetTickCount()-t, mpc::zk_paillier_range_time);
+  printf("\nAll tests successfully finished. 10 Signatures took %d ms\n", t);
   return rv;
 }
 

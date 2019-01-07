@@ -94,6 +94,7 @@ protected:
   static void free(T* ptr);
 };
 
+uint64_t read_timer_ms();
 
 } // namespace ub
 

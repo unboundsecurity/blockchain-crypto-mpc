@@ -176,13 +176,9 @@ private:
   const crypto::paillier_t* paillier;
 };
 
-int zk_paillier_range_time = 0;
-
 
 void zk_paillier_range_t::p(bool threaded, const bn_t& q, const crypto::paillier_t& paillier, const bn_t& c_key, mem_t session_id, uint8_t aux, const bn_t& x_original, const bn_t& r)
 {
-  int tt = GetTickCount();
-
   bn_t N = paillier.get_N();
   bn_t x = x_original;
   bn_t l = q / 3;
@@ -283,13 +279,10 @@ void zk_paillier_range_t::p(bool threaded, const bn_t& q, const crypto::paillier
       infos[i].d = (j==2) ? c1[i] : c2[i];
     }
   }
-
-  zk_paillier_range_time += GetTickCount()-tt;
 }
 
 bool zk_paillier_range_t::v(bool threaded, const bn_t& q, const bn_t& N, const bn_t& c_key, mem_t session_id, uint8_t aux) const
 {
-  int tt = GetTickCount();
   bn_t N2 = N*N;
 
   bn_t l = q / 3;
@@ -396,7 +389,6 @@ bool zk_paillier_range_t::v(bool threaded, const bn_t& q, const bn_t& N, const b
     return false;
   }
 
-  zk_paillier_range_time += GetTickCount()-tt;
   return true;
 }
 

@@ -263,5 +263,23 @@ bool bits_t::equ(const bits_t& src1, const bits_t& src2)
   return true;
 }
 
+uint64_t read_timer_ms()
+{
+#ifdef _WIN32
+  static LARGE_INTEGER freq = { 0 };
+  if (!freq.QuadPart) ::QueryPerformanceFrequency(&freq);
+  LARGE_INTEGER time;
+  ::QueryPerformanceCounter(&time);
+  return time.QuadPart * 1000 / freq.QuadPart;
+#elif defined(__APPLE__)
+  static mach_timebase_info_data_t freq = { 0 };
+  if (freq.denom == 0) mach_timebase_info(&freq);
+  return int64_t(mach_absolute_time()) * freq.numer / (freq.denom * 1000000);
+#else
+  struct timespec tp = { 0 };
+  clock_gettime(CLOCK_MONOTONIC, &tp);
+  return int64_t(tp.tv_sec) * 1000 + tp.tv_nsec / 1000000;
+#endif
+}
 
 } // namespace ub

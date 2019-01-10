@@ -605,7 +605,7 @@ MPCCRYPTO_API int MPCCrypto_test()
     if (rv = test_refresh(secret_key2)) return rv;
   }
   */
-  printf("\nAll tests successfully finished. 10 Signatures took %d ms\n", t);
+  printf("\nAll tests successfully finished. 10 Signatures took %d ms\n", int(t));
   return rv;
 }
 

@@ -14,13 +14,13 @@ Run the utility with the following command:
 
 where *algorithm* can be one of the following:
 
-- ecdsa-gen
-- ecdsa-sign
-- eddsa-gen
-- eddsa-sign
-- bip-initial
-- bip-hardened
-- bip-normal
+- ecdsa-gen - ECDSA key generation
+- ecdsa-sign - ECDSA key signing
+- eddsa-gen - EdDSA key generation
+- eddsa-sign - EdDSA key signing
+- bip-initial - BIP master key generation
+- bip-hardened - BIP derivation of hardened child key
+- bip-normal - BIP derivation of child key
 
 The value of *iterations* designates how many times to loop.
 

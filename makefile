@@ -5,7 +5,7 @@
 #  If you choose to receive it under the GPL v.3 license, the following applies:
 #  Blockchain-crypto-mpc is a Multiparty Computation (MPC)-based cryptographic library for securing blockchain wallets and applications.
 #  
-#  Copyright (C) 2018, Unbound Tech Ltd. 
+#  Copyright (C) 2018-2019, Unbound Tech Ltd. 
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
 #  the Free Software Foundation, either version 3 of the License, or
@@ -59,8 +59,8 @@ LIB_HEADERS = $(wildcard src/*.h) \
 	
 LIB_INCLUDES = \
 	$(COMMON_INCLUDES) \
-	-I /usr/lib/jvm/java-8-oracle/include \
-	-I /usr/lib/jvm/java-8-oracle/include/linux \
+	-I ${JAVA_HOME}/include \
+	-I ${JAVA_HOME}/include/linux \
 	-I src/utils \
 	-I src/crypto_utils \
 	-I src/mpc_protocols

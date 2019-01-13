@@ -24,6 +24,7 @@ This readme includes an overview of this library, why it is important,
 what it allows you to achieve, sample use cases, and how to use the
 library (high level description).
 
+This repository includes a tool for benchmarking the **blockchain-crypto-mpc** library. See [mpc_crypto_bench](https://github.com/unbound-tech/blockchain-crypto-mpc/blob/master/bench/README_MPC_Crypto_Bench.md) in the [bench](./bench) folder for more information.
 
 # 2. Who Should Use it? 
 

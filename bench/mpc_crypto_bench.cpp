@@ -263,7 +263,7 @@ int main(int argc, char* argv[])
   bench->init();
   printf("\n");
 
-  printf("Runing %s for %d times\n", name, count);
+  printf("Running %s for %d iterations\n", name, count);
   std::chrono::high_resolution_clock::time_point begin = std::chrono::high_resolution_clock::now();
   for (int i=0; i<count; i++)
   {

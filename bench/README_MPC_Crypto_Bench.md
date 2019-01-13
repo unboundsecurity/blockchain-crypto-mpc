@@ -1,6 +1,6 @@
 # MPC Crypto Bench
 
-**MPC Crypto Bench** is a utility that can be used to accurately measure the speed of the **blockchain-crypto-mpc** library. It runs **blockchain-crypto-mpc** with a specified algorithm for a number of iterations and then returns that average runtime. 
+**MPC Crypto Bench** is a utility that can be used to accurately measure the speed of the **blockchain-crypto-mpc** library. It runs **blockchain-crypto-mpc** with a specified algorithm for a number of iterations and then returns that average runtime. The utility strives to measure the raw speed of the **blockchain-crypto-mpc** library, without any delays due to networking.
 
 ## Build Instructions
 

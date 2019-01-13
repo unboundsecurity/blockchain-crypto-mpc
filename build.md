@@ -16,6 +16,8 @@ The **blockchain-mpc-crypto** library has the following dependencies:
 
 Building your target requires having the required OpenSSL version and optionally having Java if JNI is required.
 
+**Note:** If you are using **JNI**, you must define the JAVA_HOME environment variable. It is used in the [makefile](https://github.com/unbound-tech/blockchain-crypto-mpc/blob/master/makefile).
+
 **Note:** If you do not need **JNI** (the library will not be used from Java), you can disable JNI code generation and build dependency on Java header files by defining `MPC_CRYPTO_NO_JNI` (add  the flag `-DMPC_CRYPTO_NO_JNI` to CPP).
 
 ## Build Instructions

@@ -31,7 +31,7 @@ To run 10 iterations of ECDSA key generation:
 ```
 ./mpc_crypto_bench ecdsa-gen 10
 Initialization...
-Runing ecdsa-gen for 10 times
+Running ecdsa-gen for 10 iterations
 ..........
 0.786100 seconds per operation
 ```

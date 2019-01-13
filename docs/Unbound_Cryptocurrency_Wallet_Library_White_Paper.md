@@ -6,7 +6,7 @@
 ### Guy Peer, VP R&D
 ### Dr. Samuel Ranellucci, Cryptographer
 
-**November 1, 2018**
+**December 21, 2018**
 
 You can download a PDF of this document [here](./Unbound%20Cryptocurrency%20Wallet%20Library%20White%20Paper.pdf).
 
@@ -108,9 +108,7 @@ initially, and reshare their shares to all pairs among the *n*. We
 show how to achieve this in our code samples.
 
 Our solution is generic, supporting ECDSA over a secp256k1 curve and supporting
-EdDSA over an ed25519 curve (or Schnorr). For ECDSA, we implement the protocol that was
-published in \[5\]. For EdDSA, we use the folklore threshold signature
-protocol for Schnorr with additive sharing of the secret key.
+EdDSA over an ed25519 curve (or Schnorr). For ECDSA, we implement the protocol that was published in \[5\]. For EdDSA, we use the threshold signature protocol for Schnorr with additive sharing of the secret key that appears in \[10\].
 
 Our open-source library contains elements that do not appear in \[5\].
 In particular, the zero-knowledge proofs used in key generation are more
@@ -424,8 +422,8 @@ with *q*.
 
 ## 5.4 ECDSA Signing
 
-Given a message *m* that both parties agree to sign, they can generate a
-signature on that message as follows:
+Given a message *m* that both parties agree to sign, the parties can generate a
+signature on that message using the protocol of \[5\] as follows:
 
 1.  Alice and Bob generate a random sharing *k<sub>1</sub>* and *k<sub>2</sub>* of *k*,
     and both learn the value *R = k<sub>1</sub> &sdot; k<sub>2</sub> &sdot; G*. This
@@ -451,8 +449,8 @@ signature on that message as follows:
 
 ## 5.5 EdDSA Signing
 
-Given a message *m* that both parties agree to sign, they can generate a
-signature on that message as follows:
+Given a message *m* that both parties agree to sign, the parties can generate a
+signature on that message using the protocol of \[10\] as follows:
 
 1.  Alice and Bob run two oblivious pseudo-random function evaluations,
     in order for them to derive pseudo-random shares *r<sub>1</sub>* and *r<sub>2</sub>*
@@ -496,6 +494,8 @@ Paillier key must be changed as well as the sharing, since otherwise
 once the Paillier private key is stolen from Alice, it can corrupt Bob
 at any later time and decrypt *c<sub>key</sub>*; this value together with
 *x<sub>2</sub>* (both held by Bob) yields the private key *x*. This level of security is called proactive in the academic literature.
+
+We remark that the method described above results in the encryption of *x<sub>1</sub>'* being larger than that of *x<sub>1</sub>*, and in each refresh it can grow by up to *q*. Since part of the ECDSA signing protocol requires adding random noise to mask the opened value – this is the random multiple of *q* described in Section ‎5.4 – it is necessary to increase this multiple to take into account *x<sub>1</sub>'* being larger. We do this in the implementation by adding an additional *2<sup>80</sup> &sdot; q*, which suffices for up to 2<sup>80</sup> refreshes (something that will never happen).
 
 
 <a name="security-guarantees"></a>
@@ -559,3 +559,5 @@ Computation](https://iacr.org/archive/pkc2006/39580468/39580468.pdf). In
 \[8\] Marcel Keller, Emmanuela Orsini, Peter Scholl. [Actively Secure OT Extension with Optimal Overhead](https://eprint.iacr.org/2015/546.pdf). In CRYPTO 2015, Springer (LNCS 9215), pages 724-741, 2015.
 
 \[9\] Yan Huang, Jonathan Katz and David Evans. [Quid-Pro-Quo-tocols: Strengthening Semi-honest Protocols with Dual Execution](https://www.cs.virginia.edu/~evans/pubs/oakland2012/quidproquotocols.pdf). In IEEE Symposium on Security and Privacy, pages 272-284, 2012.
+
+\[10\]	Antonio Nicolosi, Maxwell Krohn, Yevgeniy Dodis, and David Mazières. [Proactive Two-Party Signatures for User Authentication](http://www.scs.stanford.edu/~dm/home/papers/nicolosi:2schnorr.pdf). In Proceedings of the Network and Distributed System Security Symposium (NDSS), 2003.

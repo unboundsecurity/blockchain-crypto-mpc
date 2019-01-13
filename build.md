@@ -79,3 +79,11 @@ The python module is based on the native library (ctypes).
 1. The python library can then be used with *mpc_crypto.py*.
 
 See *mpc_demo.py* for an actual implementation of client server communication executing different operations. 
+
+## Troubleshooting
+
+JNI Error:
+
+`fatal error: jni.h: No such file or directory`
+
+If you receive this error, then you need to define the JAVA_HOME environment variable. It is used in the [makefile](https://github.com/unbound-tech/blockchain-crypto-mpc/blob/master/makefile).

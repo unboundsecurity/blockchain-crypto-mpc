@@ -2,7 +2,7 @@
 The script demonstrates the Unbound Tech blockchain-crypto-mpc library.
 This example has two instances, a client and a server, which cooperate to execute crypto primitives via MPC.
 
-A simple protocol is executed where the server and client are assumed to perform the same operation.
+A simple protocol is executed that starts with client sending command parameters to the server.
 Messages are sent as is, preceded by length.
 
 Usage:
@@ -11,17 +11,19 @@ Usage:
     Run with '--help' flag to see all parameter details.
 
 Example 1: Generate a split EDDSA key
-    user1@host1> python mpc_demo.py --type EDDSA --command generate --out_file key_share.bin --server
+    user1@host1> python mpc_demo.py --out_file key_share.bin --server
     user2@host2> python mpc_demo.py --type EDDSA --command generate --out_file key_share.bin --host host1
 
 Example 2: Sign with the split EDDSA key
-    user1@host1> python mpc_demo.py --type EDDSA --command sign --in_file key_share.bin --server
-    user2@host2> python mpc_demo.py --type EDDSA --command sign --in_file key_share.bin --host host1
+    user1@host1> python mpc_demo.py --in_file key_share.bin --data_file data.dat --server
+    user2@host2> python mpc_demo.py --type EDDSA --command sign --in_file key_share.bin --data_file data.dat --host host1
 """
 import sys
 import argparse
 import socket
 import struct
+import datetime
+
 import mpc_crypto
 
 CLIENT = 1
@@ -88,33 +90,33 @@ def run_eddsa_gen():
     return eddsaObj
 
 
-def run_generate():
+def run_generate(cryptoType, size):
     print("Generating key...")
-    if args.type == 'EDDSA':
+    if cryptoType == 'EDDSA':
         obj = mpc_crypto.Eddsa(peer)
         obj.initGenerate()
-    elif args.type == 'ECDSA':
+    elif cryptoType == 'ECDSA':
         obj = mpc_crypto.Ecdsa(peer)
         obj.initGenerate()
-    elif args.type == 'generic':
+    elif cryptoType == 'generic':
         obj = mpc_crypto.GenericSecret(peer)
-        obj.initGenerate(args.size)
+        obj.initGenerate(size)
     else:
-        sys.exit("Generate not supported for " + args.type)
+        sys.exit("Generate not supported for " + cryptoType)
     with obj:
         exec_mpc_exchange(obj)
         print(" ok")
         return obj.exportShare()
 
 
-def run_sign(inShare):
-    print(args.type + " signing...")
-    if args.type == 'ECDSA':
+def run_sign(inShare, cryptoType):
+    print(cryptoType + " signing...")
+    if cryptoType == 'ECDSA':
         obj = mpc_crypto.Ecdsa(peer, inShare)
-    elif args.type == 'EDDSA':
+    elif cryptoType == 'EDDSA':
         obj = mpc_crypto.Eddsa(peer, inShare)
     else:
-        sys.exit("Sign not supported for " + args.type)
+        sys.exit("Sign not supported for " + cryptoType)
 
     if not args.data_file:
         sys.exit("Input data missing")
@@ -128,23 +130,23 @@ def run_sign(inShare):
     return sig
 
 
-def run_import(inShare):
+def run_import(inShare, cryptoType='generic'):
     print("Importing key...")
     if not inShare:
         sys.exit("Input share missing")
-    if args.type == 'generic':
+    if cryptoType == 'generic':
         obj = mpc_crypto.GenericSecret(peer)
         obj.initImport(inShare)
     else:
-        sys.exit("Import not supported for " + args.type)
+        sys.exit("Import not supported for " + cryptoType)
     with obj:
         exec_mpc_exchange(obj)
         print(" ok")
         return obj.exportShare()
 
 
-def run_derive(inShare):
-    if args.type != 'BIP32':
+def run_derive(inShare, cryptoType='BIP32'):
+    if cryptoType != 'BIP32':
         sys.exit("Derive not supported for " + args.type)
     srcObj = mpc_crypto.GenericSecret(peer, inShare)
     with srcObj:
@@ -156,29 +158,26 @@ def run_derive(inShare):
             return obj.exportShare()
 
 
-def run_command():
+def run_command(params):
     inStr = None
     if args.in_file:
         with open(args.in_file, "rb") as f:
             inStr = f.read()
-    if args.command == 'generate':
-        out = run_generate()
-        outFileDefault = args.type + '_share'
-    elif args.command == 'import':
-        out = run_import(inStr)
-        outFileDefault = args.type + '_share'
-    elif args.command == 'derive':
-        out = run_derive(inStr)
-        outFileDefault = args.type + '_derived'
-    elif args.command == 'sign':
-        out = run_sign(inStr)
-        outFileDefault = args.type + '_signature'
-
-    if args.command != 'sign' or peer == CLIENT:  # only client receives the signature
-        outputFile = args.out_file if args.out_file else outFileDefault + \
-            '_' + str(peer) + '.dat'
-        with open(outputFile, "wb") as f:
-            f.write(out)
+    if params.command == 'generate':
+        out = run_generate(params.type, params.size)
+        outFileDefault = params.type + '_share'
+    elif params.command == 'import':
+        out = run_import(inStr, params.type)
+        outFileDefault = params.type + '_share'
+    elif params.command == 'derive':
+        out = run_derive(inStr, params.type)
+        outFileDefault = params.type + '_derived'
+    elif params.command == 'sign':
+        out = run_sign(inStr, params.type)
+        outFileDefault = params.type + '_signature'
+    outputFile = args.out_file if args.out_file else outFileDefault + \
+        '_' + str(peer) + '.dat'
+    return out, outputFile
 
 
 def run_server():
@@ -189,7 +188,20 @@ def run_server():
 
     global clientsocket
     clientsocket, address = serversocket.accept()
-    run_command()
+    params = argparse.Namespace()
+    while True:
+        header = clientsocket.recv(6)
+        if not header:
+            break
+        params.command = commands[int.from_bytes(header[:1], 'big')]
+        params.type = types[int.from_bytes(header[1:2], 'big')]
+        params.size = int.from_bytes(header[2:], 'big')
+        print(params)
+        out, outputFile = run_command(params)
+
+    if params.command != 'sign':  # only client receives the signature
+        with open(outputFile, "wb") as f:
+            f.write(out)
     clientsocket.close()
 
 
@@ -198,10 +210,25 @@ def run_client():
     clientsocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     clientsocket.connect((args.host, args.port))
 
-    run_command()
+    header = commands.index(args.command).to_bytes(
+        1, 'big') + types.index(args.type).to_bytes(1, 'big') + args.size.to_bytes(4, 'big')
+    startTime = datetime.datetime.now()
+    for _ in range(args.repeat):
+        clientsocket.send(header)
+        out, outputFile = run_command(args)
+    endTime = datetime.datetime.now()
+    tookMs = (endTime - startTime).total_seconds() * 1000 / args.repeat
+    tookStr = 'Took ' + str(tookMs) + ' ms'
+    if args.repeat > 1:
+        tookStr += ' on average'
+    print(tookStr)
+    with open(outputFile, "wb") as f:
+        f.write(out)
     clientsocket.close()
 
 
+commands = ['generate', 'import', 'sign', 'derive']
+types = ['EDDSA', 'ECDSA', 'BIP32', 'generic']
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter,
                                  conflict_handler='resolve',
                                  description='''Simple tester script.
@@ -215,19 +242,22 @@ parser.add_argument('-s', '--server', action='store_true',
 parser.add_argument('-o', '--out_file', help='Output file name')
 parser.add_argument('-i', '--in_file', help='Input file name')
 parser.add_argument('-d', '--data_file', help='Data file name')
-parser.add_argument('-c', '--command', default='generate', choices=['generate', 'import', 'sign', 'derive'],
-                    required=True, help='MPC Operation')
-parser.add_argument('-t', '--type', default='eddsa', choices=['EDDSA', 'ECDSA', 'BIP32', 'generic'],
-                    required=True, help='MPC Operation')
+parser.add_argument('-c', '--command', choices=commands, help='MPC Operation')
+parser.add_argument('-t', '--type', choices=types, help='MPC Operation')
 parser.add_argument('--hardened', action='store_true',
                     help='BIP32 derive parameter')
 parser.add_argument('--index', type=int, default=0,
                     help='BIP32 derive parameter')
 parser.add_argument('--size', type=int, default=256,
                     help='Size parameter')
+parser.add_argument('--repeat', type=int, default=1,
+                    help='Run the command N times to measure performance')
 
 
 args = parser.parse_args()
+if not args.server:
+    if not args.command or not args.type:
+        parser.error('Command and Type required for Client')
 clientsocket = None
 
 if args.server:

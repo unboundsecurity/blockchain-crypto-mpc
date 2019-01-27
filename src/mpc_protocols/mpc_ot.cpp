@@ -212,9 +212,19 @@ static fixed_aes_openssl_key_t fixed_aes_openssl_key;
 
 static void generate_128_m_hashes(buf128_t dst[128], uint64_t counter, buf128_t src[128])
 {
-  for (int i=0; i<128; i++) src[i] ^= buf128_t::make_le(counter++);
-  fixed_aes_openssl_key.update(mem_t(byte_ptr(src), 128*16), byte_ptr(dst));
-  for (int i=0; i<128; i++) dst[i] ^= src[i];
+  buf128_t pi_x[128];
+  buf128_t pi_x_xor_i[128];
+  mem_t x = mem_t(byte_ptr(src), 128*16);
+  fixed_aes_openssl_key.update(x, byte_ptr(pi_x)); // calculate pi(x)
+
+  for (int j=0; j<128; j++, counter++) 
+  {
+    buf128_t i = buf128_t::make_le(counter);
+    pi_x_xor_i[j] = pi_x[j] ^ i ; // calculate pi(x) ^ i
+  }
+
+  fixed_aes_openssl_key.update(mem_t(byte_ptr(pi_x_xor_i), 128*16), byte_ptr(dst)); // calculate pi(pi(x) ^ i)
+  for (int j=0; j<128; j++) dst[j] ^= pi_x[j]; // dst = pi(pi(x) ^ i) ^ pi(x)
 }
 
 

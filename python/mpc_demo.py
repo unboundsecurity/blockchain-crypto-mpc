@@ -190,12 +190,12 @@ def run_server():
     clientsocket, address = serversocket.accept()
     params = argparse.Namespace()
     while True:
-        header = clientsocket.recv(6)
+        header = clientsocket.recv(3*4)
         if not header:
             break
-        params.command = commands[int.from_bytes(header[:1], 'big')]
-        params.type = types[int.from_bytes(header[1:2], 'big')]
-        params.size = int.from_bytes(header[2:], 'big')
+        params.command = commands[struct.unpack("i", header[:4])[0]]
+        params.type = types[struct.unpack("i", header[4:8])[0]]
+        params.size = struct.unpack("i", header[8:])[0]
         print(params)
         out, outputFile = run_command(params)
 
@@ -210,8 +210,9 @@ def run_client():
     clientsocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     clientsocket.connect((args.host, args.port))
 
-    header = commands.index(args.command).to_bytes(
-        1, 'big') + types.index(args.type).to_bytes(1, 'big') + args.size.to_bytes(4, 'big')
+    header = struct.pack("i", commands.index(args.command)) + \
+        struct.pack("i", types.index(args.type)) + \
+        struct.pack("i", args.size)
     startTime = datetime.datetime.now()
     for _ in range(args.repeat):
         clientsocket.send(header)

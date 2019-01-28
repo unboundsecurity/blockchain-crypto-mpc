@@ -183,6 +183,7 @@ def run_command(params):
 def run_server():
     serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     serversocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    serversocket.setsockopt(socket.SOL_TCP, socket.TCP_NODELAY, 1)
     serversocket.bind((args.host, args.port))
     serversocket.listen(5)
 
@@ -208,6 +209,7 @@ def run_server():
 def run_client():
     global clientsocket
     clientsocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    clientsocket.setsockopt(socket.SOL_TCP, socket.TCP_NODELAY, 1)
     clientsocket.connect((args.host, args.port))
 
     header = struct.pack("i", commands.index(args.command)) + \

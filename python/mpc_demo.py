@@ -123,7 +123,7 @@ def run_sign(inShare, cryptoType):
     with open(args.data_file, "rb") as f:
         inData = f.read()
     with obj:
-        obj.initSign(inData, True)
+        obj.initSign(inData)
         exec_mpc_exchange(obj)
         sig = obj.getSignResult()
     print("ok")
@@ -260,7 +260,6 @@ if not args.server:
     if not args.command or not args.type:
         parser.error('Command and Type required for Client')
 clientsocket = None
-
 if args.server:
     peer = SERVER
     run_server()

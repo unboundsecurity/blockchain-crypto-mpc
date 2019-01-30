@@ -217,6 +217,8 @@ This repository includes a two different tools for benchmarking the **blockchain
 1. MPC Crypto Bench - a tool written C++. See [mpc_crypto_bench](https://github.com/unbound-tech/blockchain-crypto-mpc/blob/master/bench/README.md) in the [bench](./bench) folder for more information.
 2. MPC Crypto Python script. See [mpc_crypto](https://github.com/unbound-tech/blockchain-crypto-mpc/blob/master/python/README.md) in the [Python](./python) folder for more information.
 
+MPC Crypto Bench tests the raw protocols, with no networking involved, while the MPC Crypto Python script is uses a client and server with actual networking.
+ 
 Using the Python script, each command was run for 20 iterations and resulted in the following performance numbers:
 
 | Algorithm | Command  | Time (seconds) |

@@ -32,6 +32,25 @@ The repository includes a simple makefile for building in Linux.
 1. Review the makefile and modify as needed for your environment.
 1. Run *make*.
 
+For example, on Ubuntu Linux, use the following:
+```sudo add-apt-repository ppa:webupd8team/java
+sudo apt-get update
+sudo apt-get install oracle-java8-installer
+export JAVA_HOME=/usr/lib/jvm/java-8-oracle/
+
+sudo apt install make
+sudo apt install make-guile
+sudo apt-get install gcc
+sudo apt-get install g++
+sudo apt-get install openssl
+sudo apt-get install libssl-dev
+
+git clone https://github.com/unbound-tech/blockchain-crypto-mpc.git
+cd blockchain-crypto-mpc
+make
+export LD_LIBRARY_PATH=.
+```
+
 ### Windows
 
 The repository includes a Visual Studio solution.

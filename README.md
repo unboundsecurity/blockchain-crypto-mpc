@@ -2,7 +2,7 @@
 # 1. Introduction to *blockchain-crypto-mpc*
 
 **blockchain-crypto-mpc** is an open source library released by [Unbound
-Tech](https://www.unboundtech.com/company/about/) that provides the
+Tech](http://bit.ly/2SpMJ7W) that provides the
 cryptographic foundation to resolve one of the hardest challenges
 associated with crypto asset and blockchain applications: **The
 protection of cryptographic signing keys and seed secrets**.
@@ -10,7 +10,7 @@ protection of cryptographic signing keys and seed secrets**.
 
 
 Unbound leverages [secure multiparty computation
-(MPC)](https://www.unboundtech.com/technology-distributed-trust-platform/)
+(MPC)](http://bit.ly/2Skw8m1)
 for the protection and management of cryptographic keys and secrets, and
 provides industry-grade MPC-based solutions for key management, key
 protection and additional applications. The protocols were designed by

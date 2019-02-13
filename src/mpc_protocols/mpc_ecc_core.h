@@ -132,35 +132,6 @@ struct zk_ddh_t
 };
 
 
-struct zk_paillier_eq_t
-{
-  bn_t s1, s2;
-  bn_t lc;
-  bn_t t1, t2;
-  bn_t c1, c2;
-
-  void convert(ub::converter_t& converter)
-  {
-    converter.convert(s1);
-    converter.convert(s2);
-    converter.convert(lc);
-    converter.convert(t1);
-    converter.convert(t2);
-    converter.convert(c1);
-    converter.convert(c2);
-  }
-
-  void p(const bn_t& x, const bn_t& r1, const bn_t& r2,     
-         mem_t session_id,
-         const bn_t& n1,     
-         const bn_t& c1,
-         const bn_t& n2,
-         const bn_t& c2);
-  bool v(mem_t session_id,
-         const bn_t& n1,     
-         const bn_t& n2) const;
-};
-
 struct zk_ec_affine_t
 {
   bn_t e, z1, z2, z3;

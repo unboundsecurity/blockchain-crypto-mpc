@@ -118,73 +118,43 @@ error_t ecdsa_create_paillier_t::peer2_step2(ecdsa_share_t& share, mem_t session
 
 //------------------------ ecdsa_refresh_paillier_t---------------------------------
 
-error_t ecdsa_refresh_paillier_t::peer1_step(ecdsa_share_t& share, mem_t session_id, const ecdsa_share_t& old_share, const bn_t& delta)
+error_t ecdsa_refresh_paillier_t::peer1_step(ecdsa_share_t& share, mem_t session_id, const ecdsa_share_t& old_share)
 {
   ecurve_t curve = share.get_curve();
+  const ecc_generator_point_t& G = curve.generator();
   int paillier_size = get_safe_paillier_bits(curve);
 
-  share.paillier.generate(paillier_size);
-  N = share.paillier.get_N();
+  crypto::paillier_t& paillier = share.paillier;
+  paillier.generate(paillier_size);
+  N = paillier.get_N();
   share.r_key = bn_t::rand(N);
 
-  const crypto::paillier_t& paillier1 = old_share.paillier;
-  const crypto::paillier_t& paillier2 = share.paillier;
+  c_key = share.c_key = paillier.encrypt(share.x, share.r_key);
+  pi = mpc::ZK_PAILLIER_P_non_interactive(N, paillier.get_phi_N(), session_id);
 
-  bn_t n1 = paillier1.get_N();
-  bn_t n2 = paillier2.get_N();
-   
-  bn_t r1 = old_share.r_key;
-  bn_t r2 = share.r_key;
-
-  bn_t c1 = old_share.c_key;
-
-  bn_t temp = paillier1.decrypt(c1);
-  bn_t c2 = paillier2.encrypt(temp, r2);
-
-  zk_paillier_eq.p(temp, r1, r2, session_id, n1, c1, n2, c2);
-  pi = ZK_PAILLIER_P_non_interactive(N, paillier2.get_phi_N(), session_id);
-  share.c_key = c_key = share.paillier.add_scalar(c2, delta);
+  zk_pdl.p(curve, G * share.x, c_key, paillier, session_id, 1, share.r_key, share.x);
 
   return 0;
 }
 
-error_t ecdsa_refresh_paillier_t::peer2_step(ecdsa_share_t& share, mem_t session_id, const ecdsa_share_t& old_share, const bn_t& delta) const
+error_t ecdsa_refresh_paillier_t::peer2_step(ecdsa_share_t& share, mem_t session_id, const ecdsa_share_t& old_share) const
 {
   error_t rv = 0;
 
   ecurve_t curve = share.get_curve();
+  const ecc_generator_point_t& G = curve.generator();
   int paillier_size = get_safe_paillier_bits(curve);
 
   if (N.get_bits_count() < paillier_size) return rv = error(E_CRYPTO);
+  if (!mpc::ZK_PAILLIER_V_non_interactive(N, pi, session_id)) return rv = error(E_CRYPTO);
+
+  ecc_point_t Q_remote = share.Q_full - G *share.x;
+  
+  if (!curve.check(zk_pdl.R)) return rv = error(E_CRYPTO); 
+  if (!zk_pdl.v(curve, Q_remote, c_key, N, session_id, 1)) return rv = error(E_CRYPTO);
+
   share.c_key = c_key;
   share.paillier.create_pub(N);
-
-  if (zk_paillier_eq.c1 != old_share.c_key)
-  {
-    return rv = ub::error(E_CRYPTO);
-  }
-
-  const crypto::paillier_t& paillier1 = old_share.paillier;
-  const crypto::paillier_t& paillier2 = share.paillier;
-
-
-  bn_t n1 = paillier1.get_N();
-  bn_t n2 = paillier2.get_N();
-
-  if (!ZK_PAILLIER_V_non_interactive(n2, pi, session_id)) return rv = error(E_CRYPTO);
-
-  if (!zk_paillier_eq.v(session_id, n1, n2))
-  {
-    return rv = ub::error(E_CRYPTO);
-  }
-
-  // recalculate c_key
-  bn_t new_c_key = paillier2.add_scalar(zk_paillier_eq.c2, delta);
-
-  if (c_key!=new_c_key)
-  {
-    return rv = ub::error(E_CRYPTO);
-  }
 
   return 0;
 }
@@ -388,15 +358,13 @@ error_t ecdsa_sign_t::peer2_step2(
 
   bn_t m_tag = bn_t::from_bin(data_to_sign);
 
-  //bn_t rho = bn_t::rand((q*q) << 208); // 128 + 80 (needed to ensure statistical closeness, even though over integers)
-  bn_t rho = bn_t::rand((q*q) << 80); // 80 (need additional noise over q*q due to refresh)
+  bn_t rho = bn_t::rand(q*q);
 
   MODULO(q) u = m_tag / k2;  
   bn_t u2 = rho*q + u;
   MODULO(q) v = r / k2;  
 
   bn_t c1 = share.paillier.add_scalar(share.c_key, share.x);
-  // c1 = share.paillier.add_scalar(c1, q << 208); // 128 + 80 (needed to ensure that is positive, due to slack in range proof)
 
   bn_t c2 = share.paillier.mul_scalar(c1, v);
   out.c3 = share.paillier.add_scalar(c2, u2);
@@ -441,7 +409,7 @@ error_t ecdsa_sign_t::peer1_step3(
     bn_t delta;
     if (rv = ecdsa_share_t::get_refresh_delta(curve, agree_refresh, delta)) return rv;
     if (rv = share.refresh_peer1(delta)) return rv;
-    if (rv = out.refresh_paillier.peer1_step(share, session_id, old_share, delta)) return rv;
+    if (rv = out.refresh_paillier.peer1_step(share, session_id, old_share)) return rv;
   }
 
   return 0;
@@ -467,9 +435,7 @@ error_t ecdsa_sign_t::peer2_step3(
     if (rv = ecdsa_share_t::get_refresh_delta(curve, agree_refresh, delta)) return rv;
     if (rv = share.refresh_peer2(delta)) return rv;
 
-    const bn_t& order = curve.order();
-    bn_t x_delta = bn_t::from_bin(agree_refresh) % order;
-    if (rv = in.refresh_paillier.peer2_step(share, session_id, old_share, delta)) return rv;
+    if (rv = in.refresh_paillier.peer2_step(share, session_id, old_share)) return rv;
   }
 
   return 0;
@@ -519,7 +485,7 @@ error_t ecdsa_refresh_t::peer1_step2(
   bn_t delta;
   if (rv = ecdsa_share_t::get_refresh_delta(curve, agree_refresh, delta)) return rv;
   if (rv = share.refresh_peer1(delta)) return rv; 
-  if (rv = out.refresh_paillier.peer1_step(share, session_id, old_share, delta)) return rv;
+  if (rv = out.refresh_paillier.peer1_step(share, session_id, old_share)) return rv;
 
   return 0;
 }
@@ -543,7 +509,7 @@ error_t ecdsa_refresh_t::peer2_step2(
   bn_t delta;
   if (rv = ecdsa_share_t::get_refresh_delta(curve, agree_refresh, delta)) return rv;
   if (rv = share.refresh_peer2(delta)) return rv;
-  if (rv = in.refresh_paillier.peer2_step(share, session_id, old_share, delta)) return rv;
+  if (rv = in.refresh_paillier.peer2_step(share, session_id, old_share)) return rv;
   return 0;
 }
 

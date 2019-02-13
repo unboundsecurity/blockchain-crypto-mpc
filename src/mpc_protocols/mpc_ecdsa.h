@@ -56,18 +56,18 @@ struct ecdsa_refresh_paillier_t
 {
   bn_t N, c_key;
   buf_t pi;
-  zk_paillier_eq_t zk_paillier_eq;
+  zk_pdl_t zk_pdl;
 
   void convert(ub::converter_t& converter) 
   { 
     converter.convert(N);
     converter.convert(c_key);
     converter.convert(pi);
-    converter.convert(zk_paillier_eq);
+    converter.convert(zk_pdl);
   }
 
-  error_t peer1_step(ecdsa_share_t& share, mem_t session_id, const ecdsa_share_t& old_share, const bn_t& delta);
-  error_t peer2_step(ecdsa_share_t& share, mem_t session_id, const ecdsa_share_t& old_share, const bn_t& delta) const;
+  error_t peer1_step(ecdsa_share_t& share, mem_t session_id, const ecdsa_share_t& old_share);
+  error_t peer2_step(ecdsa_share_t& share, mem_t session_id, const ecdsa_share_t& old_share) const;
 };
 
 struct ecdsa_create_paillier_t 

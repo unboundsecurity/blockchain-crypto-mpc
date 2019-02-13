@@ -4,9 +4,10 @@
 
 ## Build Instructions
 
-First, compile the **blockchain-crypto-mpc** library as described in [build.md](https://github.com/unbound-tech/blockchain-crypto-mpc/blob/master/build.md).
+This utility is compiled along with the **blockchain-crypto-mpc** library. Following the build instructions found [here](https://github.com/unbound-tech/blockchain-crypto-mpc/blob/master/build.md).
 
-Next, compile the benchmark utility by running `make`. The resulting executable is called **mpc_crypto_bench**.
+The executable is called **mpc_crypto_bench**.
+
 
 ## Command Line
 

@@ -2,7 +2,7 @@
 # 1. Introduction to *blockchain-crypto-mpc*
 
 **blockchain-crypto-mpc** is an open source library released by [Unbound
-Tech](https://www.unboundtech.com/company/about/) that provides the
+Tech](http://bit.ly/2SpMJ7W) that provides the
 cryptographic foundation to resolve one of the hardest challenges
 associated with crypto asset and blockchain applications: **The
 protection of cryptographic signing keys and seed secrets**.
@@ -10,7 +10,7 @@ protection of cryptographic signing keys and seed secrets**.
 
 
 Unbound leverages [secure multiparty computation
-(MPC)](https://www.unboundtech.com/technology-distributed-trust-platform/)
+(MPC)](http://bit.ly/2Skw8m1)
 for the protection and management of cryptographic keys and secrets, and
 provides industry-grade MPC-based solutions for key management, key
 protection and additional applications. The protocols were designed by
@@ -24,7 +24,6 @@ This readme includes an overview of this library, why it is important,
 what it allows you to achieve, sample use cases, and how to use the
 library (high level description).
 
-This repository includes a tool for benchmarking the **blockchain-crypto-mpc** library. See [mpc_crypto_bench](https://github.com/unbound-tech/blockchain-crypto-mpc/blob/master/bench/README_MPC_Crypto_Bench.md) in the [bench](./bench) folder for more information.
 
 # 2. Who Should Use it? 
 
@@ -81,15 +80,11 @@ to use blockchain applications for all.**
 **blockchain-crypto-mpc** includes a secure MPC implementation of the
 following algorithms:
 
--   2-party ECDSA secp256k1: generation and signing
-
+-   2-party ECDSA secp256k1: generation and signing
 -   2-party EdDSA ed25519: generation and signing
-
 -   2-party BIP32 (based on the [BIP32 specification](https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki)): generation, hard
     derivation, and normal derivation
-
 -   Key share refresh
-
 -   Zero-knowledge backup
 
 The source code is written in C++ and the external API in C. Detailed
@@ -131,16 +126,12 @@ them).
 
 -   Guaranteed non-repudiation; the application server cannot sign any
     transaction without cooperation from the endpoint device.
-
 -   No single point of compromise: Compromising the seed or key material
     requires the attacker to compromise both the server and the endpoint
     simultaneously.
-
 -   No key or seed material ever appears in the clear throughout its
     lifecycle, including while in use and during generation.
-
 -   Resilient to side-channel attacks.
-
 -   A model that empowers a crypto service provider to create an
     excellent user experience by delivering a wallet service while
     maintaining a very high security level and granting the users full
@@ -167,16 +158,12 @@ of both participants (and communication between them).
 
 -   Both devices must collaborate and approve any transaction. No single
     device can approve a transaction.
-
 -   No single point of compromise: Compromising the seed or key material
     requires the attacker to compromise both the laptop and the mobile
     device simultaneously.
-
 -   No key or seed material ever appears in the clear throughout its
     lifecycle, including while in use and during generation.
-
 -   Resilient to side-channel attacks.
-
 -   A model that empowers a wallet provider to create an excellent
     user experience while maintaining a very high security level and
     granting the users full control of their crypto assets.
@@ -223,7 +210,28 @@ the user's device and the Trustee Service, key share B is used by the user's dev
 It's important to highlight that each of these pairs is completely
 independent, each is effectively a backup of the same seed.
 
-# 5. Technical Overview and Usage Guidelines
+# 5. Benchmarking and Performance
+
+This repository includes a two different tools for benchmarking the **blockchain-crypto-mpc** library. 
+
+1. MPC Crypto Bench - a tool written C++. See [mpc_crypto_bench](https://github.com/unbound-tech/blockchain-crypto-mpc/blob/master/bench/README.md) in the [bench](./bench) folder for more information.
+2. MPC Crypto Python script. See [mpc_crypto](https://github.com/unbound-tech/blockchain-crypto-mpc/blob/master/python/README.md) in the [Python](./python) folder for more information.
+
+MPC Crypto Bench tests the raw protocols, with no networking involved, while the MPC Crypto Python script is uses a client and server with actual networking.
+ 
+Using the Python script, each command was run for 20 iterations and resulted in the following performance numbers:
+
+| Algorithm | Command  | Time (seconds) |
+|-----------|----------|:--------------:|
+| ECDSA     | Generate | 0.945          |
+| ECDSA     | Sign     | 0.015          |
+| EdDSA     | Generate | 0.003          |
+| EdDSA     | Sign     | 0.003          |
+
+The tests were run on a server with an Intel Xeon E5-2686 v4 (2.30 GHz) with 32 GB RAM.
+
+
+# 6. Technical Overview and Usage Guidelines
 
 
 Unbound's Blockchain Crypto MPC open source library provides functions
@@ -236,7 +244,7 @@ messages that are sent between the peers. Note that the actual
 communication between peers is not included in this library.
 
 ![blockchain-crypto-mpc system](docs/images/os-system.png)
-## 5.1 Definitions
+## 6.1 Definitions
 
 
 Blockchain Crypto MPC utilizes the following three structures:
@@ -245,10 +253,8 @@ Blockchain Crypto MPC utilizes the following three structures:
     phase of the process or in any location at any time. A key share is
     a piece of a key, which can be used by Unbound's MPC technology to
     sign transactions.
-
 2.  **Message** -- Data that is passed to the other peer. The message
     contains information about the action in progress.
-
 3.  **Context** -- Since each action, such as signing with a key,
     involves multiple messages between the two peers, the status of the
     action is preserved in a context.
@@ -257,27 +263,23 @@ The **key share**, **message**, and **context** contain varying amounts
 of information depending on the type action, and therefore they are
 structures.
 
-## 5.2 Actions
+## 6.2 Actions
 
 
 The library provides the following actions:
 
--   2-party ECDSA secp256k1: generation and signing
-
+-   2-party ECDSA secp256k1: generation and signing
 -   2-party EdDSA ed25519: generation and signing
-
 -   2-party BIP32 (based on the [BIP32 specification](https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki)): generation, hard
     derivation, and normal derivation
-
 -   Key share refresh
-
 -   Zero-knowledge backup
 
 The library also provides mechanisms to handle serialization,
 deserialization, and memory management for the key share, message, and
 context structures.
 
-## 5.3 System Flow
+## 6.3 System Flow
 
 
 The system flow is shown in the following figure:
@@ -301,11 +303,11 @@ peer can then do any necessary cleanup, such as freeing memory, or
 copying an updated key share to storage.
 
 
-### 5.3.1 Peer Roles
+### 6.3.1 Peer Roles
 
 Peer roles are determined by which peer initiates key generation. This peer must be used for any subsequent key operations, such as signing, derivation, and backup. For example, if peer A generates a key and then peer B wants to initiate a signing process, it should make a request to the peer A to start the process. When complete, the peer A can send the result to peer B. Peer B can verify this result with the *verify* function.
 
-### 5.3.2 Detailed Flow
+### 6.3.2 Detailed Flow
 
 A detailed flow is described in the following procedure:
 
@@ -329,7 +331,7 @@ Throughout the entire process the same context should be used. If the context ne
 
 
 
-### 5.3.3 Example Action
+### 6.3.3 Example Action
 
 An example of an ECDSA signing action is shown in the following figure.
 
@@ -341,4 +343,3 @@ for initialization. After initialization, each peer calls the
 finished with the signing process. The signature, which is the result of 
 the signing process, is received by calling the final function, 
 **MPCCrypto_finalEcdsaSign()**, after which the signing process is done.
-

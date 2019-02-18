@@ -6,7 +6,7 @@
 ### Guy Peer, VP R&D
 ### Dr. Samuel Ranellucci, Cryptographer
 
-**December 21, 2018**
+**February 13, 2019**
 
 You can download a PDF of this document [here](./Unbound%20Cryptocurrency%20Wallet%20Library%20White%20Paper.pdf).
 
@@ -481,21 +481,8 @@ difference can only be detected when running known-input tests.
 
 ## 5.6 Share Refresh
 
-The parties run a secure coin tossing protocol in order to generate a
-random value *r* that neither can bias. Then, Alice modifies her share
-of the private key to be *x<sub>1</sub>' = x<sub>1</sub> + r mod q*, and Bob
-modifies his share of the private key to be
-*x<sub>2</sub>' = x<sub>2</sub> - r mod q*. Alice then generates a new Paillier key to encrypt x<sub>1</sub>' and proves in zero-knowledge that this is the correct value. This proof involves proving that the same value is encrypted under two different Paillier keys, and is very efficient. (This suffices since Bob can generate an encryption of x<sub>1</sub>' by adding the scalar r to the existing encryption of x<sub>1</sub> with the old Paillier key, and then verifying the proof.)
-As a result, after the refresh the parties hold a fresh sharing of *x*, with a new Paillier key. This achieves
-the property that if an attacker obtains Alice's secret information
-before a refresh and Bob's secret information after a refresh (or vice
-versa), it cannot learn *anything* about the private key *x*. (The
-Paillier key must be changed as well as the sharing, since otherwise
-once the Paillier private key is stolen from Alice, it can corrupt Bob
-at any later time and decrypt *c<sub>key</sub>*; this value together with
-*x<sub>2</sub>* (both held by Bob) yields the private key *x*. This level of security is called proactive in the academic literature.
+The parties run a secure coin tossing protocol in order to generate a random value *r* that neither can bias. Then, Alice modifies her share of the private key to be *x<sub>1</sub>' = x<sub>1</sub> + r mod q*, and Bob modifies his share of the private key to be *x<sub>2</sub>' = x<sub>2</sub> + r mod q*. Alice then generates a new Paillier key to encrypt x<sub>1</sub>' and proves in zero-knowledge that this is the correct value. This proof works by running the proofs of Steps 2 and 3 in the distributed key generation procedure (Section 5.1). As a result, after the refresh the parties hold a fresh sharing of x, with a new Paillier key. This achieves the property that if an attacker obtains Alice's secret information before a refresh and Bob's secret information after a refresh (or vice versa), it cannot learn anything about the private key *x*. (The Paillier key must be changed as well as the sharing, since otherwise once the Paillier private key is stolen from Alice, it can corrupt Bob at any later time and decrypt *c<sub>key</sub>*; this value together with *x<sub>2</sub>* (both held by Bob) yields the private key *x*. This level of security is called proactive in the academic literature.
 
-We remark that the method described above results in the encryption of *x<sub>1</sub>'* being larger than that of *x<sub>1</sub>*, and in each refresh it can grow by up to *q*. Since part of the ECDSA signing protocol requires adding random noise to mask the opened value – this is the random multiple of *q* described in Section ‎5.4 – it is necessary to increase this multiple to take into account *x<sub>1</sub>'* being larger. We do this in the implementation by adding an additional *2<sup>80</sup> &sdot; q*, which suffices for up to 2<sup>80</sup> refreshes (something that will never happen).
 
 
 <a name="security-guarantees"></a>

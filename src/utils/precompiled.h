@@ -60,7 +60,6 @@ extern "C"
 #include <errno.h>
 #include <math.h>
 
-#include <typeinfo>
 #include <string>
 #include <memory>
 #include <algorithm>
@@ -73,7 +72,6 @@ extern "C"
 #include <fstream>
 #include <sstream>
 #include <ctime>
-#include <exception>
 
 #if defined(_WIN32) || defined(__APPLE__) || defined(__ANDROID__)
 #include <unordered_map>

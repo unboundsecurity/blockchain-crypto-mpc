@@ -29,7 +29,6 @@
 
 // --------------------------------- gcdef_bip_t ---------------------------------------
 
-
 circuit_def_t::wires_t gcdef_bip_t::bn_to_wires(const bn_t& value, int bits)
 {
   buf_t buf = value.to_bin(bits/8);
@@ -38,7 +37,7 @@ circuit_def_t::wires_t gcdef_bip_t::bn_to_wires(const bn_t& value, int bits)
   for (int i=0; i<bits; i++) 
   {
     bool bit = get_bit(buf.data(), i);
-    out[i] = bit ? gc_true : gc_false; //get_const_wire();
+    out[i] = bit ? gc_true : gc_false; 
   }
   return out;
 }
@@ -190,19 +189,26 @@ gcdef_bip_t::gcdef_bip_t(int initial_seed_size, unsigned index)
 
   wires_t prev_x(q_size);
   wires_t x(q_size);
+  wires_t r(q_size);
+  wires_t r1(q_size);
+  wires_t r2(q_size);
 
   bool initial = initial_seed_size >= 0;
 
   int in_size = initial ? initial_seed_size*8 : q_size;
   in1.init(in_size); update_wires(in1);
-  in2.init(in_size); update_wires(in2);
-  
+  in2.init(in_size); update_wires(in2);  
+  r1.init(q_size); update_wires(r1);
+  r2.init(q_size); update_wires(r2);  
 
   wires_t q(q_size);
+
+  r = add_mod(r1, r2, q);
 
   if (initial)
   {
     hmac_in = xor_gates(in1, in2);
+    for (int i=0; i<q_size; i++) prev_x[i] =  get_wire_false(); // all zeroes
   }
   else
   {
@@ -235,59 +241,38 @@ gcdef_bip_t::gcdef_bip_t(int initial_seed_size, unsigned index)
     x = add_mod(prev_x, delta, q);
   }
 
-  wires_t alpha1(128);
-  wires_t alpha2(128);
+  wires_t alpha1(bip_sec_param);
+  wires_t alpha2(bip_sec_param);
   wires_t alpha = xor_gates(alpha1, alpha2);
 
-  wires_t rhos[64];
-  wires_t out_x1[64];
-  wires_t out_x2[64];
+  wires_t rhos[bip_sec_count+1];
+  wires_t out_x2[bip_sec_count+1];
+  
+  for (int i=0; i<bip_sec_count+1; i++) { rhos[i].init(q_size); update_wires(rhos[i]); }
 
-  for (int i=0; i<64; i++)
+  out_x2[0] = sub_mod(x, rhos[0], q);
+
+  for (int i=1; i<bip_sec_param+1; i++)
   {
-    rhos[i].init(q_size); update_wires(rhos[i]);
+    out_x2[2*i-1].init(q_size);
+    out_x2[2*i].init(q_size);
 
-    wires_t rho = rhos[i];
-    rho.resize(q_size);
-
-    out_x1[i] = rho;
-    out_x2[i].init(q_size);
-    wires_t w0, w1, w2;
-
-    w0 = rho;
-    w2 = sub_mod(x, rho, q);
-
-    if (initial)
-    {
-      w1 = sub(q, rho);
-    }
-    else
-    {
-      w1 = sub_mod(prev_x, rho, q);
-    }
-
-    int alpha_i = alpha[i*2];
-    int alpha_i_plus_1 = alpha[i*2+1];
-    int not_alpha_i_plus_1 =  not_gate(alpha_i_plus_1);
-    int case0 = not_gate(alpha_i);
-    int case1 = and_gate(alpha_i, not_alpha_i_plus_1);
-    int case2 = and_gate(alpha_i, alpha_i_plus_1);
-
+    int a = alpha[i-1];
+    wires_t lo_case0 = sub_mod(r,      rhos[2*i-1], q);
+    wires_t hi_case0 = sub_mod(r,      rhos[2*i],   q);
+    wires_t lo_case1 = sub_mod(prev_x, rhos[2*i-1], q);
+    wires_t hi_case1 = sub_mod(x,      rhos[2*i],   q);
     for (int j=0; j<q_size; j++)
     {
-      if (i==0)
-      {
-        out_x2[i][j] = w2[j];
-      }
-      else
-      {
-        int out0 = and_gate(case0,  w0[j]);
-        int out1 = and_gate(case1,  w1[j]);
-        int out2 = and_gate(case2,  w2[j]);
+      int lo = xor_gate(lo_case1[j], lo_case0[j]);
+      int hi = xor_gate(hi_case1[j], hi_case0[j]);
+      lo = and_gate(lo, a);
+      hi = and_gate(hi, a);
+      lo = xor_gate(lo, lo_case0[j]);
+      hi = xor_gate(hi, hi_case0[j]);
 
-        int out_temp = or_gate(out0, out1);
-        out_x2[i][j] = or_gate(out2, out_temp);
-      }
+      out_x2[2*i-1][j] = lo;
+      out_x2[2*i][j] = hi;
     }
   }
 
@@ -295,16 +280,19 @@ gcdef_bip_t::gcdef_bip_t(int initial_seed_size, unsigned index)
 
   opad_param = set_input_param(opad_state);
   ipad_param = set_input_param(ipad_state);
-  in1_param = set_input_param(in1);
-  in2_param = set_input_param(in2);
-  out_c_par_param = set_output_param(out_c_par);
   alpha1_param = set_input_param(alpha1);
   alpha2_param = set_input_param(alpha2);
+  r1_param = set_input_param(r1);
+  r2_param = set_input_param(r2);
+  in1_param = set_input_param(in1);
+  in2_param = set_input_param(in2);
+  
+  out_c_par_param = set_output_param(out_c_par); 
+  out_r_param = set_output_param(r);
 
-  for (int i=0; i<64; i++)
+  for (int i=0; i<bip_sec_count+1; i++)
   {
     rho_param[i] = set_input_param(rhos[i]);
-    out_x1_param[i] = set_output_param(out_x1[i]);
     out_x2_param[i] = set_output_param(out_x2[i]);
   }
 }
@@ -336,7 +324,7 @@ const gcdef_bip_t* cache_gcdef_bip_t::get(int initial_seed_size, unsigned index)
 
 //-------------------------------------------------------------------------------------
 
-enum { max_ot_blocks = 150 };
+enum { max_ot_blocks = 300 };
 
 void mpc_ecdsa_derive_bip_t::convert(ub::converter_t& converter) 
 {
@@ -367,6 +355,7 @@ void mpc_ecdsa_derive_bip_t::convert(ub::converter_t& converter)
     gc.ot_receiver = &ot_receiver;    
 
     converter.convert(gc);
+    converter.convert(r);
     converter.convert(rho);
     converter.convert(alpha1);
     converter.convert(alpha2);
@@ -543,7 +532,7 @@ static void set_initial_hmac_key(const gcdef_bip_t* circuit_def, gc_plain_t& inp
 
 static void set_rho(const gcdef_bip_t* circuit_def, gc_plain_t& input, const std::vector<bn_t>& rho)
 {
-  for (int i=0; i<64; i++)
+  for (int i=0; i<bip_sec_count+1; i++)
   {
     buf_t rho_data = rho[i].to_bin(32); rho_data.reverse();
     int param = circuit_def->rho_param[i];
@@ -551,6 +540,12 @@ static void set_rho(const gcdef_bip_t* circuit_def, gc_plain_t& input, const std
   } 
 }
 
+static void set_bn(gc_plain_t& input, int param, const bn_t& value, int bits)
+{
+  buf_t buf = value.to_bin(ub::bits_to_bytes(bits)); 
+  buf.reverse();
+  input.set_param(param, buf);
+}
 
 void mpc_ecdsa_derive_bip_t::init_circuit_def()
 {
@@ -566,14 +561,17 @@ void mpc_ecdsa_derive_bip_t::init_circuit_def()
     mpc_circuit_def->set_input_param(circuit_def->ipad_param, gc_param_type_e::party12);  
     mpc_circuit_def->set_input_param(circuit_def->in1_param, gc_param_type_e::party1);
     mpc_circuit_def->set_input_param(circuit_def->in2_param, gc_param_type_e::party2);
-    mpc_circuit_def->set_output_param(circuit_def->out_c_par_param, gc_param_type_e::party12);  
     mpc_circuit_def->set_input_param(circuit_def->alpha1_param, gc_param_type_e::party1);
     mpc_circuit_def->set_input_param(circuit_def->alpha2_param, gc_param_type_e::party2);
+    mpc_circuit_def->set_input_param(circuit_def->r1_param, gc_param_type_e::party1);
+    mpc_circuit_def->set_input_param(circuit_def->r2_param, gc_param_type_e::party2);
+    
+    mpc_circuit_def->set_output_param(circuit_def->out_r_param, gc_param_type_e::party12);  
+    mpc_circuit_def->set_output_param(circuit_def->out_c_par_param, gc_param_type_e::party12);  
 
-    for (int i=0; i<64; i++)
+    for (int i=0; i<bip_sec_count+1; i++)
     {
       mpc_circuit_def->set_input_param(circuit_def->rho_param[i], gc_param_type_e::party1);
-      mpc_circuit_def->set_output_param(circuit_def->out_x1_param[i], gc_param_type_e::party1);
       mpc_circuit_def->set_output_param(circuit_def->out_x2_param[i], gc_param_type_e::party2);
     }
 
@@ -586,12 +584,16 @@ void mpc_ecdsa_derive_bip_t::gc_init_peer1()
   init_circuit_def();
   gc_plain_t input1(mpc_circuit_def->get_input_params(gc_param_type_e::party1) | mpc_circuit_def->get_input_params(gc_param_type_e::party12));
   input1.set_param(circuit_def->q_param, get_q_buf_le());
+
   
   ecurve_t curve = crypto::curve_k256;
   const bn_t& q = curve.order();
-  alpha1 = buf128_t::rand();
-  rho.resize(64);
-  for (int i=0; i<64; i++) rho[i] = bn_t::rand(q);
+  alpha1 = crypto::gen_random_bits(bip_sec_param);
+  rho.resize(bip_sec_count+1);
+  for (int i=0; i<bip_sec_count+1; i++) rho[i] = bn_t::rand(q);
+
+  bn_t r1 = bn_t::rand(q);
+  set_bn(input1, circuit_def->r1_param, r1, 256);
 
   if (initial)
   {
@@ -605,7 +607,7 @@ void mpc_ecdsa_derive_bip_t::gc_init_peer1()
     input1.set_param(circuit_def->in1_param, prev_x);
   }
 
-  input1.set_param(circuit_def->alpha1_param, mem_t(alpha1));
+  input1.set_param_bits(circuit_def->alpha1_param, alpha1);
   set_rho(circuit_def, input1, rho);
 
   gc.init(true, mpc_circuit_def, &ot_sender, &ot_receiver, input1);
@@ -622,7 +624,10 @@ void mpc_ecdsa_derive_bip_t::gc_init_peer2()
 
   ecurve_t curve = crypto::curve_k256;
   const bn_t& q = curve.order();
-  alpha2 = buf128_t::rand();
+  alpha2 = crypto::gen_random_bits(bip_sec_param);
+
+  bn_t r2 = bn_t::rand(q);
+  set_bn(input2, circuit_def->r2_param, r2, 256);
 
   if (initial)
   {
@@ -635,7 +640,7 @@ void mpc_ecdsa_derive_bip_t::gc_init_peer2()
     buf_t prev_x = old_ecdsa_share.x.to_bin(32); prev_x.reverse();
     input2.set_param(circuit_def->in2_param, prev_x);
   }
-  input2.set_param(circuit_def->alpha2_param, mem_t(alpha1));
+  input2.set_param_bits(circuit_def->alpha2_param, alpha2);
 
   gc.init(false, mpc_circuit_def, &ot_sender, &ot_receiver, input2);
   gc_initialized = true;
@@ -683,16 +688,24 @@ error_t mpc_ecdsa_derive_bip_t::party1_step3(const message4_t& in, message5_t& o
 
 static std::vector<bn_t> get_out_x(const int* param_tab, const gc_plain_t& output) 
 {
-  std::vector<bn_t> out_x(64); 
+  std::vector<bn_t> out_x(bip_sec_count+1); 
 
   buf_t x_data;
-  for (int i=0; i<64; i++)
+  for (int i=0; i<bip_sec_count+1; i++)
   {
     x_data = output.get_param(param_tab[i]); x_data.reverse(); 
     out_x[i] = bn_t::from_bin(x_data);    
   }
 
   return out_x;
+}
+
+static bn_t get_out_bn(const gc_plain_t& output, int param) 
+{
+
+  buf_t x_data = output.get_param(param); 
+  x_data.reverse(); 
+  return bn_t::from_bin(x_data);    
 }
 
 error_t mpc_ecdsa_derive_bip_t::party2_step3(const message5_t& in, message6_t& out) // step 6
@@ -705,13 +718,14 @@ error_t mpc_ecdsa_derive_bip_t::party2_step3(const message5_t& in, message6_t& o
   buf_t new_c_par_buf = gc.unverified_output.get_param(circuit_def->out_c_par_param);
   new_c_par = buf256_t::load(new_c_par_buf.data());
   new_x = get_out_x(circuit_def->out_x2_param, gc.unverified_output);
+  r = get_out_bn(gc.unverified_output, circuit_def->out_r_param);
 
   ecurve_t curve = crypto::curve_k256;
   const ecc_generator_point_t& G = curve.generator();
   
-  Q2.resize(64);
+  Q2.resize(bip_sec_count+1);
   sha256_t sha256;
-  for (int i=0; i<64; i++) 
+  for (int i=0; i<bip_sec_count+1; i++) 
   {
     Q2[i] = G * new_x[i];
     sha256.update(Q2[i]);
@@ -721,7 +735,6 @@ error_t mpc_ecdsa_derive_bip_t::party2_step3(const message5_t& in, message6_t& o
   comm_Q2.gen(sha256);
   comm_Q2_hash = out.comm_Q2_hash = comm_Q2.hash;
   comm_Q2_rand = comm_Q2.rand;
-
   out.Q2_first = Q2[0];
 
   return 0;
@@ -730,42 +743,37 @@ error_t mpc_ecdsa_derive_bip_t::party2_step3(const message5_t& in, message6_t& o
 error_t mpc_ecdsa_derive_bip_t::check_new_Q()
 {
   error_t rv = 0;
-  /*
-  Q_index = -1;
+  ecurve_t curve = crypto::curve_k256;
+  const ecc_generator_point_t& G = curve.generator();
 
-  ecc_point_t Q;
+  ecc_point_t Q = Q1[0] + Q2[0];
+  ecc_point_t Q_hat = G * r;
+    
   ecc_point_t src_Q;
   if (!initial) src_Q = old_ecdsa_share.Q_full;
 
-  for (int i=0; i<64; i++) 
+  for (int i=1; i<bip_sec_param+1; i++) 
   {
-    if (Q1[i]==Q2[i]) continue;
+    ecc_point_t Q_sum_lo = Q1[2*i-1] + Q2[2*i-1];
+    ecc_point_t Q_sum_hi = Q1[2*i]   + Q2[2*i];
 
-    ecc_point_t Q_i = Q1[i] + Q2[i];
+    if (Q_sum_hi == Q_hat && Q_sum_lo == Q_hat) continue;
 
-    if (initial)
+    if (Q_sum_hi == Q)
     {
-      if (Q_i.is_infinity()) continue;
-    }
-    else
-    {
-      if (Q_i == src_Q) continue;
+      if (initial)
+      {
+        if (Q_sum_lo.is_infinity()) continue;
+      }
+      else
+      {
+        if (Q_sum_lo==src_Q) continue;
+      }
     }
 
-    if (Q_index>=0)
-    {
-      if (Q_i!=Q) return rv = ub::error(E_CRYPTO);
-    }
-    else 
-    { 
-      Q = Q_i; 
-      Q_index = i; 
-    }
+    return rv = ub::error(E_CRYPTO);
   }
 
-  if (Q_index<0) return rv = ub::error(E_CRYPTO);
-  new_share.Q_full = Q;
-  */
   return rv;
 }
 
@@ -777,22 +785,22 @@ error_t mpc_ecdsa_derive_bip_t::party1_step4 (const message6_t& in,  message7_t&
 
   buf_t new_c_par_buf = gc.unverified_output.get_param(circuit_def->out_c_par_param);
   new_c_par = buf256_t::load(new_c_par_buf.data());
-  new_x = get_out_x(circuit_def->out_x1_param, gc.unverified_output);
+  new_x = rho;
+  r = get_out_bn(gc.unverified_output, circuit_def->out_r_param);
 
   ecurve_t curve = crypto::curve_k256;
   const ecc_generator_point_t& G = curve.generator();
 
-  Q1.resize(64);
+  Q1.resize(bip_sec_count+1);
 
   sha256_t sha256;
-  for (int i=0; i<64; i++) 
+  for (int i=0; i<bip_sec_count+1; i++) 
   {
     Q1[i] = G * new_x[i];
     sha256.update(Q1[i]);
   }
 
-  int Q_index = 0;
-  new_share.x = new_x[Q_index];
+  new_share.x = new_x[0];
   new_share.Q_full = in.Q2_first + Q1[0];
 
   gen_helper.peer1_step1(true, curve, session_id, new_share, out.gen_msg1);
@@ -808,8 +816,8 @@ error_t mpc_ecdsa_derive_bip_t::party2_step4(const message7_t& in,  message8_t& 
 
   ecurve_t curve = crypto::curve_k256;
   Q1 = in.Q1;
-  if (Q1.size()!=64) return rv = ub::error(E_CRYPTO);
-  for (int i=0; i<64; i++) 
+  if (Q1.size()!=bip_sec_count+1) return rv = ub::error(E_CRYPTO);
+  for (int i=0; i<bip_sec_count+1; i++) 
   {
     if (!curve.check(Q1[i])) return rv = ub::error(E_CRYPTO);
   } 
@@ -832,9 +840,9 @@ error_t mpc_ecdsa_derive_bip_t::party1_step5(const message8_t& in, message9_t& o
   ecurve_t curve = crypto::curve_k256;
 
   Q2 = in.Q2;
-  if (Q2.size()!=64) return rv = ub::error(E_CRYPTO);
+  if (Q2.size()!=bip_sec_count+1) return rv = ub::error(E_CRYPTO);
   sha256_t sha256;
-  for (int i=0; i<64; i++) 
+  for (int i=0; i<bip_sec_count+1; i++) 
   {
     if (!curve.check(Q2[i])) return rv = ub::error(E_CRYPTO);
     sha256.update(Q2[i]);

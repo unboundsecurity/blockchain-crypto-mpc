@@ -29,6 +29,13 @@
 #include "mpc_ot.h"
 #include "garbled_circuit_2party.h"
 
+enum
+{
+  bip_sec_param = 64,
+  bip_sec_count = bip_sec_param*2
+};
+
+
 class gcdef_bip_t : public circuit_def_t
 {
 public:
@@ -36,10 +43,10 @@ public:
 
   int opad_param, ipad_param, in1_param, in2_param, alpha1_param, alpha2_param;
   int q_param;
-  int rho_param[64]; 
-  int out_c_par_param;
-  int out_x1_param[64]; 
-  int out_x2_param[64];
+  int rho_param[bip_sec_count+1]; 
+  int r1_param, r2_param;
+  int out_c_par_param, out_r_param;
+  int out_x2_param[bip_sec_count+1];
 
 private:
   wires_t xor_gates(wires_t& in1, wires_t& in2);
@@ -65,7 +72,6 @@ public:
   ~mpc_ecdsa_derive_bip_t()
   {
     delete mpc_circuit_def;
-    //delete circuit_def;
   }
 
   static const uint64_t CODE_TYPE = 0xa5be406795b76416;
@@ -160,9 +166,9 @@ public:
     void convert(ub::converter_t& converter)
     {
       converter.convert(comm_Q2_hash);
+      converter.convert(Q2_first);
       converter.convert(gc_msg4);
       converter.convert(agree_msg3);
-      converter.convert(Q2_first);
     }
   };
 
@@ -231,8 +237,9 @@ private:
   bool gc_initialized;
   gc_2party_t gc;
   std::vector<bn_t> rho;
-  buf128_t alpha1, alpha2;
+  ub::bits_t alpha1, alpha2;
 
+  bn_t r;
   std::vector<bn_t> new_x;
   std::vector<ecc_point_t> Q1;
   std::vector<ecc_point_t> Q2;

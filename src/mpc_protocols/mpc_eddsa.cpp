@@ -263,7 +263,8 @@ ecc_point_t tweak_to_point(mem_t tweak) // static
   bn_t p, a, b;
   crypto::curve_p256.get_params(p, a, b);
 
-  buf256_t h = sha256_t::hash(tweak);
+  buf256_t h = crypto::random_oracle_hash(tweak);
+
   bn_t x = bn_t(h) % p;
 
   ecc_point_t point(crypto::curve_p256);

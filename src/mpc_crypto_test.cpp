@@ -559,14 +559,13 @@ static int test_bip()
   return rv;
 }
 
-namespace mpc {
-extern int zk_paillier_range_time;
-}
 
 MPCCRYPTO_API int MPCCrypto_test()
 {
   int rv = 0;
-  /*
+
+  if (rv = test_bip()) return rv;
+
   test_key_t eddsa_key;
   if (rv = test_eddsa_gen(eddsa_key)) return rv;
   if (rv = test_eddsa_backup(eddsa_key)) return rv;
@@ -576,18 +575,16 @@ MPCCRYPTO_API int MPCCrypto_test()
     if (rv = test_refresh(eddsa_key)) return rv;
   }
 
-  */
+  
   test_key_t ecdsa_key;
   if (rv = test_ecdsa_gen(ecdsa_key)) return rv;
 
-  uint64_t t = ub::read_timer_ms();
   for (int i=0; i<10; i++)
   {
     if (rv = test_ecdsa_sign(ecdsa_key)) return rv;
   }
-  t = ub::read_timer_ms() - t;
 
-  /*
+  
   if (rv = test_ecdsa_backup(ecdsa_key)) return rv;
   for (int i=0; i<3; i++)
   {
@@ -595,17 +592,13 @@ MPCCRYPTO_API int MPCCrypto_test()
     if (rv = test_refresh(ecdsa_key)) return rv;
   }
 
-
-  if (rv = test_bip()) return rv;
-
   test_key_t secret_key1; if (rv = test_generic_secret_import(secret_key1)) return rv;
   test_key_t secret_key2; if (rv = test_generic_secret_gen(secret_key2)) return rv;
   for (int i = 0; i<3; i++)
   {
     if (rv = test_refresh(secret_key2)) return rv;
   }
-  */
-  printf("\nAll tests successfully finished. 10 Signatures took %d ms\n", int(t));
+  
   return rv;
 }
 

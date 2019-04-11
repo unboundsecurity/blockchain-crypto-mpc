@@ -376,4 +376,10 @@ public:
 
 };
 
+inline buf256_t random_oracle_hash(mem_t input)
+{
+  static const byte_t random_oracle_key[16] = {0xf4, 0x91, 0xf2, 0x73, 0x2b, 0x8d, 0x40, 0xe7, 0x81, 0x2b, 0x53, 0x5c, 0x6e, 0xa5, 0xbb, 0xc4};
+  return hmac_sha256_t(mem_t(random_oracle_key, 16)).calculate(input);
+}
+
 } //namespace crypto

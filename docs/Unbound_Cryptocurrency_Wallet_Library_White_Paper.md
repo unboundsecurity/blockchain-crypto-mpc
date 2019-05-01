@@ -452,7 +452,7 @@ signature on that message using the protocol of \[5\] as follows:
 Given a message *m* that both parties agree to sign, the parties can generate a
 signature on that message using the protocol of \[10\] as follows:
 
-1.  Alice and Bob run two oblivious pseudo-random function evaluations,
+1.  Alice and Bob run two distributed pseudorandom function evaluations,
     in order for them to derive pseudo-random shares *r<sub>1</sub>* and *r<sub>2</sub>*
     of *r* from the message. Both parties also learn the value
     *R = r<sub>1</sub> &sdot; G + r<sub>2</sub> &sdot; G*. This generation uses

@@ -164,7 +164,7 @@ public:
   void set_refresh(bool refresh) { this->refresh = refresh; }
   virtual mpc_crypto_key_e get_share_type() const override { return mpc_eddsa; }
 
-  virtual int get_messages_count() const override { return 6; }
+  virtual int get_messages_count() const override { return 4; }
   virtual bool changes_share() const override { return refresh; }
 
   struct message1_t
@@ -184,16 +184,12 @@ public:
   typedef mpc::eddsa_sign_t::message2_t message2_t;
   typedef mpc::eddsa_sign_t::message3_t message3_t;
   typedef mpc::eddsa_sign_t::message4_t message4_t;
-  typedef mpc::eddsa_sign_t::message5_t message5_t;
-  typedef mpc::eddsa_sign_t::message6_t message6_t;
 
   error_t party1_step1(message1_t& out);
   error_t party2_step1(const message1_t& in, message2_t& out);
   error_t party1_step2(const message2_t& in, message3_t& out);
   error_t party2_step2(const message3_t& in, message4_t& out);
-  error_t party1_step3(const message4_t& in, message5_t& out);
-  error_t party2_step3(const message5_t& in, message6_t& out);
-  error_t party1_step4(const message6_t& in, none_message_t& out);
+  error_t party1_step3(const message4_t& in, none_message_t& out);
 
 private:
   bool refresh;

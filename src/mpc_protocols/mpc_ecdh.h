@@ -131,58 +131,30 @@ struct ecdh_generate_t
 
 struct ecdh_derive_t
 {
-  bool prove_mode;
-  buf_t session_id;
-  ecc_point_t PUB_KEY;
-
-  void convert(ub::converter_t& converter)
+  struct message_t // 1 --> 2
   { 
-    converter.convert(prove_mode);
-    converter.convert(session_id);
-    converter.convert(PUB_KEY);
-  }
-
-  struct message1_t // 1 --> 2
-  {
     ecc_point_t T1;
-    void convert(ub::converter_t& converter)
-    { 
-      converter.convert(T1);
-    }
-  };
-
-  struct message2_t // 2 --> 1
-  { 
-    ecc_point_t T2;
     zk_ddh_t zk_ddh;
 
     void convert(ub::converter_t& converter)
     { 
-      converter.convert(T2);
+      converter.convert(T1);
       converter.convert(zk_ddh);
     }
   };
 
-  error_t peer1_init(
+  static error_t peer1_step(
+    const ecdh_share_t& share,
     const ecc_point_t& PUB_KEY, 
-    bool prove_mode, 
     mem_t session_id, 
-    const ecdh_share_t& share,
-    /*OUT*/ message1_t& out); 
+    /*OUT*/ message_t& msg); 
 
-  error_t peer2_exec(
+  static error_t peer2_step(
+    const ecdh_share_t& share,
     const ecc_point_t& PUB_KEY, 
-    const ecdh_share_t& share,
-    bool prove_mode, 
     mem_t session_id, 
-    const message1_t& in,
-    /*OUT*/ message2_t& out,
-    /*OUT*/ buf_t& result) const;
-
-  error_t peer1_final(
-    const ecdh_share_t& share,
-    const message2_t& in,     
-    /*OUT*/ buf_t& result) const; 
+    const message_t& msg,
+    /*OUT*/ buf_t& result);
 };
 
 }

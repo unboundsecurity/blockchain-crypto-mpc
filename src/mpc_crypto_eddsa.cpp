@@ -170,7 +170,7 @@ void mpc_eddsa_sign_t::convert(ub::converter_t& converter)
 error_t mpc_eddsa_sign_t::party1_step1(message1_t& out)
 {
   error_t rv = 0;
-  if (rv = ctx.peer1_step1(ctx.data_to_sign, true, share, out.sign_msg1)) return rv;
+  if (rv = ctx.peer1_step1(ctx.data_to_sign, share, out.sign_msg1)) return rv;
   out.refresh = refresh;
   out.data_to_sign = ctx.data_to_sign;
   return rv;
@@ -182,7 +182,7 @@ error_t mpc_eddsa_sign_t::party2_step1(const message1_t& in, message2_t& out)
   if (in.data_to_sign!=ctx.data_to_sign) return rv = ub::error(E_BADARG);
   if (in.refresh!=refresh) return rv = ub::error(E_BADARG);
 
-  if (rv = ctx.peer2_step1(in.data_to_sign, true, share, in.sign_msg1, out)) return rv;
+  if (rv = ctx.peer2_step1(in.data_to_sign, share, in.sign_msg1, out)) return rv;
   refresh = in.refresh;
   return rv;
 }
@@ -191,20 +191,6 @@ error_t mpc_eddsa_sign_t::party1_step2(const message2_t& in, message3_t& out)
 {
   error_t rv = 0;
   if (rv = ctx.peer1_step2(share, in, out)) return rv;
-  return rv;
-}
-
-error_t mpc_eddsa_sign_t::party2_step2(const message3_t& in, message4_t& out)
-{
-  error_t rv = 0;
-  if (rv = ctx.peer2_step2(share, in, out)) return rv;
-  return rv;
-}
-
-error_t mpc_eddsa_sign_t::party1_step3(const message4_t& in, message5_t& out)
-{
-  error_t rv = 0;
-  if (rv = ctx.peer1_step3(share, in, out)) return rv;
   return rv;
 }
 
@@ -235,10 +221,10 @@ static buf_t calc_mgf(mem_t seed, int size)
 }
 
 
-error_t mpc_eddsa_sign_t::party2_step3(const message5_t& in, message6_t& out)
+error_t mpc_eddsa_sign_t::party2_step2(const message3_t& in, message4_t& out)
 {
   error_t rv = 0;
-  if (rv = ctx.peer2_step3(share, in, out)) return rv;
+  if (rv = ctx.peer2_step2(share, in, out)) return rv;
 
   if (refresh)
   {
@@ -251,10 +237,10 @@ error_t mpc_eddsa_sign_t::party2_step3(const message5_t& in, message6_t& out)
   return rv;
 }
 
-error_t mpc_eddsa_sign_t::party1_step4(const message6_t& in, none_message_t& out)
+error_t mpc_eddsa_sign_t::party1_step3(const message4_t& in, none_message_t& out)
 {
   error_t rv = 0;
-  if (rv = ctx.peer1_step4(share, in, result)) return rv;
+  if (rv = ctx.peer1_step3(share, in, result)) return rv;
 
   if (refresh)
   {

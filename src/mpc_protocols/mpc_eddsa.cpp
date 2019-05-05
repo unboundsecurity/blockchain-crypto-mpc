@@ -281,7 +281,6 @@ ecc_point_t tweak_to_point(mem_t tweak) // static
 
 error_t eddsa_sign_t::peer1_step1(
   mem_t data_to_sign, 
-  bool prove_mode, 
   const eddsa_share_t& share,
   /*OUT*/message1_t& out)
 {
@@ -289,25 +288,23 @@ error_t eddsa_sign_t::peer1_step1(
   kdf_PUB_KEY = tweak_to_point(data_to_sign);
   buf_t kdf1_session_id = sha256_t::hash(data_to_sign, share.Q_full);
 
-  if (rv = kdf1_ctx.peer1_init(kdf_PUB_KEY, prove_mode, kdf1_session_id, share.kdf1, out.kdf1_message1)) return rv;
+  if (rv = ecdh_derive_t::peer1_step(share.kdf1, kdf_PUB_KEY, kdf1_session_id, out.kdf1_message)) return rv;
 
   agree1 = out.agree1 = crypto::gen_random(16);
 
-  this->prove_mode = prove_mode;
   this->data_to_sign = data_to_sign;
+
 
   return 0;
 }
 
 error_t eddsa_sign_t::peer2_step1(
   mem_t data_to_sign, 
-  bool prove_mode, 
   const eddsa_share_t& share,
   const message1_t& in,
   /*OUT*/message2_t& out)
 {
   error_t rv = 0;
-  this->prove_mode = prove_mode;
   this->data_to_sign = data_to_sign;
 
   if (in.agree1.size()<16) return rv = error(E_BADARG);
@@ -316,11 +313,19 @@ error_t eddsa_sign_t::peer2_step1(
   kdf_PUB_KEY = tweak_to_point(data_to_sign);
   buf_t kdf1_session_id = sha256_t::hash(data_to_sign, share.Q_full);
 
-  if (rv = kdf1_ctx.peer2_exec(kdf_PUB_KEY, share.kdf1, prove_mode, kdf1_session_id, in.kdf1_message1, out.kdf1_message2, kdf1_result)) return rv;
-  kdf1_result = sha512_t::hash(kdf1_result);
-
+  buf_t kdf_result;
+  if (rv = ecdh_derive_t::peer2_step(share.kdf1, kdf_PUB_KEY, kdf1_session_id, in.kdf1_message, kdf_result)) return rv;
+  kdf_result = sha512_t::hash(kdf_result);
+  r_reduced_buf = ec25519::reduce_scalar_64(kdf_result);
+  R2 = ec25519::mul_to_generator(r_reduced_buf);
+  
   session_id = sha256_t::hash(in.agree1, out.agree2, data_to_sign);
-  if (rv = kdf2_ctx.peer1_init(kdf_PUB_KEY, prove_mode, session_id, share.kdf2, out.kdf2_message1)) return rv;
+  if (rv = ecdh_derive_t::peer1_step(share.kdf2, kdf_PUB_KEY, session_id, out.kdf2_message)) return rv;
+
+  commitment_t comm;
+  comm.gen(sha256_t(session_id, R2));
+  out.comm_hash = comm.hash;
+  comm_rand = comm.rand;
 
   return 0;
 }
@@ -333,22 +338,15 @@ error_t eddsa_sign_t::peer1_step2(
   error_t rv = 0;
   if (in.agree2.size()<16) return rv = error(E_BADARG);
 
-  if (rv = kdf1_ctx.peer1_final(share.kdf1, in.kdf1_message2, kdf1_result)) return rv;
-  kdf1_result = sha512_t::hash(kdf1_result);
-
+  comm_hash = in.comm_hash;
   session_id = sha256_t::hash(agree1, in.agree2, data_to_sign);
-  if (rv = kdf2_ctx.peer2_exec(kdf_PUB_KEY, share.kdf2, prove_mode, session_id, in.kdf2_message1, out.kdf2_message2, kdf2_result)) return rv;
 
-  kdf2_result = sha512_t::hash(kdf2_result);
-
-  r_reduced_buf = ec25519::reduce_scalar_64(kdf1_result);
-  R1 = ec25519::mul_to_generator(r_reduced_buf);
+  buf_t kdf_result;
+  if (rv = ecdh_derive_t::peer2_step(share.kdf2, kdf_PUB_KEY, session_id, in.kdf2_message, kdf_result)) return rv;
+  kdf_result = sha512_t::hash(kdf_result);
+  r_reduced_buf = ec25519::reduce_scalar_64(kdf_result);
+  out.R1 = R1 = ec25519::mul_to_generator(r_reduced_buf);
   
-  commitment_t comm;
-  comm.gen(sha256_t(session_id, R1));
-  out.comm_hash = comm.hash;
-  comm_rand = comm.rand;
-
   return 0;
 }
 
@@ -358,41 +356,8 @@ error_t eddsa_sign_t::peer2_step2(
   message4_t& out)
 {
   error_t rv = 0;
-  if (rv = kdf2_ctx.peer1_final(share.kdf2, in.kdf2_message2, kdf2_result)) return rv;
-
-  kdf2_result = sha512_t::hash(kdf2_result);
-
-  comm_hash = in.comm_hash;
-  r_reduced_buf = ec25519::reduce_scalar_64(kdf2_result);
-  R2 = ec25519::mul_to_generator(r_reduced_buf);
-
-  out.R2 = R2;
-  return 0;
-}
-
-error_t eddsa_sign_t::peer1_step3(
-  const eddsa_share_t& share,
-  const message4_t& in,
-  /*OUT*/message5_t& out)
-{
-  error_t rv = 0;
-  if (!ec25519::check(in.R2)) return rv = error(E_BADARG);
-  R2 = in.R2;
-
-  out.R1 = R1;
-  out.comm_rand = comm_rand;
-  return 0;
-}
-
-error_t eddsa_sign_t::peer2_step3(
-  const eddsa_share_t& share,
-  const message5_t& in,
-  message6_t& out)
-{
-  error_t rv = 0;
 
   if (!ec25519::check(in.R1)) return rv = error(E_BADARG);
-  if (!commitment_t::check(in.comm_rand, comm_hash, sha256_t(session_id, in.R1))) return rv = error(E_CRYPTO);
 
   crypto::ecp_25519_t R_sum = R2 + in.R1;
   buf_t R_sum_value = R_sum.encode();
@@ -402,18 +367,23 @@ error_t eddsa_sign_t::peer2_step3(
   buf_t HRAM_reduced = ec25519::reduce_scalar_64(HRAM);
   const crypto::bn_t& x2 = share.x;
   out.s2 = ec25519::scalar_muladd(HRAM_reduced, ec25519::encode_scalar(x2), r_reduced_buf);
-
+  
+  out.R2 = R2;
+  out.comm_rand = comm_rand;
   return 0;
 }
 
-error_t eddsa_sign_t::peer1_step4(
+error_t eddsa_sign_t::peer1_step3(
   const eddsa_share_t& share,
-  const message6_t& in,
+  const message4_t& in,
   byte_ptr out)
 {
   error_t rv = 0;
 
-  ecp_25519_t R_sum = R1 + R2;
+  if (!ec25519::check(in.R2)) return rv = error(E_BADARG);
+  if (!commitment_t::check(in.comm_rand, comm_hash, sha256_t(session_id, in.R2))) return rv = error(E_CRYPTO);
+
+  ecp_25519_t R_sum = R1 + in.R2;
   buf_t R_sum_value = R_sum.encode();
   
   buf_t pub_key = share.Q_full.encode();

@@ -176,11 +176,9 @@ struct eddsa_gen_t
 
 struct eddsa_sign_t
 {
-  bool prove_mode;
   buf_t data_to_sign;
   crypto::ecc_point_t kdf_PUB_KEY;
-  buf_t agree1, session_id, kdf1_result, kdf2_result;
-  ecdh_derive_t kdf1_ctx, kdf2_ctx;
+  buf_t agree1, session_id;
   ecp_25519_t R1, R2;
   buf128_t comm_rand;
   buf256_t comm_hash;
@@ -188,15 +186,10 @@ struct eddsa_sign_t
 
   void convert(ub::converter_t& converter) 
   { 
-    converter.convert(prove_mode);
     converter.convert(data_to_sign);
     converter.convert(kdf_PUB_KEY);
     converter.convert(agree1);
     converter.convert(session_id);
-    converter.convert(kdf1_result);
-    converter.convert(kdf2_result);
-    converter.convert(kdf1_ctx);
-    converter.convert(kdf2_ctx);
     converter.convert(R1);
     converter.convert(R2);
     converter.convert(comm_rand);
@@ -206,48 +199,45 @@ struct eddsa_sign_t
 
   struct message1_t // 1 --> 2
   {
-    ecdh_derive_t::message1_t kdf1_message1;
+    ecdh_derive_t::message_t kdf1_message;
     buf_t agree1;
     void convert(ub::converter_t& converter) 
     { 
       converter.convert(agree1);
-      converter.convert(kdf1_message1);
+      converter.convert(kdf1_message);
     }
   };
 
   error_t peer1_step1(mem_t m, 
-    bool prove_mode, 
     const eddsa_share_t& share,
     /*OUT*/message1_t& out);
 
   struct message2_t // 2 --> 1
   {
-    ecdh_derive_t::message2_t kdf1_message2;
-    ecdh_derive_t::message1_t kdf2_message1;
+    ecdh_derive_t::message_t kdf2_message;
     buf_t agree2;
+    buf256_t comm_hash;
 
     void convert(ub::converter_t& converter)
     { 
       converter.convert(agree2);
-      converter.convert(kdf1_message2);
-      converter.convert(kdf2_message1);
+      converter.convert(kdf2_message);
+      converter.convert(comm_hash);
     }
   };
 
-  error_t peer2_step1(mem_t m, 
-    bool prove_mode, 
+  error_t peer2_step1(
+    mem_t data_to_sign, 
     const eddsa_share_t& share,
     const message1_t& in,
-    /*OUT*/message2_t& out);
+    message2_t& out);
 
   struct message3_t // 1 --> 2
   {
-    ecdh_derive_t::message2_t kdf2_message2;
-    buf256_t comm_hash;
-    void convert(ub::converter_t& converter)
+    ecp_25519_t R1;
+    void convert(ub::converter_t& converter) 
     { 
-      converter.convert(kdf2_message2);
-      converter.convert(comm_hash);
+      converter.convert(R1);
     }
   };
 
@@ -258,10 +248,14 @@ struct eddsa_sign_t
 
   struct message4_t // 2 --> 1
   {
+    buf_t s2;
     ecp_25519_t R2;
+    buf128_t comm_rand;
     void convert(ub::converter_t& converter) 
     { 
+      converter.convert(s2);
       converter.convert(R2);
+      converter.convert(comm_rand);
     }
   };
 
@@ -270,39 +264,9 @@ struct eddsa_sign_t
     const message3_t& in,
     message4_t& out);
 
-  struct message5_t // 1 --> 2
-  {
-    ecp_25519_t R1;
-    buf128_t comm_rand;
-    void convert(ub::converter_t& converter) 
-    { 
-      converter.convert(R1);
-      converter.convert(comm_rand);
-    }
-  };
-
   error_t peer1_step3(
     const eddsa_share_t& share,
     const message4_t& in,
-    /*OUT*/message5_t& out);
-
-  struct message6_t // 2 --> 1
-  {
-    buf_t s2;
-    void convert(ub::converter_t& converter) 
-    { 
-      converter.convert(s2);
-    }
-  };
-
-  error_t peer2_step3(
-    const eddsa_share_t& share,
-    const message5_t& in,
-    message6_t& out);
-
-  error_t peer1_step4(
-    const eddsa_share_t& share,
-    const message6_t& in,
     byte_ptr out); // 64 bytes
 };
 

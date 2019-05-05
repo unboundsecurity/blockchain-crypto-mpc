@@ -157,78 +157,46 @@ error_t ecdh_generate_t::peer2_step2(
 
 // ----------------------------- derive -------------------------
 
-error_t ecdh_derive_t::peer1_init(
-  const ecc_point_t& PUB_KEY, 
-  bool prove_mode, 
-  mem_t session_id, 
+error_t ecdh_derive_t::peer1_step(
   const ecdh_share_t& share,
-  /*OUT*/ message1_t& out)
-{
-  ecurve_t curve = share.get_curve();
-  if (!curve.check(PUB_KEY)) return error(E_CRYPTO);
-
-  this->PUB_KEY = PUB_KEY;
-  this->prove_mode = prove_mode;
-  this->session_id = session_id;
-
-  out.T1 = PUB_KEY * share.x;
-  return 0;
-}
-
-static buf_t get_ecdh_result(const ecc_point_t& P)
-{
-  ecurve_t curve = P.get_curve();
-  bn_t x; P.get_x(x);
-  return x.to_bin(curve.size());
-}
-
-error_t ecdh_derive_t::peer2_exec(
     const ecc_point_t& PUB_KEY, 
-    const ecdh_share_t& share,
-    bool prove_mode, 
     mem_t session_id, 
-    const message1_t& in,
-    /*OUT*/ message2_t& out,
-    /*OUT*/ buf_t& result) const
+    /*OUT*/ message_t& msg)
 {
   ecurve_t curve = share.get_curve();
-  const ecc_generator_point_t& G = curve.generator();
-
-  
   if (!curve.check(PUB_KEY)) return error(E_CRYPTO);
-  if (!curve.check(in.T1)) return error(E_CRYPTO);
 
-  out.T2 = PUB_KEY * share.x;
-  if (prove_mode)
-  {
-    ecc_point_t Q_self = G * share.x;
-    out.zk_ddh.p(curve, PUB_KEY, Q_self, out.T2, share.x, session_id, 2);
-  }
+  const ecc_generator_point_t& G = curve.generator();
+  msg.T1 = PUB_KEY * share.x;
 
-  ecc_point_t T = in.T1 + out.T2;
-  result = get_ecdh_result(T);
+  ecc_point_t Q_self = G * share.x;
+  msg.zk_ddh.p(curve, PUB_KEY, Q_self, msg.T1, share.x, session_id, 2);
+
   return 0;
 }
 
-error_t ecdh_derive_t::peer1_final(
-  const ecdh_share_t& share,
-  const message2_t& in,     
-  /*OUT*/ buf_t& result) const
+error_t ecdh_derive_t::peer2_step(
+    const ecdh_share_t& share,
+    const ecc_point_t& PUB_KEY, 
+    mem_t session_id, 
+    const message_t& msg,
+    /*OUT*/ buf_t& result)
 {
   ecurve_t curve = share.get_curve();
-  if (!curve.check(in.T2)) return error(E_CRYPTO);
   const ecc_generator_point_t& G = curve.generator();
 
-  if (prove_mode) 
-  {
-    ecc_point_t Q_other = share.Q_full - G * share.x;
-    if (!in.zk_ddh.v(curve, PUB_KEY, Q_other, in.T2, session_id, 2)) return error(E_CRYPTO);
-  }
+  if (!curve.check(PUB_KEY)) return error(E_CRYPTO);
+  if (!curve.check(msg.T1)) return error(E_CRYPTO);
 
-  ecc_point_t T1 = PUB_KEY * share.x;
-  ecc_point_t T = T1 + in.T2;
+  ecc_point_t T2 = PUB_KEY * share.x;
 
-  result = get_ecdh_result(T);
+  ecc_point_t Q_self = G * share.x;
+  ecc_point_t Q_other = share.Q_full - G * share.x;
+  if (!msg.zk_ddh.v(curve, PUB_KEY, Q_other, msg.T1, session_id, 2)) return error(E_CRYPTO);
+
+  ecc_point_t T = msg.T1 + T2;
+  bn_t x; T.get_x(x);
+  result =  x.to_bin(curve.size());
   return 0;
 }
 

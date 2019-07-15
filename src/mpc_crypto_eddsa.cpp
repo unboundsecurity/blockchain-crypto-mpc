@@ -69,8 +69,8 @@ error_t mpc_eddsa_refresh_t::party1_step2(const message2_t& in, message3_t& out)
 {
   buf_t agree_buf;
   agree_random.peer1_step2(in, out, agree_buf);
-  bool add = (agree_buf[64*3] & 1) == 0;
-  mem_t refresh_data = mem_t(agree_buf.data(), 64*3);
+  bool add = (agree_buf[64] & 1) == 0;
+  mem_t refresh_data = mem_t(agree_buf.data(), 64);
   share.refresh(add, refresh_data);
   return 0;
 }
@@ -79,8 +79,8 @@ error_t mpc_eddsa_refresh_t::party2_step2(const message3_t& in, none_message_t& 
 {
   buf_t agree_buf;
   agree_random.peer2_step2(in, agree_buf);
-  bool add = (agree_buf[64*3] & 1) != 0;
-  mem_t refresh_data = mem_t(agree_buf.data(), 64*3);
+  bool add = (agree_buf[64] & 1) != 0;
+  mem_t refresh_data = mem_t(agree_buf.data(), 64);
   share.refresh(add, refresh_data);
   return 0;
 }
@@ -140,14 +140,9 @@ error_t mpc_eddsa_gen_t::party1_step3(const message4_t& in, message5_t& out)
   return ctx.peer1_step2(share, in, out);
 }
 
-error_t mpc_eddsa_gen_t::party2_step3(const message5_t& in, message6_t& out)
+error_t mpc_eddsa_gen_t::party2_step3(const message5_t& in, none_message_t& out)
 {
-  return ctx.peer2_step2(share, in, out);
-}
-
-error_t mpc_eddsa_gen_t::party1_step4(const message6_t& in, none_message_t& out)
-{
-  return ctx.peer1_step3(share, in);
+  return ctx.peer2_step2(share, in);
 }
 
 // --------------------------------------- mpc_eddsa_sign_t ----------------------------------------------
@@ -228,9 +223,9 @@ error_t mpc_eddsa_sign_t::party2_step2(const message3_t& in, message4_t& out)
 
   if (refresh)
   {
-    buf_t agree_buf = calc_mgf(ctx.session_id, 64*3+1);
-    mem_t refresh_data = mem_t(agree_buf.data(), 64*3);
-    bool add = (agree_buf[64*3] & 1) == 0;
+    buf_t agree_buf = calc_mgf(ctx.session_id, 64+1);
+    mem_t refresh_data = mem_t(agree_buf.data(), 64);
+    bool add = (agree_buf[64] & 1) == 0;
 
     share.refresh(add, refresh_data);
   }
@@ -244,9 +239,9 @@ error_t mpc_eddsa_sign_t::party1_step3(const message4_t& in, none_message_t& out
 
   if (refresh)
   {
-    buf_t agree_buf = calc_mgf(ctx.session_id, 64*3+1);
-    mem_t refresh_data = mem_t(agree_buf.data(), 64*3);
-    bool add = (agree_buf[64*3] & 1) != 0;
+    buf_t agree_buf = calc_mgf(ctx.session_id, 64+1);
+    mem_t refresh_data = mem_t(agree_buf.data(), 64);
+    bool add = (agree_buf[64] & 1) != 0;
 
     share.refresh(add, refresh_data);
   }

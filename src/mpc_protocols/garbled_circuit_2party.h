@@ -27,6 +27,7 @@
 #include "garbled_circuit.h"
 #include "crypto_aesni.h"
 #include "mpc_ot.h"
+#include "mpc_ecc_core.h"
 
 enum class gc_param_type_e
 {

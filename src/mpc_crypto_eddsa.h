@@ -53,7 +53,7 @@ class mpc_eddsa_refresh_t : public mpc_crypto_context_t
 public:
   static const uint64_t CODE_TYPE = 0x81b6d0d69a7f4f48;
 
-  mpc_eddsa_refresh_t() : agree_random(64*3+1) {}
+  mpc_eddsa_refresh_t() : agree_random(64+1) {}
 
   virtual uint64_t get_type() const override { return CODE_TYPE; }
   virtual void convert(ub::converter_t& converter) override;
@@ -106,7 +106,7 @@ public:
   virtual void set_share_core(const mpc_crypto_share_t& src) override { assert(false); }
   virtual void get_share_core(mpc_crypto_share_t& dst) const { ((mpc_eddsa_share_t&)dst).core = share; }
   
-  virtual int get_messages_count() const override { return 6; }
+  virtual int get_messages_count() const override { return 5; }
   virtual bool changes_share() const override { return true; }
 
   typedef mpc::agree_random_t::message1_t message1_t;
@@ -125,15 +125,13 @@ public:
 
   typedef mpc::eddsa_gen_t::message2_t message4_t;
   typedef mpc::eddsa_gen_t::message3_t message5_t;
-  typedef mpc::eddsa_gen_t::message4_t message6_t;
 
   error_t party1_step1(message1_t& out);
   error_t party2_step1(const message1_t& in, message2_t& out);
   error_t party1_step2(const message2_t& in, message3_t& out);
   error_t party2_step2(const message3_t& in, message4_t& out);
   error_t party1_step3(const message4_t& in, message5_t& out);
-  error_t party2_step3(const message5_t& in, message6_t& out);
-  error_t party1_step4(const message6_t& in, none_message_t& out);
+  error_t party2_step3(const message5_t& in, none_message_t& out);
 
 private:
   mpc::eddsa_share_t share;

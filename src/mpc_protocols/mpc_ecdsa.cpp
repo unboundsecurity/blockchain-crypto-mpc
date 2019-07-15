@@ -23,7 +23,6 @@
 
 #include "precompiled.h"
 #include "mpc_core.h"
-#include "mpc_ecdh.h"
 #include "mpc_ecdsa.h"
 
 using namespace ub;

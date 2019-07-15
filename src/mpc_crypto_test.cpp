@@ -564,17 +564,16 @@ MPCCRYPTO_API int MPCCrypto_test()
 {
   int rv = 0;
 
-  if (rv = test_bip()) return rv;
-
   test_key_t eddsa_key;
   if (rv = test_eddsa_gen(eddsa_key)) return rv;
   if (rv = test_eddsa_backup(eddsa_key)) return rv;
-  for (int i=0; i<3; i++)
+  for (int i=0; i<30; i++)
   {
     if (rv = test_eddsa_sign(eddsa_key)) return rv;
     if (rv = test_refresh(eddsa_key)) return rv;
   }
 
+  if (rv = test_bip()) return rv;
   
   test_key_t ecdsa_key;
   if (rv = test_ecdsa_gen(ecdsa_key)) return rv;

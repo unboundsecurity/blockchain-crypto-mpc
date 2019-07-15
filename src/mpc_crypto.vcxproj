@@ -100,7 +100,6 @@
     <ClInclude Include="mpc_protocols\ecc_backup.h" />
     <ClInclude Include="mpc_protocols\mpc_core.h" />
     <ClInclude Include="mpc_protocols\mpc_ecc_core.h" />
-    <ClInclude Include="mpc_protocols\mpc_ecdh.h" />
     <ClInclude Include="mpc_protocols\mpc_ecdsa.h" />
     <ClInclude Include="mpc_protocols\mpc_eddsa.h" />
     <ClInclude Include="mpc_protocols\mpc_ot.h" />
@@ -145,7 +144,6 @@
     <ClCompile Include="mpc_protocols\ecc_backup.cpp" />
     <ClCompile Include="mpc_protocols\mpc_core.cpp" />
     <ClCompile Include="mpc_protocols\mpc_ecc_core.cpp" />
-    <ClCompile Include="mpc_protocols\mpc_ecdh.cpp" />
     <ClCompile Include="mpc_protocols\mpc_ecdsa.cpp" />
     <ClCompile Include="mpc_protocols\mpc_eddsa.cpp" />
     <ClCompile Include="mpc_protocols\mpc_ot.cpp" />

@@ -12,9 +12,6 @@
     <ClInclude Include="mpc_protocols\mpc_core.h">
       <Filter>mpc_protocols</Filter>
     </ClInclude>
-    <ClInclude Include="mpc_protocols\mpc_ecdh.h">
-      <Filter>mpc_protocols</Filter>
-    </ClInclude>
     <ClInclude Include="mpc_protocols\mpc_ecdsa.h">
       <Filter>mpc_protocols</Filter>
     </ClInclude>
@@ -119,9 +116,6 @@
     <ClCompile Include="mpc_crypto_generic_secret.cpp" />
     <ClCompile Include="mpc_crypto_ecdsa_bip.cpp" />
     <ClCompile Include="mpc_protocols\mpc_core.cpp">
-      <Filter>mpc_protocols</Filter>
-    </ClCompile>
-    <ClCompile Include="mpc_protocols\mpc_ecdh.cpp">
       <Filter>mpc_protocols</Filter>
     </ClCompile>
     <ClCompile Include="mpc_protocols\mpc_ecdsa.cpp">

@@ -114,11 +114,6 @@ void eddsa_share_t::split(
   share1.x = bn_t::rand(order);
   share2.x = (ec25519::decode_scalar(prv_key) - share1.x) % order;
 
-  bn_t kdf1_key = curve_p256.get_random_value();
-  bn_t kdf2_key = curve_p256.get_random_value();
-  ecdh_share_t::split(curve_p256, kdf1_key, share1.kdf1, share2.kdf1);
-  ecdh_share_t::split(curve_p256, kdf2_key, share1.kdf2, share2.kdf2);
-
   const ecp_gen_25519_t& G = crypto::ec25519::generator();
   share1.Q_full = share2.Q_full = G * share1.x + G * share2.x;
 }
@@ -126,26 +121,19 @@ void eddsa_share_t::split(
 
 void eddsa_share_t::refresh(bool add, mem_t diff)
 {
-  assert(diff.size>=64*3);
+  assert(diff.size>=64);
 
   mem_t v_buf = mem_t(diff.data, 64);
-  mem_t v_kdf1_buf = mem_t(diff.data+64, 64);
-  mem_t v_kdf2_buf = mem_t(diff.data+64+64, 64);
 
   bn_t order = ec25519::order();
   const bn_t& order_kdf = curve_p256.order();
 
   bn_t v = bn_t::from_bin(v_buf) % order;
-  bn_t v_kdf1 = bn_t::from_bin(v_kdf1_buf) % order_kdf;
-  bn_t v_kdf2 = bn_t::from_bin(v_kdf2_buf) % order_kdf;
 
   MODULO(order)
   {
     if (add) x += v; else x -= v;
   }
-
-  kdf1.refresh(add, v_kdf1);
-  kdf2.refresh(add, v_kdf2);
 }
 
 // ----------------------------- eddsa_gen_t -------------------------------
@@ -170,7 +158,6 @@ error_t eddsa_gen_t::peer1_step1(
   out.comm_hash = comm.hash;
   comm_rand = comm.rand;
 
-  kdf1.peer1_step1(curve_p256, session_id, share.kdf1, out.kdf1_gen_message1);
   return rv;
 }
 
@@ -195,8 +182,6 @@ error_t eddsa_gen_t::peer2_step1(
   out.b = out.a * s2;
   out.zk_ddh.p(out.a, A2, out.b, s2, session_id, 2); 
 
-  if (rv = kdf1.peer2_step1(curve_p256, session_id, share.kdf1, in.kdf1_gen_message1, out.kdf1_gen_message2)) return rv;
-  kdf2.peer1_step1(curve_p256, session_id, share.kdf2, out.kdf2_gen_message1);
   return rv;
 }
 
@@ -212,9 +197,6 @@ error_t eddsa_gen_t::peer1_step2(
   if (!ec25519::check(in.b)) return rv = error(E_CRYPTO);
   if (!in.zk_ddh.v(in.a, in.A2, in.b, session_id, 2)) return rv = error(E_CRYPTO); 
 
-  if (rv = kdf1.peer1_step2(share.kdf1, in.kdf1_gen_message2, out.kdf1_gen_message3)) return rv;
-  if (rv = kdf2.peer2_step1(curve_p256, session_id, share.kdf2, in.kdf2_gen_message1, out.kdf2_gen_message2)) return rv;
-
   ecp_25519_t A = A1 + in.A2;
   if (!ec25519::check(A)) return rv = error(E_CRYPTO);
   share.Q_full = A;
@@ -227,8 +209,7 @@ error_t eddsa_gen_t::peer1_step2(
 
 error_t eddsa_gen_t::peer2_step2(
     eddsa_share_t& share,
-    const message3_t& in,
-    message4_t& out)
+    const message3_t& in)
 {
   error_t rv = 0;
 
@@ -239,9 +220,6 @@ error_t eddsa_gen_t::peer2_step2(
  
   if (!in.zk_dl.v(in.A1, session_id, 1)) return rv = error(E_CRYPTO);
 
-  if (rv = kdf2.peer1_step2(share.kdf2, in.kdf2_gen_message2, out)) return rv;
-  if (rv = kdf1.peer2_step2(share.kdf1, in.kdf1_gen_message3)) return rv;
-
   ecp_25519_t A = in.A1 + A2;
   if (!ec25519::check(A)) return rv = error(E_CRYPTO);
   share.Q_full = A;
@@ -249,35 +227,9 @@ error_t eddsa_gen_t::peer2_step2(
   return rv;
 }
 
-error_t eddsa_gen_t::peer1_step3(
-  eddsa_share_t& share,
-  const message4_t& in)
-{
-  return kdf2.peer2_step2(share.kdf2, in);
-}
 
 
 // ----------------------------- eddsa_sign_t -------------------------------
-ecc_point_t tweak_to_point(mem_t tweak) // static
-{
-  bn_t p, a, b;
-  crypto::curve_p256.get_params(p, a, b);
-
-  buf256_t h = crypto::random_oracle_hash(tweak);
-
-  bn_t x = bn_t(h) % p;
-
-  ecc_point_t point(crypto::curve_p256);
-
-  while (!point.set_compressed_coordinates(x, 0) && 
-         !point.set_compressed_coordinates(x, 1))
-  {
-    MODULO(p) { x++; }
-  }
-
-  return point;
-}
-
 
 error_t eddsa_sign_t::peer1_step1(
   mem_t data_to_sign, 
@@ -285,10 +237,6 @@ error_t eddsa_sign_t::peer1_step1(
   /*OUT*/message1_t& out)
 {
   error_t rv = 0;
-  kdf_PUB_KEY = tweak_to_point(data_to_sign);
-  buf_t kdf1_session_id = sha256_t::hash(data_to_sign, share.Q_full);
-
-  if (rv = ecdh_derive_t::peer1_step(share.kdf1, kdf_PUB_KEY, kdf1_session_id, out.kdf1_message)) return rv;
 
   agree1 = out.agree1 = crypto::gen_random(16);
 
@@ -310,17 +258,11 @@ error_t eddsa_sign_t::peer2_step1(
   if (in.agree1.size()<16) return rv = error(E_BADARG);
   out.agree2 = crypto::gen_random(16);
 
-  kdf_PUB_KEY = tweak_to_point(data_to_sign);
-  buf_t kdf1_session_id = sha256_t::hash(data_to_sign, share.Q_full);
-
-  buf_t kdf_result;
-  if (rv = ecdh_derive_t::peer2_step(share.kdf1, kdf_PUB_KEY, kdf1_session_id, in.kdf1_message, kdf_result)) return rv;
-  kdf_result = sha512_t::hash(kdf_result);
-  r_reduced_buf = ec25519::reduce_scalar_64(kdf_result);
+  buf_t r_buf = crypto::gen_random(64);
+  r_reduced_buf = ec25519::reduce_scalar_64(r_buf);
   R2 = ec25519::mul_to_generator(r_reduced_buf);
   
   session_id = sha256_t::hash(in.agree1, out.agree2, data_to_sign);
-  if (rv = ecdh_derive_t::peer1_step(share.kdf2, kdf_PUB_KEY, session_id, out.kdf2_message)) return rv;
 
   commitment_t comm;
   comm.gen(sha256_t(session_id, R2));
@@ -341,10 +283,8 @@ error_t eddsa_sign_t::peer1_step2(
   comm_hash = in.comm_hash;
   session_id = sha256_t::hash(agree1, in.agree2, data_to_sign);
 
-  buf_t kdf_result;
-  if (rv = ecdh_derive_t::peer2_step(share.kdf2, kdf_PUB_KEY, session_id, in.kdf2_message, kdf_result)) return rv;
-  kdf_result = sha512_t::hash(kdf_result);
-  r_reduced_buf = ec25519::reduce_scalar_64(kdf_result);
+  buf_t r_buf = crypto::gen_random(64);
+  r_reduced_buf = ec25519::reduce_scalar_64(r_buf);
   out.R1 = R1 = ec25519::mul_to_generator(r_reduced_buf);
   
   return 0;

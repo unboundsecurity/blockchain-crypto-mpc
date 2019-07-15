@@ -24,7 +24,6 @@
 #pragma once
 #include "ub_convert.h"
 #include "mpc_core.h"
-#include "mpc_ecdh.h"
 
 namespace mpc {
 

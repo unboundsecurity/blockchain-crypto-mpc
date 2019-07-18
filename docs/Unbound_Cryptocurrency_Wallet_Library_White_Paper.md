@@ -189,8 +189,8 @@ here. Let *G* be an Elliptic curve group of order *q* with base point
 (generator) *G*. The private key is a random value *x &isin; Z<sub>q</sub>* and the
 public key is *Q = x &sdot; G.* Signing a message *m* is as follows:
 
-1.  Choose a random *r &isin; Z<sub>q</sub>\** (in EdDSA, this is derived from
-    the private key and message using a pseudo-random function)
+1.  Choose a random *r &isin; Z<sub>q</sub>\** (in standard EdDSA, this is derived from
+    the private key and message using a pseudo-random function, but in our library it is chosen randomly; see Section ‎6).
 2. Compute *e &larr; H( R, Q, m )*.
 3. Compute *s &larr; r + x &sdot; e mod q*.
 4. Output *( R, s )*.
@@ -452,9 +452,7 @@ signature on that message using the protocol of \[5\] as follows:
 Given a message *m* that both parties agree to sign, the parties can generate a
 signature on that message using the protocol of \[10\] as follows:
 
-1.  Alice and Bob run two distributed pseudorandom function evaluations,
-    in order for them to derive pseudo-random shares *r<sub>1</sub>* and *r<sub>2</sub>*
-    of *r* from the message. Both parties also learn the value
+1.  Alice and Bob choose random shares *r<sub>1</sub>* and *r<sub>2</sub>*, respectively, and learn the value
     *R = r<sub>1</sub> &sdot; G + r<sub>2</sub> &sdot; G*. This generation uses
     commitments in order to ensure that *R* is (essentially) uniformly
     distributed in the group, in the case that one of the parties is
@@ -468,20 +466,14 @@ signature on that message using the protocol of \[10\] as follows:
     *s = s<sub>1</sub> + s<sub>2</sub> = ( r<sub>1</sub> + r<sub>2</sub> ) + ( x<sub>1</sub> + x<sub>2</sub> ) &sdot; e = r + x &sdot; e mod q*,
     as required.
 
-We remark that the pseudo-random function derivation of *r* from the
-message and private key is different to the actual EdDSA standard.
-Cryptographically, any such method is equivalent, and EdDSA specifies
-one concrete method. However, the EdDSA method is not "MPC friendly" and
+We remark that our implementation of EdDSA is different to the actual EdDSA standard  since *r* is chosen randomly, rather than as a function of the secret key and the message.
+Cryptographically, as long as the randomness is well chosen, this is secure. The reason that we chose to do this is that the EdDSA method  of key derivation is not "MPC friendly" and
 would require an expensive circuit evaluation. We could achieve this via
-dual execution. However, we think that it is not necessary. We stress
-that by the security of the pseudo-random function used here and in the
-EdDSA specification, it is not possible to distinguish the use of the
-method here and the one of the actual EdDSA specification. Thus, this
-difference can only be detected when running known-input tests.
+dual execution and the performance would be reasonable. However, we believe that this is not necessary and needlessly impact performance. See Section ‎6 for more discussion.
 
 ## 5.6 Share Refresh
 
-The parties run a secure coin tossing protocol in order to generate a random value *r* that neither can bias. Then, Alice modifies her share of the private key to be *x<sub>1</sub>' = x<sub>1</sub> + r mod q*, and Bob modifies his share of the private key to be *x<sub>2</sub>' = x<sub>2</sub> + r mod q*. Alice then generates a new Paillier key to encrypt x<sub>1</sub>' and proves in zero-knowledge that this is the correct value. This proof works by running the proofs of Steps 2 and 3 in the distributed key generation procedure (Section 5.1). As a result, after the refresh the parties hold a fresh sharing of x, with a new Paillier key. This achieves the property that if an attacker obtains Alice's secret information before a refresh and Bob's secret information after a refresh (or vice versa), it cannot learn anything about the private key *x*. (The Paillier key must be changed as well as the sharing, since otherwise once the Paillier private key is stolen from Alice, it can corrupt Bob at any later time and decrypt *c<sub>key</sub>*; this value together with *x<sub>2</sub>* (both held by Bob) yields the private key *x*. This level of security is called proactive in the academic literature.
+The parties run a secure coin tossing protocol in order to generate a random value *r* that neither can bias. Then, Alice updates her share of the private key to *x<sub>1</sub>' = x<sub>1</sub> - r mod q*, and Bob modifies his share of the private key to *x<sub>2</sub>' = x<sub>2</sub> + r mod q*. Alice then generates a new Paillier key to encrypt x<sub>1</sub>' and proves in zero-knowledge that this is the correct value. This proof works by running the proofs of Steps 2 and 3 in the distributed key generation procedure (Section 5.1). As a result, after the refresh the parties hold a fresh sharing of x, with a new Paillier key. This achieves the property that if an attacker obtains Alice's secret information before a refresh and Bob's secret information after a refresh (or vice versa), it cannot learn anything about the private key *x*. (The Paillier key must be changed as well as the sharing, since otherwise once the Paillier private key is stolen from Alice, it can corrupt Bob at any later time and decrypt *c<sub>key</sub>*; this value together with *x<sub>2</sub>* (both held by Bob) yields the private key *x*. This level of security is called proactive in the academic literature.
 
 
 
@@ -511,6 +503,9 @@ following bullets:
     the attacker to break the system.
 
 We remind the reader than any application using this code must take care to treat cheating that takes place in the dual execution, including the case that the last equality message is “dropped”. This is crucial for secure usage of the library.
+
+## 6.1 Deterministic vs. Randomized Signatures
+As we have described, our open-source library supports randomized (ECDSA, EdDSA) signatures only. These signature schemes have both randomized and deterministic versions. The deterministic versions are designed to prevent failures in the case that randomness is poorly chosen. Our library combines randomness from both participants and utilizes strong random sources. As such, the chance of failure from this problem is insignificant. As such, the cryptographic strength of these versions is the same. We stress that the functionality of a higher-level protocol is unaffected by our choice to use only randomized versions of the signature scheme. This is due to the fact that any higher-level protocol that relies on the signature being deterministic can be broken by a malicious signer who uses a randomized version. Such an attack can work since it is not possible to distinguish an isolated signature generated using the deterministic or randomized version. Thus, no protocol can actually rely on all signatures of the same message being the same (thus, for example, search or replication must be verified relative to the message and not the signature). 
 
 <a name="references"></a>
 # 7. References

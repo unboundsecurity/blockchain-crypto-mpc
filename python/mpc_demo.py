@@ -197,7 +197,7 @@ def run_server():
         params.command = commands[struct.unpack("i", header[:4])[0]]
         params.type = types[struct.unpack("i", header[4:8])[0]]
         params.size = struct.unpack("i", header[8:])[0]
-        print(params)
+        # print(params)
         out, outputFile = run_command(params)
 
     if params.command != 'sign':  # only client receives the signature

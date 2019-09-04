@@ -26,6 +26,9 @@ class MPCException(Exception):
         # Exception.__init__()
         self.error_code = error_code
 
+    def __str__(self):
+        return hex(self.error_code)
+
 
 def test_rv(rv):
     if rv != 0:
@@ -180,7 +183,6 @@ class message_info_t(Structure):
                 ("src_peer", c_int),
                 ("dst_peer", c_int)
                 ]
-
 
 
 #  Information
@@ -376,7 +378,6 @@ def restoreEddsaKey(prv_backup_key, pub_eddsa_key, backup):
     test_rv(libmpc.MPCCrypto_restoreEddsaKey(c_char_p(prv_backup_key), c_int(
         len(prv_backup_key)), c_char_p(pub_eddsa_key), c_char_p(backup), c_int(len(backup)), ret_key))
     return ret_key.raw
-
 
     #  ECDSA specific functions
 libmpc.MPCCrypto_initGenerateEcdsaKey.argtypes = [c_int, POINTER(c_void_p)]

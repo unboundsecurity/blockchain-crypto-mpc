@@ -111,17 +111,20 @@ def run_generate(cryptoType, size):
 
 def run_sign(inShare, cryptoType):
     print(cryptoType + " signing...")
+    if not args.data_file:
+        sys.exit("Input data missing")
+    with open(args.data_file, "rb") as f:
+        inData = f.read()
+
     if cryptoType == 'ECDSA':
+        if len(inData) > 32:
+            sys.exit("Input too long. Data should be hashed before ECDSA signing.")
         obj = mpc_crypto.Ecdsa(peer, inShare)
     elif cryptoType == 'EDDSA':
         obj = mpc_crypto.Eddsa(peer, inShare)
     else:
         sys.exit("Sign not supported for " + cryptoType)
 
-    if not args.data_file:
-        sys.exit("Input data missing")
-    with open(args.data_file, "rb") as f:
-        inData = f.read()
     with obj:
         obj.initSign(inData)
         exec_mpc_exchange(obj)

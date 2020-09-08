@@ -72,9 +72,7 @@
 		514BDB7321AAE7C6007A51AA /* garbled_circuit_x64.s in Sources */ = {isa = PBXBuildFile; fileRef = 514BDB1F21AAE7C6007A51AA /* garbled_circuit_x64.s */; };
 		514BDB7421AAE7C6007A51AA /* circuit_data.h in Headers */ = {isa = PBXBuildFile; fileRef = 514BDB2021AAE7C6007A51AA /* circuit_data.h */; };
 		514BDB7521AAE7C6007A51AA /* mpc_ecdsa.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 514BDB2121AAE7C6007A51AA /* mpc_ecdsa.cpp */; };
-		514BDB7621AAE7C6007A51AA /* mpc_ecdh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 514BDB2221AAE7C6007A51AA /* mpc_ecdh.cpp */; };
 		514BDB7721AAE7C6007A51AA /* garbled_circuit_2party.h in Headers */ = {isa = PBXBuildFile; fileRef = 514BDB2321AAE7C6007A51AA /* garbled_circuit_2party.h */; };
-		514BDB7821AAE7C6007A51AA /* mpc_ecdh.h in Headers */ = {isa = PBXBuildFile; fileRef = 514BDB2421AAE7C6007A51AA /* mpc_ecdh.h */; };
 		514BDB7921AAE7C6007A51AA /* garbled_circuit.h in Headers */ = {isa = PBXBuildFile; fileRef = 514BDB2521AAE7C6007A51AA /* garbled_circuit.h */; };
 		514BDB7A21AAE7C6007A51AA /* circuit_data.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 514BDB2621AAE7C6007A51AA /* circuit_data.cpp */; };
 		514BDB7B21AAE7C6007A51AA /* mpc_eddsa.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 514BDB2721AAE7C6007A51AA /* mpc_eddsa.cpp */; };
@@ -175,9 +173,7 @@
 		514BDB1F21AAE7C6007A51AA /* garbled_circuit_x64.s */ = {isa = PBXFileReference; explicitFileType = sourcecode.asm.llvm; fileEncoding = 4; path = garbled_circuit_x64.s; sourceTree = "<group>"; };
 		514BDB2021AAE7C6007A51AA /* circuit_data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = circuit_data.h; sourceTree = "<group>"; };
 		514BDB2121AAE7C6007A51AA /* mpc_ecdsa.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mpc_ecdsa.cpp; sourceTree = "<group>"; };
-		514BDB2221AAE7C6007A51AA /* mpc_ecdh.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mpc_ecdh.cpp; sourceTree = "<group>"; };
 		514BDB2321AAE7C6007A51AA /* garbled_circuit_2party.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = garbled_circuit_2party.h; sourceTree = "<group>"; };
-		514BDB2421AAE7C6007A51AA /* mpc_ecdh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mpc_ecdh.h; sourceTree = "<group>"; };
 		514BDB2521AAE7C6007A51AA /* garbled_circuit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = garbled_circuit.h; sourceTree = "<group>"; };
 		514BDB2621AAE7C6007A51AA /* circuit_data.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = circuit_data.cpp; sourceTree = "<group>"; };
 		514BDB2721AAE7C6007A51AA /* mpc_eddsa.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mpc_eddsa.cpp; sourceTree = "<group>"; };
@@ -337,9 +333,7 @@
 				514BDB1F21AAE7C6007A51AA /* garbled_circuit_x64.s */,
 				514BDB2021AAE7C6007A51AA /* circuit_data.h */,
 				514BDB2121AAE7C6007A51AA /* mpc_ecdsa.cpp */,
-				514BDB2221AAE7C6007A51AA /* mpc_ecdh.cpp */,
 				514BDB2321AAE7C6007A51AA /* garbled_circuit_2party.h */,
-				514BDB2421AAE7C6007A51AA /* mpc_ecdh.h */,
 				514BDB2521AAE7C6007A51AA /* garbled_circuit.h */,
 				514BDB2621AAE7C6007A51AA /* circuit_data.cpp */,
 				514BDB2721AAE7C6007A51AA /* mpc_eddsa.cpp */,
@@ -391,7 +385,6 @@
 				514BDB3521AAE7C6007A51AA /* mpc_crypto_share.h in Headers */,
 				514BDB6F21AAE7C6007A51AA /* mpc_crypto_ec_backup.h in Headers */,
 				514BDB6921AAE7C6007A51AA /* mpc_crypto_ecdsa.h in Headers */,
-				514BDB7821AAE7C6007A51AA /* mpc_ecdh.h in Headers */,
 				514BDB4B21AAE7C6007A51AA /* crypto_bn.h in Headers */,
 				514BDB3C21AAE7C6007A51AA /* crypto_aesni.h in Headers */,
 				514BDB7021AAE7C6007A51AA /* circuit_sha512_update.h in Headers */,
@@ -517,7 +510,6 @@
 				514BDB8421AAE7C6007A51AA /* mpc_ecc_core.cpp in Sources */,
 				514BDB7321AAE7C6007A51AA /* garbled_circuit_x64.s in Sources */,
 				514BDB3821AAE7C6007A51AA /* mpc_crypto_eddsa.cpp in Sources */,
-				514BDB7621AAE7C6007A51AA /* mpc_ecdh.cpp in Sources */,
 				514BDB8521AAE7C6007A51AA /* mpc_core.cpp in Sources */,
 				514BDB6621AAE7C6007A51AA /* ub_buf.cpp in Sources */,
 				514BDB5221AAE7C6007A51AA /* mpc_crypto_ecdsa.cpp in Sources */,

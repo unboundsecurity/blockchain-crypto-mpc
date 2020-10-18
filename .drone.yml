@@ -1,0 +1,31 @@
+---
+kind: pipeline
+name: default
+
+steps:
+  - name: Build library
+    image: debian:10
+    environment:
+      JAVA_HOME: /usr/lib/jvm/java-11-openjdk-amd64
+    commands:
+      - apt-get update
+      - apt-get install -y git make gcc g++ openssl libssl-dev openjdk-11-jdk
+      - make -j 4
+
+  - name: publish
+    image: plugins/github-release
+    settings:
+      api_key:
+        from_secret: kite_bot_key
+      files: libmpc_crypto.so
+      checksum:
+        - md5
+        - sha256
+        - sha512
+    when:
+      event: [tag]
+
+trigger:
+  event:
+    - push
+    - tag

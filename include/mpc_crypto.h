@@ -43,22 +43,21 @@ typedef struct tag_MPCCryptoKey     MPCCryptoShare;
 typedef struct tag_MPCCryptoContext MPCCryptoContext;
 typedef struct tag_MPCCryptoMessage MPCCryptoMessage;
 
-enum mpc_crypto_key_e : unsigned
+typedef enum
 { 
   mpc_none           = 0,
-
   mpc_eddsa          = 2,
   mpc_ecdsa          = 3,
   mpc_generic_secret = 4, // used for the seed
-};
+} mpc_crypto_key_e;
 
-enum mpc_crypto_err_e
+typedef enum
 {
   MPC_E_BADARG     = 0xff010002, // bad argument
   MPC_E_FORMAT     = 0xff010003, // invalid format
   MPC_E_TOO_SMALL  = 0xff010008, // buffer too small
   MPC_E_CRYPTO     = 0xff040001, // crypto error, process is being tampered
-};
+} mpc_crypto_err_e;
 
 typedef struct tag_mpc_crypto_share_info_t
 {

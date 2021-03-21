@@ -1,3 +1,17 @@
+# IMPORTANT NOTE
+ 
+**As of September 1, 2021, this repository will be converted to read only and support will end.**
+ 
+Therefore, starting on September 1, 2021, the following changes will occur:
+1. Unbound will stop maintenance for this repo.
+1. Unbound will not release any future versions of this repo.
+1. Unbound will not provide any security updates or hotfixes (should an issue arise).
+1. Unbound will stop support for this repo.
+ 
+This library was originally created to enable users to experiment with MPC functionality using a subset of the functionality provided in Unbound products.
+ 
+Users are encouraged to explore the new Unbound CORE offerings found in the [Unbound Security website](https://www.unboundsecurity.com/).
+ 
 
 # 1. Introduction to *blockchain-crypto-mpc*
 

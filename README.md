@@ -16,7 +16,7 @@ Users are encouraged to explore the new Unbound CORE offerings found in the [Unb
 # 1. Introduction to *blockchain-crypto-mpc*
 
 **blockchain-crypto-mpc** is an open source library released by [Unbound
-Tech](https://www.unboundtech.com/cryptoasset-security-platform/company/?utm_campaign=CASP_Awareness_campaign&utm_source=GitHub&utm_medium=ReadMe&utm_term=Unbound_Tech&utm_content=ReadMe) that provides the
+Tech](https://www.unboundsecurity.com/blog/secure-multiparty-computation-mpc/) that provides the
 cryptographic foundation to resolve one of the hardest challenges
 associated with crypto asset and blockchain applications: **The
 protection of cryptographic signing keys and seed secrets**.

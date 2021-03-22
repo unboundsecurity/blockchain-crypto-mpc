@@ -16,7 +16,7 @@ Users are encouraged to explore the new Unbound CORE offerings found in the [Unb
 # 1. Introduction to *blockchain-crypto-mpc*
 
 **blockchain-crypto-mpc** is an open source library released by [Unbound
-Tech](https://www.unboundsecurity.com/blog/secure-multiparty-computation-mpc/) that provides the
+Security](https://www.unboundsecurity.com) that provides the
 cryptographic foundation to resolve one of the hardest challenges
 associated with crypto asset and blockchain applications: **The
 protection of cryptographic signing keys and seed secrets**.
@@ -24,7 +24,7 @@ protection of cryptographic signing keys and seed secrets**.
 
 
 Unbound leverages [secure multiparty computation
-(MPC)](https://www.unboundtech.com/technology-distributed-trust-platform/?utm_campaign=CASP_Awareness_campaign&utm_source=GitHub&utm_medium=GitHub&utm_term=Distributed_Trust_Platform&utm_content=ReadMe)
+(MPC)](https://www.unboundsecurity.com/blog/secure-multiparty-computation-mpc/)
 for the protection and management of cryptographic keys and secrets, and
 provides industry-grade MPC-based solutions for key management, key
 protection and additional applications. The protocols were designed by
@@ -228,8 +228,8 @@ independent, each is effectively a backup of the same seed.
 
 This repository includes a two different tools for benchmarking the **blockchain-crypto-mpc** library. 
 
-1. MPC Crypto Bench - a tool written C++. See [mpc_crypto_bench](https://github.com/unbound-tech/blockchain-crypto-mpc/blob/master/bench/README.md) in the [bench](./bench) folder for more information.
-2. MPC Crypto Python script. See [mpc_crypto](https://github.com/unbound-tech/blockchain-crypto-mpc/blob/master/python/README.md) in the [Python](./python) folder for more information.
+1. MPC Crypto Bench - a tool written C++. See [mpc_crypto_bench](https://github.com/unboundsecurity/blockchain-crypto-mpc/blob/master/bench/README.md) in the [bench](./bench) folder for more information.
+2. MPC Crypto Python script. See [mpc_crypto](https://github.com/unboundsecurity/blockchain-crypto-mpc/blob/master/python/README.md) in the [Python](./python) folder for more information.
 
 MPC Crypto Bench tests the raw protocols, with no networking involved, while the MPC Crypto Python script is uses a client and server with actual networking.
  

@@ -160,7 +160,7 @@ MPCCRYPTO_API int MPCCrypto_restoreEddsaKey(const uint8_t* prv_backup_key, int p
 MPCCRYPTO_API int MPCCrypto_initDeriveBIP32(int peer, MPCCryptoShare* share, int hardened, unsigned index, MPCCryptoContext** context);
 MPCCRYPTO_API int MPCCrypto_getResultDeriveBIP32(MPCCryptoContext* context, MPCCryptoShare** new_share);
 MPCCRYPTO_API int MPCCrypto_getBIP32Info(MPCCryptoShare* share, bip32_info_t* bip32_info);
-MPCCRYPTO_API int MPCCrypto_serializePubBIP32(MPCCryptoShare* share, char* out, int* out_size);
+MPCCRYPTO_API int MPCCrypto_serializePubBIP32(MPCCryptoShare* share, char* out, int* out_size, bool main = true);
 
 
 #ifdef __cplusplus

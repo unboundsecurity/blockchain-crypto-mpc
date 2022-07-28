@@ -512,13 +512,13 @@ JNIEXPORT jint JNICALL Java_com_unboundTech_mpc_Native_getBIP32Info(JNIEnv *env,
   return 0;
 }
 
-JNIEXPORT jint JNICALL Java_com_unboundTech_mpc_Native_serializePubBIP32(JNIEnv *env, jclass, jlong share_handle, jcharArray j_out, jobject j_out_size)
+JNIEXPORT jint JNICALL Java_com_unboundTech_mpc_Native_serializePubBIP32(JNIEnv *env, jclass, jlong share_handle, jcharArray j_out, jobject j_out_size, jboolean main)
 {
   error_t rv = 0;
   MPCCryptoShare* share = (MPCCryptoShare*)(uintptr_t)share_handle;
 
   int str_size = 0;
-  rv = MPCCrypto_serializePubBIP32(share, nullptr, &str_size);
+  rv = MPCCrypto_serializePubBIP32(share, nullptr, &str_size, main);
   int out_size = str_size-1;
 
   if (j_out_size) set_int_ref(env, j_out_size, out_size);

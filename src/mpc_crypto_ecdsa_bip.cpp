@@ -932,7 +932,7 @@ MPCCRYPTO_API int MPCCrypto_getBIP32Info(MPCCryptoShare* share_ptr, bip32_info_t
   return rv;
 }
 
-MPCCRYPTO_API int MPCCrypto_serializePubBIP32(MPCCryptoShare* share_ptr, char* out, int* out_size)
+MPCCRYPTO_API int MPCCrypto_serializePubBIP32(MPCCryptoShare* share_ptr, char* out, int* out_size, bool main)
 {
   error_t rv = 0;
   if (!share_ptr) return rv = ub::error(E_BADARG);
@@ -953,7 +953,7 @@ MPCCRYPTO_API int MPCCrypto_serializePubBIP32(MPCCryptoShare* share_ptr, char* o
   bip_node.set_parent_fingerprint(bip_key_info.parent_fingerprint);
   bip_node.set_level(bip_key_info.level);
 
-  std::string s = bip_node.serialize_pub(Q.to_compressed_oct());
+  std::string s = bip_node.serialize_pub(Q.to_compressed_oct(), main);
   int len = (int)s.length()+1;
   int buf_size = *out_size;
   *out_size = len;
